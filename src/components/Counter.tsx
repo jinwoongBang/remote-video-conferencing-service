@@ -1,13 +1,16 @@
 import React, { useCallback } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { counterState } from '../store';
+import { incrementCount } from '../store/counter';
 
 function Counter() {
   const [count, setCount] = useRecoilState(counterState);
+  const handleIncrement = useSetRecoilState(incrementCount);
 
   const onIncrement = useCallback(() => {
-    setCount(count + 1);
+    // setCount(count + 1);
+    handleIncrement(2);
   }, [count]);
 
   const onDecrement = useCallback(() => {
