@@ -2,6 +2,7 @@ import React from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { SeminarResponse, Data } from '../api/before';
+import Counter from '../../src/components/Counter';
 
 function After({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
@@ -28,6 +29,9 @@ function After({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
             </Link>
           </li>
         </ul>
+      </div>
+      <div>
+        <Counter />
       </div>
     </div>
   );
