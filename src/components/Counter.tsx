@@ -11,11 +11,11 @@ function Counter() {
   const onIncrement = useCallback(() => {
     // setCount(count + 1);
     handleIncrement(2);
-  }, [count]);
+  }, [handleIncrement]);
 
   const onDecrement = useCallback(() => {
     setCount(count - 1);
-  }, [count]);
+  }, [count, setCount]);
 
   return (
     <div>
