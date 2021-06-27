@@ -43,6 +43,11 @@ function After({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
               <a>before3</a>
             </Link>
           </li>
+          <li>
+            <Link href="/example/before4">
+              <a>before4</a>
+            </Link>
+          </li>
         </ul>
       </div>
       <div>
