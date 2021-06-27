@@ -20,6 +20,8 @@
 - props : An optional object with the props that will be received by the page component. It should be a serializable object
 
 - revalidate : An optional amount in seconds after which a page re-generation can occur (defaults to: false or no revalidating). More on Incremental Static Regeneration
+- 이미 생성된 정적 페이지는 캐시에 넣어놓고 사용하는데
+- 해당 시간이 지나면 캐시에 있는 정적 페이지를 최신화 해서 다시 저장함.
 
 - notFound : An optional boolean value to allow the page to return a 404 status and page. Below is an example of how it works:
 

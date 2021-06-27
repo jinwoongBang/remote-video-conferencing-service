@@ -31,7 +31,7 @@ export default function handler(
   const result: Data[] = [
     { id: 20, name: 'before1' },
     { id: 20, name: 'before2' },
-    { id: 20, name: 'before3' },
+    { id: 20, name: 'before5' },
   ];
   seminarResponse.result = result;
 

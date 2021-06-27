@@ -44,8 +44,8 @@ function After({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
             </Link>
           </li>
           <li>
-            <Link href="/example/before4">
-              <a>before4</a>
+            <Link href="/example/before10">
+              <a>before10</a>
             </Link>
           </li>
         </ul>
