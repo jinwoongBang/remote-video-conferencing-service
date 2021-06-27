@@ -16,23 +16,7 @@ function Before({ name }: InferGetStaticPropsType<typeof getStaticProps>) {
   );
 }
 
-// This also gets called at build time
-export const getStaticProps: GetStaticProps<{ name: string }> = async (
-  context,
-) => {
-  // params contains the post `id`.
-  // If the route is like /posts/1, then params.id is 1
-  const { params } = context;
-  const { name } = params as IParams;
-
-  //   const res = await fetch(`http://localhost:3000/example/${id}`);
-  //   const post = await res.json();
-
-  // Pass post data to the page via props
-  return { props: { name } };
-};
-
-// This function gets called at build time
+// [1] 실행 순서
 export const getStaticPaths = async () => {
   // Call an external API endpoint to get posts
   const res = await fetch('http://localhost:3000/api/before');
@@ -46,6 +30,22 @@ export const getStaticPaths = async () => {
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
   return { paths, fallback: false };
+};
+
+// [2] 실행 순서
+export const getStaticProps: GetStaticProps<{ name: string }> = async (
+  context,
+) => {
+  const { params } = context;
+  const { name } = params as IParams;
+
+  const res = await fetch('http://localhost:3000/api/after');
+  const response = await res.json();
+
+  console.log({ after: response });
+
+  // Pass post data to the page via props
+  return { props: { name } };
 };
 
 export default Before;
