@@ -53,7 +53,7 @@ return
 - https://vercel.com/docs/next.js/incremental-static-regeneration
 
 [5] 정리
-- next js 는 SSR, Dynamic importing 뿐만 아니라 페이지를 정적으로 생성 후 캐싱하여 사용하고 있었다.
+- next js 는 SSR, Dynamic importing 뿐만 아니라 정적 페이지를 생성 후 캐싱하여 사용하고 있었다.
 - SSR 과 CSR 모두를 사용할 수 있는 장점이 있는 것 같다.
 - 즉 정적 페이지를 동적으로 생성 및 캐싱하여 사용하기 때문에 필요한 부분만 빌드하고 불러 올 수 있는 장점.
 - 또한 미리 정적 페이지를 만들어 놓기 때문에 SEO 최적화 가능.
