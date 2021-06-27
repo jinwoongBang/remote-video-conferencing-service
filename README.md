@@ -22,6 +22,7 @@
 - revalidate : An optional amount in seconds after which a page re-generation can occur (defaults to: false or no revalidating). More on Incremental Static Regeneration
 - 이미 생성된 정적 페이지는 캐시에 넣어놓고 사용하는데
 - 해당 시간이 지나면 캐시에 있는 정적 페이지를 최신화 해서 다시 저장함.
+- https://vercel.com/docs/next.js/incremental-static-regeneration
 
 - notFound : An optional boolean value to allow the page to return a 404 status and page. Below is an example of how it works:
 
@@ -45,3 +46,6 @@ return
 - 필수 사항 : getStaticPaths 함수와 반드시 같이 사용해야 함.
 
 [3] getServerSideProps (Server-side Rendering): Fetch data on each request.
+
+[4] ISR
+- https://vercel.com/docs/next.js/incremental-static-regeneration
