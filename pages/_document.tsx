@@ -1,12 +1,14 @@
 // page/_documnet.js
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import React from 'react';
 
+/**
+ * @link https://nextjs.org/docs/advanced-features/custom-document
+ */
 export default class MyDocument extends Document {
-
   /**
    * @description 최초 데이터 fetch 시 사용해도 괜찮을 듯?
-   * @returns 
+   * @returns initialProps
    */
   // static async getInitialProps(ctx) {
   //   const initialProps = await Document.getInitialProps(ctx);
@@ -15,7 +17,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <Html lang="ko">
         <Head>
           {/* <meta
             name="viewport"
@@ -29,7 +31,7 @@ export default class MyDocument extends Document {
             <NextScript />
           </div>
         </body>
-      </html>
+      </Html>
     );
   }
 }
