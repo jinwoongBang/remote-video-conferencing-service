@@ -46,6 +46,15 @@ return
 - 필수 사항 : getStaticPaths 함수와 반드시 같이 사용해야 함.
 
 [3] getServerSideProps (Server-side Rendering): Fetch data on each request.
+- pre-render the data, 즉 미리 데이터를 준비해서 렌더링 해야될 경우에만 사용해라.
+- getStaticProps 보다 느리다. ( Time to first byte (TTFB) will be slower than getStaticProps )
 
 [4] ISR
 - https://vercel.com/docs/next.js/incremental-static-regeneration
+
+[5] 정리
+- next js 는 SSR, Dynamic importing 뿐만 아니라 페이지를 정적으로 생성 후 캐싱하여 사용하고 있었다.
+- SSR 과 CSR 모두를 사용할 수 있는 장점이 있는 것 같다.
+- 즉 정적 페이지를 동적으로 생성 및 캐싱하여 사용하기 때문에 필요한 부분만 빌드하고 불러 올 수 있는 장점.
+- 또한 미리 정적 페이지를 만들어 놓기 때문에 SEO 최적화 가능.
+- 새로 생성하는 정적 페이지에 대한 fullback 도 설정 할 수 있다는 것도 사용자가 페이지에서 이탈 하는 것을 막아주는 좋은 장점인것 같다.
