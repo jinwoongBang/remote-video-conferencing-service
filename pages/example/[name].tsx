@@ -1,5 +1,10 @@
 import React from 'react';
-import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
+import {
+  GetStaticProps,
+  InferGetStaticPropsType,
+  GetStaticPaths,
+  GetServerSideProps,
+} from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { SeminarResponse, Data } from '../api/before';
 
