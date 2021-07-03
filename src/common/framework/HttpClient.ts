@@ -1,0 +1,64 @@
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import qs from 'query-string';
+import HTTPStatusCode, { StatusCodes } from 'http-status-codes';
+
+import UrlUtils from 'src/common/utils/UrlUtils';
+
+import {
+  NetworkError,
+  ServiceError,
+  InternalServerError,
+} from 'src/common/framework/Error';
+import OTAResponse from 'src/common/framework/OTAResponse';
+
+const KeyFlowHttpClient = axios.create({
+  baseURL: new UrlUtils().baseURL,
+  timeout: 10 * 1000,
+  paramsSerializer: (params: any) => qs.stringify(params),
+  headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+});
+
+/**
+ * 서버 요청에 성공하였으나,
+ * 서버 내부 로직 상 예외가 발생하였을 경우 처리
+ *
+ * @param response
+ * @returns
+ */
+function onFulfilledResponse(
+  response: AxiosResponse<OTAResponse<any>>,
+): AxiosResponse<OTAResponse<any>> {
+  const { data, status } = response;
+  const { code, message, success } = response.data;
+  const httpStatusMessage = HTTPStatusCode.getStatusText(status);
+
+  if (!success) {
+    throw new InternalServerError({
+      statusCode: status,
+      name: httpStatusMessage,
+      message: message,
+    });
+  }
+
+  return response;
+}
+
+/**
+ * 서버 요청 자체가 실패하였을 경우
+ *
+ * @param error
+ * @returns
+ */
+function onRejectedResponse(
+  error: AxiosError,
+): Promise<NetworkError | ServiceError> {
+  console.error(error);
+  return Promise.reject(new NetworkError());
+}
+
+KeyFlowHttpClient.interceptors.response.use(
+  onFulfilledResponse,
+  onRejectedResponse,
+);
+
+export default KeyFlowHttpClient;
