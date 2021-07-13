@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 /**
  * Next
@@ -77,6 +77,22 @@ function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
 
+  const sideBarMenuList = useMemo(() => {
+    switch (router.pathname) {
+      case '/':
+        return ['사이트 현황', '현황판'];
+      case '/preference':
+        return [
+          '사이트 정보관리',
+          '운영자 목록',
+          '운영자 등록',
+          '이벤트 관리자 목록',
+          '이벤트 관리자 등록',
+        ];
+    }
+    return ['Home', 'Starred', 'Send email', 'Drafts'];
+  }, [router.pathname]);
+
   const handleClickMenu = useCallback(
     (url: string) => {
       router.push(url);
@@ -102,6 +118,11 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <Divider></Divider>
         <Toolbar variant="dense">
           <Grid container justify="space-between">
+            <Grid item xs={2}>
+              <Typography variant="body1" align="center">
+                대시보드
+              </Typography>
+            </Grid>
             <Grid item xs={2}>
               <Typography variant="body1" align="center">
                 환경설정
@@ -136,23 +157,8 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <Toolbar variant="dense" />
         <div className={classes.drawerContainer}>
           <List>
-            {['Home', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            {sideBarMenuList.map((text, index) => (
               <ListItem button key={text} onClick={() => handleClickMenu('/')}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <Inbox /> : <Mail />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['Before1', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem
-                button
-                key={text}
-                onClick={() => handleClickMenu('/example/before1')}
-              >
                 <ListItemIcon>
                   {index % 2 === 0 ? <Inbox /> : <Mail />}
                 </ListItemIcon>
