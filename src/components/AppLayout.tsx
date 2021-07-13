@@ -36,8 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    // width: `calc(100% - ${drawerWidth}px)`,
-    // marginLeft: drawerWidth,
   },
   drawer: {
     width: drawerWidth,
@@ -54,6 +52,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3),
     maxWidth: `calc(100vw - ${drawerWidth}px)`,
     minWidth: `${1440 - drawerWidth}px`,
+  },
+
+  subHeader: {
+    textAlign: 'center',
   },
 
   logoContainer: {
@@ -97,6 +99,31 @@ function ApoLayout({ children }: ApoLayoutProps) {
             </Grid>
           </Grid>
         </Toolbar>
+        <Divider></Divider>
+        <Toolbar variant="dense">
+          <Grid container justify="space-between">
+            <Grid item xs={2}>
+              <Typography variant="body1" align="center">
+                환경설정
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body1" align="center">
+                회원관리
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body1" align="center">
+                이벤트관리
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body1" align="center">
+                특별관리
+              </Typography>
+            </Grid>
+          </Grid>
+        </Toolbar>
       </AppBar>
       <Drawer
         className={classes.drawer}
@@ -106,6 +133,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
         }}
       >
         <Toolbar />
+        <Toolbar variant="dense" />
         <div className={classes.drawerContainer}>
           <List>
             {['Home', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
