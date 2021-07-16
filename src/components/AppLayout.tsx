@@ -48,10 +48,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
   },
   content: {
+    border: '1xp solid tomato',
     flexGrow: 1,
-    padding: theme.spacing(3),
+    // paddingTop: '112px',
     maxWidth: `calc(100vw - ${drawerWidth}px)`,
     minWidth: `${1440 - drawerWidth}px`,
+    // height: '120vh',
   },
 
   subHeader: {
@@ -66,6 +68,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
+
+    '& > *': {
+      marginLeft: '10px',
+    },
   },
 }));
 
@@ -110,8 +116,10 @@ function ApoLayout({ children }: ApoLayoutProps) {
             </Grid>
             <Grid item xs={3} className={classes.rightContainer}>
               <Typography variant="body1">전체관리자</Typography>
-              <Typography variant="body2"> 께서 로그인하셨습니다.</Typography>
-              <Button variant="outlined">로그아웃</Button>
+              <Typography variant="body2">께서 로그인하셨습니다.</Typography>
+              <Button variant="outlined" color="inherit">
+                로그아웃
+              </Button>
             </Grid>
           </Grid>
         </Toolbar>
@@ -171,6 +179,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
 
       <main className={classes.content}>
         <Toolbar />
+        <Toolbar variant="dense" />
         <Container maxWidth={false} disableGutters>
           {children}
         </Container>
