@@ -124,7 +124,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
 
   const sideBarMenuList = useMemo(() => {
     switch (router.pathname) {
-      case '/':
+      case '/dashboard':
         return ['사이트 현황', '현황판'];
       case '/preference':
         return [
@@ -133,6 +133,24 @@ function ApoLayout({ children }: ApoLayoutProps) {
           '운영자 등록',
           '이벤트 관리자 목록',
           '이벤트 관리자 등록',
+        ];
+      case '/user':
+        return [
+          '회원 목록',
+          '회원 등록',
+          '회원 일괄 등록 (엑셀)',
+          '회원 일괄 수정 (엑셀)',
+          '회원 이력 목록',
+          '회원 이력 목록 (경과시간)',
+        ];
+      case '/event':
+        return [
+          '이벤트 목록',
+          '이벤트 등록',
+          '출석 목록',
+          '답변 목록',
+          '쪽지 목록',
+          '시청 ',
         ];
     }
     return ['Home', 'Starred', 'Send email', 'Drafts'];
