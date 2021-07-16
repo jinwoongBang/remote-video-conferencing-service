@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 /**
  * Next
@@ -24,6 +24,8 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
+  Tabs,
+  Tab,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
@@ -79,9 +81,46 @@ type ApoLayoutProps = {
   children: JSX.Element;
 };
 
+type SubHeader = {
+  label: string;
+  url: string;
+};
+
+const subHeaderList: SubHeader[] = [
+  {
+    label: '대시보드',
+    url: '/dashboard',
+  },
+  {
+    label: '환경설정',
+    url: '/preference',
+  },
+  {
+    label: '회원관리',
+    url: '/user',
+  },
+  {
+    label: '이벤트관리',
+    url: '/event',
+  },
+  {
+    label: '특별관리',
+    url: '/special',
+  },
+];
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
+
+  const [value, setValue] = useState<number>(0);
 
   const sideBarMenuList = useMemo(() => {
     switch (router.pathname) {
@@ -106,6 +145,14 @@ function ApoLayout({ children }: ApoLayoutProps) {
     [router],
   );
 
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<{}>, newValue: number) => {
+      setValue(newValue);
+      router.push(subHeaderList[newValue].url);
+    },
+    [router],
+  );
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -125,33 +172,15 @@ function ApoLayout({ children }: ApoLayoutProps) {
         </Toolbar>
         <Divider></Divider>
         <Toolbar variant="dense">
-          <Grid container justify="space-between">
-            <Grid item xs={2}>
-              <Typography variant="body1" align="center">
-                대시보드
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body1" align="center">
-                환경설정
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body1" align="center">
-                회원관리
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body1" align="center">
-                이벤트관리
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body1" align="center">
-                특별관리
-              </Typography>
-            </Grid>
-          </Grid>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="simple tabs example"
+          >
+            {subHeaderList.map((item, index) => (
+              <Tab label={item.label} key={item.label} {...a11yProps(index)} />
+            ))}
+          </Tabs>
         </Toolbar>
       </AppBar>
       <Drawer
