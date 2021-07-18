@@ -30,6 +30,11 @@ import {
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
+/**
+ * Components
+ */
+import { DashboardSideMenu } from 'src/components/SideMenu';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -122,46 +127,23 @@ function ApoLayout({ children }: ApoLayoutProps) {
 
   const [value, setValue] = useState<number>(0);
 
-  const sideBarMenuList = useMemo(() => {
+  const sideBarMenu = useMemo(() => {
     switch (router.pathname) {
       case '/':
-        return ['사이트 현황', '현황판'];
-      case '/preference':
-        return [
-          '사이트 정보관리',
-          '운영자 목록',
-          '운영자 등록',
-          '이벤트 관리자 목록',
-          '이벤트 관리자 등록',
-        ];
-      case '/user':
-        return [
-          '회원 목록',
-          '회원 등록',
-          '회원 일괄 등록 (엑셀)',
-          '회원 일괄 수정 (엑셀)',
-          '회원 이력 목록',
-          '회원 이력 목록 (경과시간)',
-        ];
-      case '/event':
-        return [
-          '이벤트 목록',
-          '이벤트 등록',
-          '출석 목록',
-          '답변 목록',
-          '쪽지 목록',
-          '시청 ',
-        ];
+        return <DashboardSideMenu />;
     }
-    return ['Home', 'Starred', 'Send email', 'Drafts'];
+    return <DashboardSideMenu />;
   }, [router.pathname]);
 
   useEffect(() => {
     const { pathname } = router;
     let index = 0;
+
     for (let i = 0; i < subHeaderList.length; i++) {
       const { url } = subHeaderList[i];
-      if (pathname === url) {
+      const urlRegx = new RegExp(`${pathname}`, 'g');
+
+      if (urlRegx.test(url)) {
         index = i;
         break;
       }
@@ -176,7 +158,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
     [router],
   );
 
-  const handleChange = useCallback(
+  const handleChangeTab = useCallback(
     (event: React.ChangeEvent<{}>, newValue: number) => {
       router.push(subHeaderList[newValue].url);
     },
@@ -204,7 +186,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <Toolbar variant="dense">
           <Tabs
             value={value}
-            onChange={handleChange}
+            onChange={handleChangeTab}
             aria-label="simple tabs example"
           >
             {subHeaderList.map((item, index) => (
@@ -222,18 +204,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
       >
         <Toolbar />
         <Toolbar variant="dense" />
-        <div className={classes.drawerContainer}>
-          <List>
-            {sideBarMenuList.map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <Inbox /> : <Mail />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-        </div>
+        <div className={classes.drawerContainer}>{sideBarMenu}</div>
       </Drawer>
 
       <main className={classes.content}>
