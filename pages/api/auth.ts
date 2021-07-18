@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import UserVO from '../../src/vo/UserVO';
+import connectionPool from 'pages/db';
 
 export type Data = {
   id: number;
@@ -22,11 +23,16 @@ export class SeminarResponseImpl<T> implements SeminarResponse<T> {
   }
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SeminarResponse<UserVO>>,
 ) {
   const { method } = req;
+
+  console.log('ramsanggggggggggggg');
+  var conn = await connectionPool.getConnection()
+  var rows = await conn.query('SELECT * FROM TB_USER'); // 쿼리 실행
+  console.log(rows[0]);
 
   const seminarResponse = new SeminarResponseImpl<UserVO>();
   const result: UserVO[] = [
