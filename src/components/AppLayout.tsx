@@ -33,7 +33,11 @@ import { Inbox, Mail } from '@material-ui/icons';
 /**
  * Components
  */
-import { DashboardSidebar, PreferenceSidebar } from 'src/components/sidebar';
+import {
+  DashboardSidebar,
+  PreferenceSidebar,
+  UserSidebar,
+} from 'src/components/sidebar';
 
 const drawerWidth = 240;
 
@@ -106,7 +110,7 @@ const subHeaderList: SubHeader[] = [
   {
     label: '회원관리',
     url: '/user',
-    sidebar: <PreferenceSidebar />,
+    sidebar: <UserSidebar />,
   },
   {
     label: '이벤트관리',
