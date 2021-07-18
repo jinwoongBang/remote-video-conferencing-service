@@ -72,13 +72,23 @@ export default function PreferenceSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem button>
+        <ListItem
+          button
+          onClick={() => {
+            router.push('/preference/eventManagerList');
+          }}
+        >
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="이벤트 관리자 목록" />
         </ListItem>
-        <ListItem button>
+        <ListItem
+          button
+          onClick={() => {
+            router.push('/preference/eventManagerRegistration');
+          }}
+        >
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
