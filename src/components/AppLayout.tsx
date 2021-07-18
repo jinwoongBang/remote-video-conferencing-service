@@ -142,12 +142,14 @@ function ApoLayout({ children }: ApoLayoutProps) {
 
   useEffect(() => {
     const { pathname } = router;
+
     let index = 0;
     for (let i = 0; i < subHeaderList.length; i++) {
       const { url } = subHeaderList[i];
-
+      const regex = new RegExp(`^${url}`, 'gi');
       console.log({ pathname, url });
-      if (pathname.indexOf(url) !== -1) {
+
+      if (regex.test(pathname)) {
         index = i;
       }
     }
