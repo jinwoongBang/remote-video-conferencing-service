@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 /**
  * Next
@@ -156,6 +156,19 @@ function ApoLayout({ children }: ApoLayoutProps) {
     return ['Home', 'Starred', 'Send email', 'Drafts'];
   }, [router.pathname]);
 
+  useEffect(() => {
+    const { pathname } = router;
+    let index = 0;
+    for (let i = 0; i < subHeaderList.length; i++) {
+      const { url } = subHeaderList[i];
+      if (pathname === url) {
+        index = i;
+        break;
+      }
+    }
+    setValue(index);
+  }, [router]);
+
   const handleClickMenu = useCallback(
     (url: string) => {
       router.push(url);
@@ -165,7 +178,6 @@ function ApoLayout({ children }: ApoLayoutProps) {
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<{}>, newValue: number) => {
-      setValue(newValue);
       router.push(subHeaderList[newValue].url);
     },
     [router],
@@ -213,7 +225,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <div className={classes.drawerContainer}>
           <List>
             {sideBarMenuList.map((text, index) => (
-              <ListItem button key={text} onClick={() => handleClickMenu('/')}>
+              <ListItem button key={text}>
                 <ListItemIcon>
                   {index % 2 === 0 ? <Inbox /> : <Mail />}
                 </ListItemIcon>
