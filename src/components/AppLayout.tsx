@@ -89,7 +89,7 @@ type SubHeader = {
 const subHeaderList: SubHeader[] = [
   {
     label: '대시보드',
-    url: '/dashboard',
+    url: '/',
   },
   {
     label: '환경설정',
@@ -124,7 +124,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
 
   const sideBarMenuList = useMemo(() => {
     switch (router.pathname) {
-      case '/dashboard':
+      case '/':
         return ['사이트 현황', '현황판'];
       case '/preference':
         return [
