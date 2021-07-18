@@ -1,7 +1,6 @@
 // import { createPool } from 'mariadb';
 import mysql from 'mariadb';
 
-
 const connectionPool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -9,6 +8,5 @@ const connectionPool = mysql.createPool({
   database: process.env.DB,
   connectionLimit: 5,
 });
-
 
 export default connectionPool;

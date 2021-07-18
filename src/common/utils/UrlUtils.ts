@@ -13,7 +13,7 @@ class UrlUtils implements OTAUrlUtils {
   isEnvProduction = process.env.NODE_ENV === 'production';
   isEnvDevelopment = process.env.NODE_ENV === 'development';
 
-  protocol = window.location.protocol || 'http';
+  protocol = 'http';
 
   hostname = process.env.HOSTNAME || window.location.hostname;
 
