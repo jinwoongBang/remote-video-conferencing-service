@@ -33,7 +33,7 @@ import { Inbox, Mail } from '@material-ui/icons';
 /**
  * Components
  */
-import { DashboardSideMenu } from 'src/components/SideMenu';
+import { DashboardSidebar, PreferenceSidebar } from 'src/components/sidebar';
 
 const drawerWidth = 240;
 
@@ -130,9 +130,11 @@ function ApoLayout({ children }: ApoLayoutProps) {
   const sideBarMenu = useMemo(() => {
     switch (router.pathname) {
       case '/':
-        return <DashboardSideMenu />;
+        return <DashboardSidebar />;
+      case '/preference':
+        return <PreferenceSidebar />;
     }
-    return <DashboardSideMenu />;
+    return <DashboardSidebar />;
   }, [router.pathname]);
 
   useEffect(() => {

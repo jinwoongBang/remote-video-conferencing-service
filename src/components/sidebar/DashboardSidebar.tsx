@@ -22,7 +22,7 @@ import {
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
-export function DashboardSideMenu() {
+function DashboardSidebar() {
   return (
     <List
       subheader={
@@ -40,3 +40,5 @@ export function DashboardSideMenu() {
     </List>
   );
 }
+
+export default DashboardSidebar;
