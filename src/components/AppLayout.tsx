@@ -89,28 +89,34 @@ type ApoLayoutProps = {
 type SubHeader = {
   label: string;
   url: string;
+  sidebar: JSX.Element;
 };
 
 const subHeaderList: SubHeader[] = [
   {
     label: '대시보드',
     url: '/',
+    sidebar: <DashboardSidebar />,
   },
   {
     label: '환경설정',
     url: '/preference',
+    sidebar: <PreferenceSidebar />,
   },
   {
     label: '회원관리',
     url: '/user',
+    sidebar: <PreferenceSidebar />,
   },
   {
     label: '이벤트관리',
     url: '/event',
+    sidebar: <PreferenceSidebar />,
   },
   {
     label: '특별관리',
     url: '/special',
+    sidebar: <PreferenceSidebar />,
   },
 ];
 
@@ -126,16 +132,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
   const router = useRouter();
 
   const [value, setValue] = useState<number>(0);
-
-  const sideBarMenu = useMemo(() => {
-    switch (router.pathname) {
-      case '/':
-        return <DashboardSidebar />;
-      case '/preference':
-        return <PreferenceSidebar />;
-    }
-    return <DashboardSidebar />;
-  }, [router.pathname]);
+  const [sidebar, setSidebar] = useState(<DashboardSidebar />);
 
   useEffect(() => {
     const { pathname } = router;
@@ -151,6 +148,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
       }
     }
     setValue(index);
+    setSidebar(subHeaderList[index].sidebar);
   }, [router]);
 
   const handleClickMenu = useCallback(
@@ -206,7 +204,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
       >
         <Toolbar />
         <Toolbar variant="dense" />
-        <div className={classes.drawerContainer}>{sideBarMenu}</div>
+        <div className={classes.drawerContainer}>{sidebar}</div>
       </Drawer>
 
       <main className={classes.content}>
