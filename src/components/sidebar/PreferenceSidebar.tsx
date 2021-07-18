@@ -23,6 +23,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
 export default function PreferenceSidebar() {
+  const router = useRouter();
+
   return (
     <>
       <List
@@ -32,7 +34,12 @@ export default function PreferenceSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem button>
+        <ListItem
+          button
+          onClick={() => {
+            router.push('/preference');
+          }}
+        >
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
@@ -46,7 +53,12 @@ export default function PreferenceSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem button>
+        <ListItem
+          button
+          onClick={() => {
+            router.push('/preference/operatorList');
+          }}
+        >
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>

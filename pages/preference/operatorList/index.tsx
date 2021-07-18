@@ -7,7 +7,7 @@ import Counter from 'src/components/Counter';
 import { authState, counterState } from 'src/store';
 import UserVO from 'src/vo/UserVO';
 
-function Preference({
+function OperatorList({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
@@ -25,7 +25,7 @@ function Preference({
   return (
     <div>
       <div>
-        <h1>Preference</h1>
+        <h1>OperatorList</h1>
         <h2>{auth.user && auth.user.userName}</h2>
       </div>
       <div>
@@ -54,4 +54,4 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   };
 };
 
-export default Preference;
+export default OperatorList;

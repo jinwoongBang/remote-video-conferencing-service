@@ -37,6 +37,8 @@ import {
   DashboardSidebar,
   PreferenceSidebar,
   UserSidebar,
+  EventSidebar,
+  SpecialSidebar,
 } from 'src/components/sidebar';
 
 const drawerWidth = 240;
@@ -115,12 +117,12 @@ const subHeaderList: SubHeader[] = [
   {
     label: '이벤트관리',
     url: '/event',
-    sidebar: <PreferenceSidebar />,
+    sidebar: <EventSidebar />,
   },
   {
     label: '특별관리',
     url: '/special',
-    sidebar: <PreferenceSidebar />,
+    sidebar: <SpecialSidebar />,
   },
 ];
 
@@ -141,14 +143,12 @@ function ApoLayout({ children }: ApoLayoutProps) {
   useEffect(() => {
     const { pathname } = router;
     let index = 0;
-
     for (let i = 0; i < subHeaderList.length; i++) {
       const { url } = subHeaderList[i];
-      const urlRegx = new RegExp(`${pathname}`, 'g');
 
-      if (urlRegx.test(url)) {
+      console.log({ pathname, url });
+      if (pathname.indexOf(url) !== -1) {
         index = i;
-        break;
       }
     }
     setValue(index);
