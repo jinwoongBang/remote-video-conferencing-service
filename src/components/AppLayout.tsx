@@ -147,7 +147,6 @@ function ApoLayout({ children }: ApoLayoutProps) {
     for (let i = 0; i < subHeaderList.length; i++) {
       const { url } = subHeaderList[i];
       const regex = new RegExp(`^${url}`, 'gi');
-      console.log({ pathname, url });
 
       if (regex.test(pathname)) {
         index = i;

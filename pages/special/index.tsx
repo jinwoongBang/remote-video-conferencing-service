@@ -38,14 +38,11 @@ function Special({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
 export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   params,
 }) => {
-  const res = await HttpClient.get('http://localhost:3000/api/auth');
-  const { result }: SeminarResponse<UserVO> = await res.data;
-
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
     props: {
-      result,
+      result: [],
     },
   };
 };
