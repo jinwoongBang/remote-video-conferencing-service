@@ -21,7 +21,7 @@ import UserVO from 'src//vo/UserVO';
 /**
  * db
  */
-import UserService from 'pages/api/service/UserService';
+import UserService from 'src/service/UserService';
 
 function User({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');

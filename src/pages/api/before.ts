@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import OTAResponse from './framework/OTAResponse';
+import OTAResponse from 'src/common/framework/OTAResponse';
 
 export type Data = {
   id: number;

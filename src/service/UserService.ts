@@ -1,7 +1,7 @@
 /**
  * db
  */
-import connectionPool from 'database';
+import connectionPool from 'src/db';
 import UserVO from 'src/vo/UserVO';
 
 class UserService {

@@ -1,11 +1,11 @@
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 
 export interface OTAResponseProps<T extends OnTheAirVO> {
-  result: T[];
-  reference: ReferenceType;
-  success: string;
-  code: number;
-  message: string;
+  result?: T[];
+  reference?: ReferenceType;
+  success?: string;
+  code?: number;
+  message?: string;
 }
 
 export type PaginationType = {
@@ -20,17 +20,17 @@ export type ReferenceType = PaginationType; // | ETCType1 | ETCTYPE2 ...
 
 class OTAResponse<T extends OnTheAirVO> {
   result: T[];
-  reference: ReferenceType;
+  reference?: ReferenceType;
   success: boolean;
   code: number;
   message: string;
 
-  constructor(json: OTAResponseProps<T>) {
-    this.result = json.result || [];
-    this.reference = json.reference || {};
-    this.success = json.success === 'YES';
-    this.code = json.code;
-    this.message = json.message;
+  constructor(json?: OTAResponseProps<T>) {
+    this.result = json?.result || [];
+    this.reference = json?.reference;
+    this.success = json?.success === 'YES';
+    this.code = json?.code || 200;
+    this.message = json?.message || '성공';
   }
 
   mappingData(responseEntity: new () => T) {

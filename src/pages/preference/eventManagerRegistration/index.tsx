@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { SeminarResponse, Data } from '../api/before';
-import Counter from '../../src/components/Counter';
-import { authState, counterState } from '../../src/store';
-import UserVO from '../../src/vo/UserVO';
+import Counter from 'src/components/Counter';
+import UserVO from 'src/vo/UserVO';
 
-function Event({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
+function EventManagerRegistration({
+  result,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <div>
-        <h1>Event</h1>
+        <h1>eventManagerRegistration</h1>
       </div>
       <div>
         <Counter />
@@ -24,7 +23,6 @@ function Event({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
 export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   params,
 }) => {
-  // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
     props: {
@@ -33,4 +31,4 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   };
 };
 
-export default Event;
+export default EventManagerRegistration;

@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { SeminarResponse, Data } from 'pages/api/before';
 import Counter from 'src/components/Counter';
-import { authState, counterState } from 'src/store';
 import UserVO from 'src/vo/UserVO';
 
-function EventManagerList({
+function Preference({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <div>
-        <h1>EventManagerList</h1>
+        <h1>Preference</h1>
       </div>
       <div>
         <Counter />
@@ -35,4 +32,4 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   };
 };
 
-export default EventManagerList;
+export default Preference;

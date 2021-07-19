@@ -6,8 +6,10 @@ import {
   GetServerSideProps,
 } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import { SeminarResponse, Data } from '../api/before';
 import HttpClient from 'src/common/framework/HttpClient';
+import { AxiosResponse } from 'axios';
+import OTAResponse from 'src/common/framework/OTAResponse';
+import { Data } from 'src/pages/api/before';
 
 interface IParams extends ParsedUrlQuery {
   name: string;
@@ -64,6 +66,11 @@ export const getStaticProps: GetStaticProps<{ name: string }> = async (
 ) => {
   const { params } = context;
   const { name } = params as IParams;
+
+  /**
+   * TODO: API 요청을 하면 안됨, 쿼리를 직접 짜야 함.
+   *  자세한 내용은 위 @description 을 참고
+   */
 
   // Pass post data to the page via props
   return { props: { name }, revalidate: 3 };

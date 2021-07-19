@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import UserVO from 'src/vo/UserVO';
 import connectionPool from 'src/db';
-import OTAResponse from 'pages/api/framework/OTAResponse';
+import OTAResponse from 'src/common/framework/OTAResponse';
 
 export type Data = {
   id: number;
