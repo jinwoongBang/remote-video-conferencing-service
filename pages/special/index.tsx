@@ -10,22 +10,11 @@ import HttpClient from 'src/common/framework/HttpClient';
 
 function Special({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
-  const [auth, setAuth] = useRecoilState(authState);
-
-  useEffect(() => {
-    const user = result[0] || null;
-    setAuth((currVal) => ({ ...currVal, user }));
-    console.log('getStaticProps() :: useEffect (mount)');
-    return () => {
-      console.log('getStaticProps() :: useEffect (unmount)');
-    };
-  }, [result, setAuth]);
 
   return (
     <div>
       <div>
         <h1>Special</h1>
-        <h2>{auth.user && auth.user.userName}</h2>
       </div>
       <div>
         <Counter />

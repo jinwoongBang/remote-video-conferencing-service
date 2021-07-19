@@ -18,8 +18,9 @@ function Serverside({}: InferGetServerSidePropsType<
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch('http://localhost:3000/api/after');
-  const data = await res.json();
+  // const res = await fetch('http://localhost:3000/api/after');
+  // const data = await res.json();
+  let data;
 
   if (!data) {
     return {

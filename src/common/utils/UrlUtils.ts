@@ -9,19 +9,27 @@ interface OTAUrlUtils {
   contextPath?: string;
 }
 
+const DEFAULT_HOST = 'localhost';
+const DEFAULT_PORT = '3000';
+
 class UrlUtils implements OTAUrlUtils {
   isEnvProduction = process.env.NODE_ENV === 'production';
   isEnvDevelopment = process.env.NODE_ENV === 'development';
 
   protocol = 'http';
-
-  hostname = process.env.HOSTNAME || window.location.hostname;
-
-  port = process.env.PORT || window.location.port;
-
+  hostname = process.env.HOSTNAME || DEFAULT_HOST;
+  port = process.env.PORT || DEFAULT_PORT;
   contextPath = process.env.CONTEXT_PATH;
 
   constructor() {
+    if (!this.hostname && typeof window !== 'undefined') {
+      this.hostname = window.location.hostname;
+    }
+
+    if (!this.port && typeof window !== 'undefined') {
+      this.port = window.location.port;
+    }
+
     console.log({ URLInfo: { ...this } });
   }
 

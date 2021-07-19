@@ -7,6 +7,7 @@ import {
 } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { SeminarResponse, Data } from '../api/before';
+import HttpClient from 'src/common/framework/HttpClient';
 
 interface IParams extends ParsedUrlQuery {
   name: string;
@@ -28,14 +29,18 @@ function Before({ name }: InferGetStaticPropsType<typeof getStaticProps>) {
  * @returns
  */
 export const getStaticPaths = async () => {
-  // Call an external API endpoint to get posts
-  const res = await fetch('http://localhost:3000/api/before');
-  const response: SeminarResponse<Data> = await res.json();
+  // const res = await HttpClient.get('before');
+  // const response: SeminarResponse<Data> = await res.data;
 
   // Get the paths we want to pre-render based on posts
-  const paths = response.result.map((item: Data) => ({
-    params: { name: item.name },
-  }));
+  // const paths = response.result.map((item: Data) => ({
+  //   params: { name: item.name },
+  // }));
+
+  const paths = [
+    { params: { name: 'before1' } },
+    { params: { name: 'before2' } },
+  ];
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
@@ -43,16 +48,22 @@ export const getStaticPaths = async () => {
 };
 
 // [2] 실행 순서
+/**
+ * @description
+ *  You should not fetch an API route from getStaticProps..."
+ *  여기서 API 호출해서는 안됨
+ *  getStaticProps 와 getStaticPaths 는 서버 쪽에서 실행되는 로직이기 때문에
+ *  쿼리를 짜도되고, node 네이티브 코드 사용 가능
+ *  브라우저 관련 로직을 짜서는 안됨.
+ * @link {https://nextjs.org/docs/basic-features/data-fetching#write-server-side-code-directly}
+ * @param context
+ * @returns
+ */
 export const getStaticProps: GetStaticProps<{ name: string }> = async (
   context,
 ) => {
   const { params } = context;
   const { name } = params as IParams;
-
-  const res = await fetch('http://localhost:3000/api/after');
-  const response = await res.json();
-
-  console.log({ after: response });
 
   // Pass post data to the page via props
   return { props: { name }, revalidate: 3 };
