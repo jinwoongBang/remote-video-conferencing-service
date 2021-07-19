@@ -11,7 +11,7 @@ import {
 } from 'src/common/framework/Error';
 import OTAResponse from 'src/common/framework/OTAResponse';
 
-const KeyFlowHttpClient = axios.create({
+const HttpClient = axios.create({
   baseURL: new UrlUtils().baseURL,
   timeout: 10 * 1000,
   paramsSerializer: (params: any) => qs.stringify(params),
@@ -56,9 +56,6 @@ function onRejectedResponse(
   return Promise.reject(new NetworkError());
 }
 
-KeyFlowHttpClient.interceptors.response.use(
-  onFulfilledResponse,
-  onRejectedResponse,
-);
+HttpClient.interceptors.response.use(onFulfilledResponse, onRejectedResponse);
 
-export default KeyFlowHttpClient;
+export default HttpClient;

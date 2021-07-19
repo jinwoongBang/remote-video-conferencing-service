@@ -30,7 +30,7 @@ export default async function handler(
   const { method } = req;
 
   console.log('ramsanggggggggggggg');
-  var conn = await connectionPool.getConnection()
+  var conn = await connectionPool.getConnection();
   var rows = await conn.query('SELECT * FROM TB_USER'); // 쿼리 실행
   console.log(rows[0]);
 

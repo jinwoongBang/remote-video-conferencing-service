@@ -6,7 +6,7 @@ import { SeminarResponse, Data } from '../api/before';
 import Counter from '../../src/components/Counter';
 import { authState, counterState } from '../../src/store';
 import UserVO from '../../src/vo/UserVO';
-import KeyFlowHttpClient from 'src/common/framework/HttpClient';
+import HttpClient from 'src/common/framework/HttpClient';
 
 function User({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
@@ -40,7 +40,7 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
 }) => {
   // Call an external API endpoint to get posts
 
-  const res = await KeyFlowHttpClient.get('http://localhost:3000/api/auth');
+  const res = await HttpClient.get('http://localhost:3000/api/auth');
   console.log('getStaticProps()');
   console.log(res.data);
   const { result }: SeminarResponse<UserVO> = await res.data;
