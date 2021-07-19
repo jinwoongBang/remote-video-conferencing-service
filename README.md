@@ -23,6 +23,7 @@
 - 이미 생성된 정적 페이지는 캐시에 넣어놓고 사용하는데
 - 해당 시간이 지나면 캐시에 있는 정적 페이지를 최신화 해서 다시 저장함.
 - https://vercel.com/docs/next.js/incremental-static-regeneration
+- 여기서 API 기존 API 를 요청해서는 안됨. ( getStaticPaths 동일 )
 
 - notFound : An optional boolean value to allow the page to return a 404 status and page. Below is an example of how it works:
 
@@ -58,3 +59,48 @@ return
 - 즉 정적 페이지를 동적으로 생성 및 캐싱하여 사용하기 때문에 필요한 부분만 빌드하고 불러 올 수 있는 장점.
 - 또한 미리 정적 페이지를 만들어 놓기 때문에 SEO 최적화 가능.
 - 새로 생성하는 정적 페이지에 대한 fullback 도 설정 할 수 있다는 것도 사용자가 페이지에서 이탈 하는 것을 막아주는 좋은 장점인것 같다.
+
+## 폴더 구조
+```bash
+├── assets                                  // 이미지, 파일 등
+├── common                                  // 공통 로직
+│   ├── framework                           
+│   │   ├── Error.ts                       
+│   │   ├── HttpClient.ts                   
+│   │   └── OTAResponse.ts
+│   └── utils
+│       └── UrlUtils.ts
+├── components                                // 리액트 컴포넌트
+│   ├── AppLayout.tsx
+│   ├── Counter.tsx
+│   └── sidebar
+│       ├── DashboardSidebar.tsx
+│       ├── EventSidebar.tsx
+│       ├── PreferenceSidebar.tsx
+│       ├── SpecialSidebar.tsx
+│       ├── UserSidebar.tsx
+│       └── index.ts
+├── db                                      // 데이터베이스
+│   └── index.ts
+├── pages                                   // next.js 라우팅 페이지
+│   ├── _app.tsx
+│   ├── _document.tsx
+│   ├── _error.tsx
+│   ├── api                                 // API 서버
+│   │   └── auth.ts
+│   ├── example
+│   │   ├── [name].tsx
+│   │   ├── index.tsx
+│   │   └── serverside.tsx
+│   ├── index.tsx
+│   └── user
+│       └── index.tsx
+├── service                                 // DB 쿼리 로직을 분리
+│   └── UserService.ts
+├── store                                   // 리액트 상태 관리
+│   ├── index.ts
+│   └── user.ts
+└── vo                                      // 응답 요청 시 Modeling 객체
+    ├── OnTheAirVO.ts
+    └── UserVO.ts
+```
