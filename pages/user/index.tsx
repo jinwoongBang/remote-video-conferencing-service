@@ -21,8 +21,7 @@ import UserVO from 'src//vo/UserVO';
 /**
  * db
  */
-import connectionPool from 'src/db';
-import UserService from 'src/pages/api/service/UserService';
+import UserService from 'pages/api/service/UserService';
 
 function User({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
@@ -54,9 +53,7 @@ function User({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
 export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> = async ({
   params,
 }) => {
-  const service = new UserService();
-
-  const userList: UserVO[] = await service.selectUser();
+  const userList: UserVO[] = await UserService.selectUser();
 
   return {
     props: {

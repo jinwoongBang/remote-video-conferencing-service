@@ -1,31 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import UserVO from '../../vo/UserVO';
+import UserVO from 'src/vo/UserVO';
 import connectionPool from 'src/db';
+import OTAResponse from 'pages/api/framework/OTAResponse';
 
 export type Data = {
   id: number;
   name: string;
 };
 
-export interface SeminarResponse<T> {
-  success: boolean;
-  result: T[];
-}
-
-export class SeminarResponseImpl<T> implements SeminarResponse<T> {
-  success!: boolean;
-  result!: T[];
-
-  constructor() {
-    this.success = true;
-    this.result = [];
-  }
-}
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SeminarResponse<UserVO>>,
+  res: NextApiResponse<OTAResponse<UserVO>>,
 ) {
   const { method } = req;
 
@@ -34,7 +20,7 @@ export default async function handler(
   var rows = await conn.query('SELECT * FROM TB_USER'); // 쿼리 실행
   console.log(rows[0]);
 
-  const seminarResponse = new SeminarResponseImpl<UserVO>();
+  const seminarResponse = new OTAResponse<UserVO>();
   const result: UserVO[] = [
     new UserVO({
       userName: '진웅 방',
