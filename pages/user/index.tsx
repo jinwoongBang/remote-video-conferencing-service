@@ -40,14 +40,9 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
 }) => {
   // Call an external API endpoint to get posts
 
-  const res = await HttpClient.get('http://localhost:3000/api/auth');
-  console.log('getStaticProps()');
-  console.log(res.data);
-  const { result }: SeminarResponse<UserVO> = await res.data;
-
   return {
     props: {
-      result,
+      result: [],
     },
   };
 };

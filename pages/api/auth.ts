@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import UserVO from '../../src/vo/UserVO';
-import connectionPool from 'pages/db';
+import connectionPool from 'db';
 
 export type Data = {
   id: number;
