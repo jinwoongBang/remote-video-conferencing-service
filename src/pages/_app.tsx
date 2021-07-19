@@ -15,7 +15,7 @@ import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { GlobalTheme } from 'styles/GlobalTheme';
 
-import '../styles/globals.css';
+import 'styles/globals.css';
 
 /**
  * component

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { SeminarResponse, Data } from 'pages/api/before';
+import { SeminarResponse, Data } from 'src/pages/api/before';
 import Counter from 'src/components/Counter';
 import { authState, counterState } from 'src/store';
 import UserVO from 'src/vo/UserVO';

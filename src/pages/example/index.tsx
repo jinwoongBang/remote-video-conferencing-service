@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { SeminarResponse, Data } from 'pages/api/before';
-import Counter from 'src/components/Counter';
-import { authState, counterState } from 'src/store';
-import UserVO from 'src/vo/UserVO';
-import { SeminarResponseImpl } from './api/auth';
+import { SeminarResponse, Data } from '../api/before';
+import Counter from '../../components/Counter';
+import { authState, counterState } from '../../store';
+import UserVO from '../../vo/UserVO';
 
-function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
+function After({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
   const [auth, setAuth] = useRecoilState(authState);
 
@@ -24,8 +23,32 @@ function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <div>
-        <h1>대시보드</h1>
+        <h1>After</h1>
         <h2>{auth.user && auth.user.userName}</h2>
+      </div>
+      <div>
+        <ul>
+          <li>
+            <Link href="/example/before1">
+              <a>before1</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/example/before2">
+              <a>before2</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/example/before3">
+              <a>before3</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/example/before10">
+              <a>before10</a>
+            </Link>
+          </li>
+        </ul>
       </div>
       <div>
         <Counter />
@@ -38,6 +61,8 @@ function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
 export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   params,
 }) => {
+  // Call an external API endpoint to get posts
+
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
@@ -47,4 +72,4 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   };
 };
 
-export default Home;
+export default After;

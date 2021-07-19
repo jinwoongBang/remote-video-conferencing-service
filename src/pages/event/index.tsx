@@ -3,9 +3,9 @@ import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { SeminarResponse, Data } from '../api/before';
-import Counter from '../../src/components/Counter';
-import { authState, counterState } from '../../src/store';
-import UserVO from '../../src/vo/UserVO';
+import Counter from '../../components/Counter';
+import { authState, counterState } from '../../store';
+import UserVO from '../../vo/UserVO';
 
 function Event({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (

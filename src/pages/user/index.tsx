@@ -1,25 +1,41 @@
 import React, { useEffect } from 'react';
+
+/**
+ * next
+ */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { SeminarResponse, Data } from '../api/before';
-import Counter from '../../src/components/Counter';
-import { authState, counterState } from '../../src/store';
-import UserVO from '../../src/vo/UserVO';
-import HttpClient from 'src/common/framework/HttpClient';
+import Counter from 'src/components/Counter';
 
-function User({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
+/**
+ * recoil
+ */
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
+/**
+ * store
+ */
+import { authState, counterState } from 'src/store';
+import UserVO from 'src//vo/UserVO';
+
+/**
+ * db
+ */
+import connectionPool from 'src/db';
+import UserService from 'src/pages/api/service/UserService';
+
+function User({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
   const [auth, setAuth] = useRecoilState(authState);
 
   useEffect(() => {
-    const user = result[0] || null;
+    const user = userList[0] || null;
     setAuth((currVal) => ({ ...currVal, user }));
     console.log('getStaticProps() :: useEffect (mount)');
     return () => {
       console.log('getStaticProps() :: useEffect (unmount)');
     };
-  }, [result, setAuth]);
+  }, []);
 
   return (
     <div>
@@ -35,14 +51,16 @@ function User({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
+export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> = async ({
   params,
 }) => {
-  // Call an external API endpoint to get posts
+  const service = new UserService();
+
+  const userList: UserVO[] = await service.selectUser();
 
   return {
     props: {
-      result: [],
+      userList,
     },
   };
 };
