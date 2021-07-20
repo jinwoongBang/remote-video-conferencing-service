@@ -62,6 +62,7 @@ return
 
 ## 폴더 구조
 ```bash
+src
 ├── assets                                  // 이미지, 파일 등
 ├── common                                  // 공통 로직
 │   ├── framework                           
