@@ -1,44 +1,19 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
-import UserVO from 'src/vo/UserVO';
-import connectionPool from 'src/db';
-import OTAResponse from 'src/common/framework/OTAResponse';
+import withSession from 'src/common/utils/session';
 
-export type Data = {
-  id: number;
-  name: string;
-};
+export default withSession(async (req, res) => {
+  const user = req.session.get('user');
+  console.log('with session');
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<OTAResponse<UserVO>>,
-) {
-  const { method } = req;
-
-  console.log('ramsanggggggggggggg');
-  var conn = await connectionPool.getConnection();
-  var rows = await conn.query('SELECT * FROM TB_USER'); // 쿼리 실행
-  console.log(rows[0]);
-
-  const seminarResponse = new OTAResponse<UserVO>();
-  const result: UserVO[] = [
-    new UserVO({
-      userName: '진웅 방',
-      userId: 'jinwoong-bang',
-      userPassword: '1234',
-    }),
-  ];
-  seminarResponse.result = result;
-
-  switch (method) {
-    case 'GET':
-      res.status(200).json(seminarResponse);
-      break;
-    case 'POST':
-      res.status(200).json(seminarResponse);
-      break;
-    default:
-      res.status(200).json(seminarResponse);
-      break;
+  if (user) {
+    // in a real world application you might read the user id from the session and then do a database request
+    // to get more information on the user if needed
+    res.json({
+      isLoggedIn: true,
+      ...user,
+    });
+  } else {
+    res.json({
+      isLoggedIn: false,
+    });
   }
-}
+});
