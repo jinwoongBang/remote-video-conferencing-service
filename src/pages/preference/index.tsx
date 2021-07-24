@@ -4,18 +4,25 @@ import Link from 'next/link';
 import Counter from 'src/components/Counter';
 import UserVO from 'src/vo/UserVO';
 
+/**
+ * component
+ */
+import ApoLayout from 'src/components/AppLayout';
+
 function Preference({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div>
+    <ApoLayout>
       <div>
-        <h1>Preference</h1>
+        <div>
+          <h1>Preference</h1>
+        </div>
+        <div>
+          <Counter />
+        </div>
       </div>
-      <div>
-        <Counter />
-      </div>
-    </div>
+    </ApoLayout>
   );
 }
 

@@ -25,6 +25,12 @@ import { DataGrid, GridRowsProp, GridColDef } from '@material-ui/data-grid';
 import UserService from 'src/service/UserService';
 
 
+/**
+ * component
+ */
+import ApoLayout from 'src/components/AppLayout';
+
+
 const columns: GridColDef[] = [
   { field: 'regDate', headerName: '가입일', width: 150 },
   { field: 'eventCode', headerName: '이벤트(code)', width: 150 },
@@ -96,17 +102,19 @@ function User({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   }, []);
 
   return (
-    <div>
+    <ApoLayout>
       <div>
-        <h1>User</h1>
-        <h2>{auth.user && auth.user.userName}</h2>
-      </div>
-      
-      <div style={{ height: 300, width: '100%' }}>
-        <DataGrid rows={rows} columns={columns} />
-      </div>
+        <div>
+          <h1>User</h1>
+          <h2>{auth.user && auth.user.userName}</h2>
+        </div>
+        
+        <div style={{ height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>
 
-    </div>
+      </div>
+    </ApoLayout>
   );
 }
 

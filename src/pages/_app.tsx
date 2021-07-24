@@ -17,19 +17,12 @@ import { GlobalTheme } from 'styles/GlobalTheme';
 
 import 'styles/globals.css';
 
-/**
- * component
- */
-import ApoLayout from 'src/components/AppLayout';
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <CssBaseline />
       <ThemeProvider theme={GlobalTheme}>
-        <ApoLayout>
-          <Component {...pageProps} />
-        </ApoLayout>
+        <Component {...pageProps} />
       </ThemeProvider>
     </RecoilRoot>
   );

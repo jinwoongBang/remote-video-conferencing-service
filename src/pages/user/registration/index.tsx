@@ -27,10 +27,18 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-const styles = (theme: { spacing: (arg0: number) => any; palette: { text: { primary: any; }; }; }) => ({
+/**
+ * component
+ */
+import ApoLayout from 'src/components/AppLayout';
+
+const styles = (theme: {
+  spacing: (arg0: number) => any;
+  palette: { text: { primary: any } };
+}) => ({
   root: {
     padding: theme.spacing(3),
-    background: '#eeeeee'
+    background: '#eeeeee',
   },
   paper: {
     padding: theme.spacing(3),
@@ -39,7 +47,9 @@ const styles = (theme: { spacing: (arg0: number) => any; palette: { text: { prim
   },
 });
 
-function UserRegistration({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
+function UserRegistration({
+  userList,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
   const [auth, setAuth] = useRecoilState(authState);
 
@@ -53,13 +63,14 @@ function UserRegistration({ userList }: InferGetStaticPropsType<typeof getStatic
   }, []);
 
   return (
-    <div>
+    <ApoLayout>
       <div>
-        <h1>User Registration</h1>
-        <h2>{auth.user && auth.user.userName}</h2>
+        <div>
+          <h1>User Registration</h1>
+          <h2>{auth.user && auth.user.userName}</h2>
+        </div>
       </div>
-      
-    </div>
+    </ApoLayout>
   );
 }
 
