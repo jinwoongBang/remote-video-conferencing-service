@@ -24,17 +24,23 @@ export const handleAuthentication = selector({
   get: async ({ get }) => {
     console.log('handleAuthentication() :: invoked');
     const { user } = get(authState);
-    console.log({ auth: user });
+
     const id = user?.userId;
     const password = user?.userPassword;
     const body = {
       id,
       password,
     };
-    const response = await HttpClient.post('/auth', body);
-    const data: OTAResponse<UserVO> = await response.data;
+    let data: OTAResponse<UserVO>;
+    try {
+      const response = await HttpClient.post('/auth', body);
+      data = await response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
 
-    return data.success;
+    return data.result[0];
   },
 });
 

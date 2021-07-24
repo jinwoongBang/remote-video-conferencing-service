@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * next
@@ -32,8 +32,18 @@ import useUser from 'src/common/hooks/useUser';
 import { useRecoilValue } from 'recoil';
 import { handleAuthentication } from 'src/store/auth';
 
+interface ErrorProps {
+  isError: boolean;
+  message: string;
+}
+
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [contents, state] = useUser({ redirectTo: '/', redirectIfFound: true });
+
+  const [error, setError] = useState<ErrorProps>({
+    isError: false,
+    message: '',
+  });
 
   const handleSubmit = async (event: React.MouseEvent) => {
     // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
