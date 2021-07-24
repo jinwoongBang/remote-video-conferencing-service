@@ -23,35 +23,37 @@ import UserVO from 'src//vo/UserVO';
  */
 import UserService from 'src/service/UserService';
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 
 /**
  * component
  */
 import ApoLayout from 'src/components/AppLayout';
 
-const styles = (theme: {
-  spacing: (arg0: number) => any;
-  palette: { text: { primary: any } };
-}) => ({
-  root: {
-    padding: theme.spacing(3),
-    background: '#eeeeee',
-  },
-  paper: {
-    padding: theme.spacing(3),
-    textAlign: 'center',
-    color: theme.palette.text.primary,
-  },
-});
-
 function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
   const [auth, setAuth] = useRecoilState(authState);
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    paper2: {
+      padding: theme.spacing(3),
+      textAlign: 'center',
+      color: theme.palette.text.primary,
+    },
+  }));
 
   useEffect(() => {
     const user = userList[0] || null;
@@ -62,13 +64,19 @@ function UserRegistration({
     };
   }, []);
 
+  const classes = useStyles();
+
   return (
     <ApoLayout>
-      <div>
-        <div>
-          <h1>User Registration</h1>
-          <h2>{auth.user && auth.user.userName}</h2>
-        </div>
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>회원상태</Paper>
+          </Grid>
+          <Grid item xs={9}>
+            <TextField id="outlined-basic" label="회원상태" variant="outlined" fullWidth/>
+          </Grid>
+        </Grid>
       </div>
     </ApoLayout>
   );
