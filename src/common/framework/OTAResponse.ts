@@ -3,7 +3,7 @@ import OnTheAirVO from 'src/vo/OnTheAirVO';
 export interface OTAResponseProps<T extends OnTheAirVO> {
   result?: T[];
   reference?: ReferenceType;
-  success?: string;
+  success?: boolean;
   code?: number;
   message?: string;
 }
@@ -28,7 +28,7 @@ class OTAResponse<T extends OnTheAirVO> {
   constructor(json?: OTAResponseProps<T>) {
     this.result = json?.result || [];
     this.reference = json?.reference;
-    this.success = json?.success === 'YES';
+    this.success = json?.success || true;
     this.code = json?.code || 200;
     this.message = json?.message || '성공';
   }

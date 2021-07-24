@@ -10,7 +10,11 @@ import Counter from 'src/components/Counter';
 /**
  * recoil
  */
-import { useRecoilState, useRecoilValueLoadable, useSetRecoilState } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from 'recoil';
 
 /**
  * store
@@ -26,11 +30,17 @@ import useUser from 'src/common/hooks/useUser';
  * Recoil
  */
 import { useRecoilValue } from 'recoil';
-import { getCurrentUser } from 'src/store/auth';
+import { handleAuthentication } from 'src/store/auth';
 
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
-  // useUser({ redirectTo: '/user', redirectIfFound: true });
-  // const userLoadable = useRecoilValueLoadable(getCurrentUser);
+  const [contents, state] = useUser({ redirectTo: '/', redirectIfFound: true });
+
+  const handleSubmit = async (event: React.MouseEvent) => {
+    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await alert('login');
+  };
+
   return (
     <div>
       <h1>로그인</h1>
@@ -43,7 +53,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
         <input type="text" />
       </div>
       <div>
-        <button>로그인</button>
+        <button onClick={handleSubmit}>로그인</button>
       </div>
     </div>
   );
