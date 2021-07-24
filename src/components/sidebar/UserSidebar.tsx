@@ -23,6 +23,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
 function UserSidebar() {
+  const router = useRouter();
+
   return (
     <List
       subheader={
@@ -31,13 +33,19 @@ function UserSidebar() {
         </ListSubheader>
       }
     >
-      <ListItem button>
+      <ListItem button
+      onClick={() => {
+        router.push('/user');
+      }}>
         <ListItemIcon>
           <Inbox />
         </ListItemIcon>
         <ListItemText primary="회원 목록" />
       </ListItem>
-      <ListItem button>
+      <ListItem button
+      onClick={() => {
+        router.push('/user/registration');
+      }}>
         <ListItemIcon>
           <Inbox />
         </ListItemIcon>
