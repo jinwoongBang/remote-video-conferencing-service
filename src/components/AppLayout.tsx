@@ -41,6 +41,11 @@ import {
   SpecialSidebar,
 } from 'src/components/sidebar';
 
+/**
+ * Hooks
+ */
+import useUser from 'src/common/hooks/useUser';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -136,6 +141,7 @@ function a11yProps(index: number) {
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
+  // useUser();
 
   const [value, setValue] = useState<number>(0);
   const [sidebar, setSidebar] = useState(<DashboardSidebar />);

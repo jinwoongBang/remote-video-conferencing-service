@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 /**
  * next
@@ -40,32 +40,53 @@ interface ErrorProps {
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [contents, state] = useUser({ redirectTo: '/', redirectIfFound: true });
 
+  const [id, setId] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<ErrorProps>({
     isError: false,
     message: '',
   });
 
-  const handleSubmit = async (event: React.MouseEvent) => {
-    // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const setAuth = useSetRecoilState(authState);
+
+  // const handleSubmit = async (event: React.MouseEvent) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await alert('login');
+    event.stopPropagation();
+    alert('login');
+    setAuth((auth) => ({ isLoggedIn: true, user: auth.user }));
   };
 
+  const handleChangeId = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setId(value);
+    },
+    [],
+  );
+  const handleChangePassword = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setPassword(value);
+    },
+    [],
+  );
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h1>로그인</h1>
       <div>
         <span>아이디</span>
-        <input type="text" />
+        <input type="text" value={id} onChange={handleChangeId} />
       </div>
       <div>
         <span>패스워드</span>
-        <input type="text" />
+        <input type="text" value={password} onChange={handleChangePassword} />
       </div>
       <div>
-        <button onClick={handleSubmit}>로그인</button>
+        <button>로그인</button>
       </div>
-    </div>
+    </form>
   );
 }
 

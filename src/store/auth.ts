@@ -4,25 +4,22 @@ import OTAResponse from 'src/common/framework/OTAResponse';
 import UserVO from '../vo/UserVO';
 
 interface Auth {
+  isLoggedIn: boolean;
   user: null | UserVO;
 }
 
 const authState = atom<Auth>({
-  key: 'authState', // unique ID (with respect to other atoms/selectors)
+  key: 'authState',
   default: {
-    user: new UserVO({
-      userId: 'test',
-      userName: 'test',
-      userPassword: 'test',
-    }),
-    // user: null,
-  }, // default value (aka initial value)
+    isLoggedIn: false,
+    user: null,
+  },
 });
 
 export const handleAuthentication = selector({
   key: 'handleAuthentication',
   get: async ({ get }) => {
-    console.log('handleAuthentication() :: invoked');
+    console.log('handleAuthentication() get :: invoked');
     const { user } = get(authState);
 
     const id = user?.userId;
@@ -41,6 +38,9 @@ export const handleAuthentication = selector({
     }
 
     return data.result[0];
+  },
+  set: async ({ set }, value) => {
+    console.log(`handleAuthentication() get :: invoked :: ${value}`);
   },
 });
 
