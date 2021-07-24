@@ -19,7 +19,7 @@ class UrlUtils implements OTAUrlUtils {
   protocol = 'http';
   hostname = process.env.HOSTNAME || DEFAULT_HOST;
   port = process.env.PORT || DEFAULT_PORT;
-  contextPath = process.env.CONTEXT_PATH;
+  contextPath = '/api';
 
   constructor() {
     if (!this.hostname && typeof window !== 'undefined') {

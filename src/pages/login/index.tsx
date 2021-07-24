@@ -10,7 +10,7 @@ import Counter from 'src/components/Counter';
 /**
  * recoil
  */
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValueLoadable, useSetRecoilState } from 'recoil';
 
 /**
  * store
@@ -18,10 +18,33 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { authState, counterState } from 'src/store';
 import UserVO from 'src//vo/UserVO';
 
+/**
+ * Hooks
+ */
+import useUser from 'src/common/hooks/useUser';
+/**
+ * Recoil
+ */
+import { useRecoilValue } from 'recoil';
+import { getCurrentUser } from 'src/store/auth';
+
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
+  // useUser({ redirectTo: '/user', redirectIfFound: true });
+  // const userLoadable = useRecoilValueLoadable(getCurrentUser);
   return (
     <div>
       <h1>로그인</h1>
+      <div>
+        <span>아이디</span>
+        <input type="text" />
+      </div>
+      <div>
+        <span>패스워드</span>
+        <input type="text" />
+      </div>
+      <div>
+        <button>로그인</button>
+      </div>
     </div>
   );
 }
