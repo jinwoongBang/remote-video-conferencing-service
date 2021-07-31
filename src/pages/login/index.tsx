@@ -30,6 +30,7 @@ import {
   Typography,
   TextField,
   Divider,
+  CircularProgress,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -80,6 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: '1.5em',
+    // textShadow: 'pink 1px 0 10px',
   },
   loginFormContainer: {
     display: 'flex',
@@ -97,6 +99,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
 
   const { auth } = useUser({ redirectTo: '/', redirectIfFound: true });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<ErrorProps>({
@@ -109,6 +112,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
+    setIsLoading(true);
 
     try {
       const { data, status } = await HttpClient.post(
@@ -123,6 +127,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
     } catch (e) {
       console.error(e);
     }
+    setIsLoading(false);
   };
 
   const handleChangeId = useCallback(
@@ -153,7 +158,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
           <Grid item xs={6} className={classes.loginFormContainer}>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2} justify="center">
-                {/* <Grid item xs={6} className={classes.loginTitleContainer}>
+                <Grid item xs={3} className={classes.loginTitleContainer}>
                   <Typography
                     variant="caption"
                     color="primary"
@@ -161,7 +166,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
                   >
                     On The Air
                   </Typography>
-                </Grid> */}
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -196,8 +201,9 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
                     fullWidth
                     color="primary"
                     variant="contained"
+                    disabled={isLoading}
                   >
-                    Login
+                    {isLoading ? <CircularProgress size="1.8em" /> : 'Login'}
                   </Button>
                 </Grid>
               </Grid>
