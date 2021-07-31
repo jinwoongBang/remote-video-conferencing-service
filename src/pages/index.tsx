@@ -6,6 +6,11 @@ import Counter from 'src/components/Counter';
 import { authState, counterState } from 'src/store';
 import UserVO from 'src/vo/UserVO';
 
+/**
+ * component
+ */
+import ApoLayout from 'src/components/AppLayout';
+
 function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
   const [auth, setAuth] = useRecoilState(authState);
@@ -20,15 +25,17 @@ function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   }, [result, setAuth]);
 
   return (
-    <div>
+    <ApoLayout>
       <div>
-        <h1>대시보드</h1>
-        <h2>{auth.user && auth.user.userName}</h2>
+        <div>
+          <h1>대시보드</h1>
+          <h2>{auth.user && auth.user.userName}</h2>
+        </div>
+        <div>
+          <Counter />
+        </div>
       </div>
-      <div>
-        <Counter />
-      </div>
-    </div>
+    </ApoLayout>
   );
 }
 
