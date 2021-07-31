@@ -1,18 +1,14 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import withSession from 'src/common/utils/session';
 import UserVO from 'src/vo/UserVO';
+import { withIronSession, Session } from 'next-iron-session';
 
-export default withSession(async (req, res) => {
+type NextIronRequest = NextApiRequest & { session: Session };
+
+async function handler(req: NextIronRequest, res: NextApiResponse) {
   const user: UserVO | undefined = req.session.get('user');
-  // const user: UserVO = new UserVO({
-  //   userId: 'test',
-  //   userName: 'test',
-  //   userPassword: 'test',
-  // });
-
   const response = new OTAResponse<UserVO>();
-
-  const isSuccess = Boolean(user);
 
   if (user) {
     res.statusCode = 200;
@@ -20,10 +16,18 @@ export default withSession(async (req, res) => {
   } else {
     res.statusCode = 401;
     response.success = false;
+    response.message = '실패';
     response.code = 401;
   }
 
-  console.log(`withSession() API :: invoked :: ${isSuccess}`);
-
   res.send(response);
+}
+
+export default withIronSession(handler, {
+  password: 'complex_password_at_least_32_characters_long',
+  cookieName: 'myapp_cookiename',
+  // if your localhost is served on http:// then disable the secure flag
+  cookieOptions: {
+    secure: process.env.NODE_ENV === 'production',
+  },
 });

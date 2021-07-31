@@ -141,7 +141,10 @@ function a11yProps(index: number) {
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
-  // useUser();
+  const { auth, state } = useUser({
+    redirectTo: router.pathname,
+    redirectIfFound: true,
+  });
 
   const [value, setValue] = useState<number>(0);
   const [sidebar, setSidebar] = useState(<DashboardSidebar />);
@@ -185,8 +188,8 @@ function ApoLayout({ children }: ApoLayoutProps) {
               <Typography variant="body1">On The Air 로고</Typography>
             </Grid>
             <Grid item xs={3} className={classes.rightContainer}>
-              <Typography variant="body1">전체관리자</Typography>
-              <Typography variant="body2">께서 로그인하셨습니다.</Typography>
+              <Typography variant="body1">{auth.user?.userName}</Typography>
+              <Typography variant="body2">님 께서 로그인하셨습니다.</Typography>
               <Button variant="outlined" color="inherit">
                 로그아웃
               </Button>
@@ -222,7 +225,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <Toolbar />
         <Toolbar variant="dense" />
         <Container maxWidth={false} disableGutters>
-          {children}
+          {auth.isLoggedIn && children}
         </Container>
       </main>
     </div>

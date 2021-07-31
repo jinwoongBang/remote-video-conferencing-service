@@ -13,7 +13,7 @@ import ApoLayout from 'src/components/AppLayout';
 
 function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [auth, setAuth] = useRecoilState(authState);
-  
+
   return (
     <ApoLayout>
       <div>

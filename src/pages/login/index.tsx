@@ -41,7 +41,7 @@ interface ErrorProps {
 }
 
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [contents, state] = useUser({ redirectTo: '/', redirectIfFound: true });
+  const { auth, state } = useUser({ redirectTo: '/', redirectIfFound: true });
 
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -51,8 +51,6 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   });
 
   const setAuth = useSetRecoilState(authState);
-
-  // const [login, setLogin] = useRecoilState(handleLogin);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
