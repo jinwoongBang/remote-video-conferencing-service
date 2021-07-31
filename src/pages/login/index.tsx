@@ -21,6 +21,19 @@ import {
 } from 'recoil';
 
 /**
+ * Material UI
+ */
+import {
+  Button,
+  Container,
+  Grid,
+  Typography,
+  TextField,
+  Divider,
+} from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+
+/**
  * store
  */
 import { authState, counterState } from 'src/store';
@@ -41,7 +54,47 @@ interface ErrorProps {
   message: string;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    height: '100vh',
+    padding: 0,
+  },
+  logoContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: theme.palette.primary.main,
+  },
+  logo: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    textShadow: 'pink 1px 0 10px',
+  },
+  loginTitleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginTitle: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: '1.5em',
+  },
+  loginFormContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginButton: {
+    height: '40px',
+  },
+  divider: {},
+}));
+
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const classes = useStyles();
+
   const { auth } = useUser({ redirectTo: '/', redirectIfFound: true });
 
   const [id, setId] = useState<string>('');
@@ -89,20 +142,70 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>로그인</h1>
-      <div>
-        <span>아이디</span>
-        <input type="text" value={id} onChange={handleChangeId} />
-      </div>
-      <div>
-        <span>패스워드</span>
-        <input type="text" value={password} onChange={handleChangePassword} />
-      </div>
-      <div>
-        <button>로그인</button>
-      </div>
-    </form>
+    <main>
+      <Container maxWidth={false} className={classes.root}>
+        <Grid container>
+          <Grid item xs={6} className={classes.logoContainer}>
+            <Typography variant="h1" className={classes.logo}>
+              On The Air
+            </Typography>
+          </Grid>
+          <Grid item xs={6} className={classes.loginFormContainer}>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2} justify="center">
+                {/* <Grid item xs={6} className={classes.loginTitleContainer}>
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    className={classes.loginTitle}
+                  >
+                    On The Air
+                  </Typography>
+                </Grid> */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="outlined-password-input"
+                    label="ID"
+                    type="text"
+                    value={id}
+                    onChange={handleChangeId}
+                    autoComplete="current-password"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="outlined-password-input"
+                    label="Password"
+                    type="password"
+                    autoComplete="current-password"
+                    variant="outlined"
+                    value={password}
+                    onChange={handleChangePassword}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider className={classes.divider} />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    className={classes.loginButton}
+                    type="submit"
+                    fullWidth
+                    color="primary"
+                    variant="contained"
+                  >
+                    Login
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Grid>
+        </Grid>
+      </Container>
+    </main>
   );
 }
 
