@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     height: '100vh',
     backgroundColor: theme.palette.primary.main,
+    boxShadow: '5px 0 10px rgba(0, 0, 0, 0.4)',
   },
   logo: {
     color: '#ffffff',
