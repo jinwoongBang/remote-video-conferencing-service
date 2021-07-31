@@ -14,6 +14,9 @@ import {
   useRecoilState,
   useRecoilValueLoadable,
   useSetRecoilState,
+  selector,
+  atom,
+  useRecoilValue,
 } from 'recoil';
 
 /**
@@ -26,11 +29,11 @@ import UserVO from 'src//vo/UserVO';
  * Hooks
  */
 import useUser from 'src/common/hooks/useUser';
-/**
- * Recoil
- */
-import { useRecoilValue } from 'recoil';
-import { handleAuthentication } from 'src/store/auth';
+
+import { Auth, handleAuthentication } from 'src/store/auth';
+import { tempFahrenheit, tempCelsius } from 'src/store/test';
+import HttpClient from 'src/common/framework/HttpClient';
+import OTAResponse from 'src/common/framework/OTAResponse';
 
 interface ErrorProps {
   isError: boolean;
@@ -49,12 +52,20 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
 
   const setAuth = useSetRecoilState(authState);
 
-  // const handleSubmit = async (event: React.MouseEvent) => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // const [login, setLogin] = useRecoilState(handleLogin);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    alert('login');
-    setAuth((auth) => ({ isLoggedIn: true, user: auth.user }));
+    try {
+      const { data, status } = await HttpClient.get('/login');
+      const { success } = new OTAResponse(data);
+      if (success) {
+        setAuth((auth) => ({ ...auth, isLoggedIn: true }));
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleChangeId = useCallback(
@@ -67,6 +78,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const handleChangePassword = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
+
       setPassword(value);
     },
     [],

@@ -1,9 +1,9 @@
-import { atom, selector } from 'recoil';
+import { atom, selector, selectorFamily } from 'recoil';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import UserVO from '../vo/UserVO';
 
-interface Auth {
+export interface Auth {
   isLoggedIn: boolean;
   user: null | UserVO;
 }
@@ -42,6 +42,18 @@ export const handleAuthentication = selector({
   set: async ({ set }, value) => {
     console.log(`handleAuthentication() get :: invoked :: ${value}`);
   },
+});
+
+type LoginProps = { id: string; password: string };
+
+export const handleLogin = selectorFamily({
+  key: 'handleLogin',
+  get:
+    (param: LoginProps) =>
+    async ({ get }) => {
+      console.log('handleLogin() get :: invoked');
+      return get(authState);
+    },
 });
 
 export default authState;
