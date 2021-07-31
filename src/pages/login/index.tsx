@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import Counter from 'src/components/Counter';
+import Router from 'next/router';
 
 /**
  * recoil
@@ -41,7 +42,7 @@ interface ErrorProps {
 }
 
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { auth, state } = useUser({ redirectTo: '/', redirectIfFound: true });
+  const { auth } = useUser({ redirectTo: '/', redirectIfFound: true });
 
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');

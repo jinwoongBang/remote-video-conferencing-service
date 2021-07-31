@@ -31,6 +31,18 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
 /**
+ * recoil
+ */
+import {
+  useRecoilState,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+  selector,
+  atom,
+  useRecoilValue,
+} from 'recoil';
+
+/**
  * Components
  */
 import {
@@ -45,6 +57,13 @@ import {
  * Hooks
  */
 import useUser from 'src/common/hooks/useUser';
+import HttpClient from 'src/common/framework/HttpClient';
+import OTAResponse from 'src/common/framework/OTAResponse';
+
+/**
+ * store
+ */
+import { authState, counterState } from 'src/store';
 
 const drawerWidth = 240;
 
@@ -141,13 +160,15 @@ function a11yProps(index: number) {
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
-  const { auth, state } = useUser({
+  const { auth } = useUser({
     redirectTo: router.pathname,
     redirectIfFound: true,
   });
 
   const [value, setValue] = useState<number>(0);
   const [sidebar, setSidebar] = useState(<DashboardSidebar />);
+
+  const setAuth = useSetRecoilState(authState);
 
   useEffect(() => {
     const { pathname } = router;
@@ -179,6 +200,22 @@ function ApoLayout({ children }: ApoLayoutProps) {
     [router],
   );
 
+  const handleLogout = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      const response = await HttpClient.get('/logout');
+      const { success, result } = await new OTAResponse(response.data);
+
+      if (success) {
+        setAuth((auth) => ({ user: null, isLoggedIn: false }));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -190,7 +227,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
             <Grid item xs={3} className={classes.rightContainer}>
               <Typography variant="body1">{auth.user?.userName}</Typography>
               <Typography variant="body2">님 께서 로그인하셨습니다.</Typography>
-              <Button variant="outlined" color="inherit">
+              <Button variant="outlined" color="inherit" onClick={handleLogout}>
                 로그아웃
               </Button>
             </Grid>
