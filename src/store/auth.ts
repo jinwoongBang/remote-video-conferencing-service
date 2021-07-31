@@ -44,16 +44,4 @@ export const handleAuthentication = selector({
   },
 });
 
-type LoginProps = { id: string; password: string };
-
-export const handleLogin = selectorFamily({
-  key: 'handleLogin',
-  get:
-    (param: LoginProps) =>
-    async ({ get }) => {
-      console.log('handleLogin() get :: invoked');
-      return get(authState);
-    },
-});
-
 export default authState;

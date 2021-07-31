@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withIronSession, Session } from 'next-iron-session';
 import OTAResponse from 'src/common/framework/OTAResponse';
+import UserService from 'src/service/UserService';
 import UserVO from 'src/vo/UserVO';
 
 type NextIronRequest = NextApiRequest & { session: Session };
@@ -10,21 +11,21 @@ async function handler(
   res: NextApiResponse,
 ): Promise<void> {
   // get user from database then:
-  const requestBody = req.body;
+  const requestBody: UserVO = req.body;
   console.log({ requestBody });
-  const { id, password } = requestBody;
 
-  const user = new UserVO({
-    userName: '방진웅',
-    userPassword: password,
-    userId: id,
-  });
+  const user: UserVO = await UserService.selectUser(requestBody);
 
-  req.session.set('user', user);
-
-  await req.session.save();
   const response = new OTAResponse<UserVO>();
-  response.result.push(user);
+
+  if (user) {
+    console.log({ loginDB: user });
+    req.session.set('user', user);
+    await req.session.save();
+    response.result.push(user);
+  } else {
+    response.success = false;
+  }
 
   res.send(response);
 }

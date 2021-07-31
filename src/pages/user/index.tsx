@@ -122,7 +122,7 @@ function User({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
 export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> = async ({
   params,
 }) => {
-  const userList: UserVO[] = await UserService.selectUser();
+  const userList: UserVO[] = await UserService.selectUserList();
 
   return {
     props: {

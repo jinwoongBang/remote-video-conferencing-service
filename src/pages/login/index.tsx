@@ -57,11 +57,16 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
     try {
-      const { data, status } = await HttpClient.get('/login');
-      const { success } = new OTAResponse(data);
+      const { data, status } = await HttpClient.post(
+        '/login',
+        new UserVO({ userId: id, userPassword: password }),
+      );
+      const { success, result } = new OTAResponse<UserVO>(data);
+
       if (success) {
-        setAuth((auth) => ({ ...auth, isLoggedIn: true }));
+        setAuth((auth) => ({ user: result[0], isLoggedIn: true }));
       }
     } catch (e) {
       console.error(e);
