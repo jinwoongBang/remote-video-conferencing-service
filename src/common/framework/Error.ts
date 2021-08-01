@@ -14,7 +14,7 @@ export interface ErrorProps {
 /**
  * @description OTA Error(On The Air 약자) 추상 인터페이스
  */
-interface OTAError {
+export interface OTAError {
   statusCode: StatusCodes;
   name: string;
   message: string;

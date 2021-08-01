@@ -49,6 +49,7 @@ import { Auth, handleAuthentication } from 'src/store/auth';
 import { tempFahrenheit, tempCelsius } from 'src/store/test';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
+import { OTAError } from 'src/common/framework/Error';
 
 interface ErrorProps {
   isError: boolean;
@@ -126,12 +127,10 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
         new UserVO({ userId: id, userPassword: password }),
       );
       const { success, result } = new OTAResponse<UserVO>(data);
-
-      if (success) {
-        setAuth((auth) => ({ user: result[0], isLoggedIn: true }));
-      }
-    } catch (e) {
-      console.error(e);
+      setAuth((auth) => ({ user: result[0], isLoggedIn: true }));
+    } catch (error) {
+      setError({ isError: true, message: error.message });
+      console.error(error);
     }
     setIsLoading(false);
   };
@@ -140,6 +139,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
       setId(value);
+      setError({ isError: false, message: '' });
     },
     [],
   );
@@ -148,6 +148,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
       const { name, value } = event.target;
 
       setPassword(value);
+      setError({ isError: false, message: '' });
     },
     [],
   );
@@ -189,6 +190,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
                     onChange={handleChangeId}
                     autoComplete="current-password"
                     variant="outlined"
+                    error={error.isError}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -201,6 +203,8 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
                     variant="outlined"
                     value={password}
                     onChange={handleChangePassword}
+                    error={error.isError}
+                    helperText={error.message}
                   />
                 </Grid>
                 <Grid item xs={12}>
