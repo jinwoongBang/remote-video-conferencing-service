@@ -21,18 +21,23 @@ import {
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
+/**
+ * Compoents
+ */
 import Counter from 'src/components/Counter';
-import UserVO from 'src/vo/UserVO';
 import AppLayout from 'src/components/AppLayout';
+import OperatorListTable from 'src/components/OperatorList';
+
+import UserVO from 'src/vo/UserVO';
 
 function OperatorList({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <AppLayout>
-      <Grid container alignItems="center">
-        <Grid item xs={3}>
-          <Typography variant="caption">운영자 목록</Typography>
+      <Grid container>
+        <Grid item xs={12}>
+          <OperatorListTable />
         </Grid>
       </Grid>
     </AppLayout>
