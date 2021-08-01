@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
  */
 import Head from 'next/head';
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 /**
@@ -19,6 +19,7 @@ import {
   Typography,
   Drawer,
   List,
+  Link,
   Divider,
   ListItem,
   ListItemIcon,
@@ -28,7 +29,7 @@ import {
   Tab,
 } from '@material-ui/core';
 import { makeStyles, Theme, withStyles } from '@material-ui/core/styles';
-import { Inbox, Mail } from '@material-ui/icons';
+import { NavigateNext } from '@material-ui/icons';
 
 /**
  * recoil
@@ -52,6 +53,7 @@ import {
   EventSidebar,
   SpecialSidebar,
 } from 'src/components/sidebar';
+import BreadcrumbsList from 'src/components/Breadcrumbs';
 
 /**
  * Hooks
@@ -277,6 +279,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <Toolbar />
         <Toolbar variant="dense" />
         <Container maxWidth="lg" disableGutters className={classes.content}>
+          <BreadcrumbsList />
           {auth.isLoggedIn && children}
         </Container>
       </main>

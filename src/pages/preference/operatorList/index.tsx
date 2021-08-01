@@ -1,6 +1,26 @@
+/**
+ * React
+ */
 import React, { useEffect } from 'react';
+
+/**
+ * Next
+ */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
+
+/**
+ *  Material UI
+ */
+import {
+  Button,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+
 import Counter from 'src/components/Counter';
 import UserVO from 'src/vo/UserVO';
 import AppLayout from 'src/components/AppLayout';
@@ -10,14 +30,11 @@ function OperatorList({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <AppLayout>
-      <div>
-        <div>
-          <h1>OperatorList</h1>
-        </div>
-        <div>
-          <Counter />
-        </div>
-      </div>
+      <Grid container alignItems="center">
+        <Grid item xs={3}>
+          <Typography variant="caption">운영자 목록</Typography>
+        </Grid>
+      </Grid>
     </AppLayout>
   );
 }
