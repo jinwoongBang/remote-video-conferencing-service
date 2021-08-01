@@ -20,6 +20,18 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import {
+  Copyright,
+  Create,
+  Mail,
+  Person,
+  PhoneAndroid,
+} from '@material-ui/icons';
+
+/**
+ * Library
+ */
+import MaskedInput from 'react-text-mask';
 
 /**
  * VO
@@ -30,6 +42,42 @@ import UserVO from 'src/vo/UserVO';
  * component
  */
 import ApoLayout from 'src/components/AppLayout';
+
+interface PhoneNumberMaskProps {
+  inputRef: (ref: HTMLInputElement | null) => void;
+}
+
+function PhoneNumberMask(props: PhoneNumberMaskProps) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref: any) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[
+        /[0-9]/,
+        /\d/,
+        /\d/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+      ]}
+      // placeholderChar={'\u2000'}
+      showMask
+      guide={true}
+      keepCharPositions={true}
+    />
+  );
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   inputLabelContainer: {
@@ -48,17 +96,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   modifyButton: {
     width: '200px',
   },
+  divider: {
+    padding: '15px',
+  },
 }));
 
 function Preference({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
+
   return (
     <ApoLayout>
       <Grid container alignItems="center">
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          <Button fullWidth color="primary" variant="outlined">
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
             대표자 성명
           </Button>
           {/* <Typography variant="caption">대표자 성명</Typography> */}
@@ -72,7 +130,13 @@ function Preference({
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
           {/* <Typography variant="caption">대표 번호</Typography> */}
-          <Button fullWidth color="primary" variant="outlined">
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<PhoneAndroid />}
+          >
             대표 번호
           </Button>
         </Grid>
@@ -81,11 +145,20 @@ function Preference({
             fullWidth
             id="standard-required"
             placeholder="대표 휴대전화 번호를 입력해주세요."
+            InputProps={{
+              inputComponent: PhoneNumberMask as any,
+            }}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
           {/* <Typography variant="caption">대표 메일</Typography> */}
-          <Button fullWidth color="primary" variant="outlined">
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Mail />}
+          >
             대표 메일
           </Button>
         </Grid>
@@ -93,12 +166,18 @@ function Preference({
           <TextField
             fullWidth
             id="standard-required"
-            placeholder="대표 메일을 입력해주세요."
+            placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
           {/* <Typography variant="caption">Copyright</Typography> */}
-          <Button fullWidth color="primary" variant="outlined">
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Copyright />}
+          >
             Copyright
           </Button>
         </Grid>
@@ -109,7 +188,7 @@ function Preference({
             placeholder="저작권 문구를 입력해주세요."
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} className={classes.divider}>
           <Divider />
         </Grid>
         <Grid item xs={12} className={classes.buttonContaier}>
@@ -118,6 +197,7 @@ function Preference({
             color="primary"
             size="large"
             className={classes.modifyButton}
+            startIcon={<Create />}
           >
             수정
           </Button>
