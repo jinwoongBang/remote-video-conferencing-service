@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 /**
  * Next
@@ -19,12 +19,14 @@ import {
   ListItemText,
   ListSubheader,
 } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
-export default function PreferenceSidebar() {
-  const router = useRouter();
+import { PreferencePath } from 'src/common/path';
 
+import StyledListItem from 'src/components/sidebar/StyledListItem';
+
+export default function PreferenceSidebar() {
   return (
     <>
       <List
@@ -34,17 +36,12 @@ export default function PreferenceSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem
-          button
-          onClick={() => {
-            router.push('/preference');
-          }}
-        >
+        <StyledListItem pathname={PreferencePath.root}>
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="사이트 정보 관리" />
-        </ListItem>
+        </StyledListItem>
       </List>
       <List
         subheader={
@@ -53,17 +50,12 @@ export default function PreferenceSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem
-          button
-          onClick={() => {
-            router.push('/preference/operatorList');
-          }}
-        >
+        <StyledListItem pathname={PreferencePath.operatorList}>
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="운영자 목록" />
-        </ListItem>
+        </StyledListItem>
       </List>
       <List
         subheader={
@@ -72,28 +64,18 @@ export default function PreferenceSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem
-          button
-          onClick={() => {
-            router.push('/preference/eventManagerList');
-          }}
-        >
+        <StyledListItem pathname={PreferencePath.eventManagerList}>
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="이벤트 관리자 목록" />
-        </ListItem>
-        <ListItem
-          button
-          onClick={() => {
-            router.push('/preference/eventManagerRegistration');
-          }}
-        >
+        </StyledListItem>
+        <StyledListItem pathname={PreferencePath.eventManagerRegistration}>
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="이벤트 관리자 등록" />
-        </ListItem>
+        </StyledListItem>
       </List>
     </>
   );

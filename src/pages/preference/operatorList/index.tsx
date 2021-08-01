@@ -3,19 +3,22 @@ import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import Counter from 'src/components/Counter';
 import UserVO from 'src/vo/UserVO';
+import AppLayout from 'src/components/AppLayout';
 
 function OperatorList({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div>
+    <AppLayout>
       <div>
-        <h1>OperatorList</h1>
+        <div>
+          <h1>OperatorList</h1>
+        </div>
+        <div>
+          <Counter />
+        </div>
       </div>
-      <div>
-        <Counter />
-      </div>
-    </div>
+    </AppLayout>
   );
 }
 

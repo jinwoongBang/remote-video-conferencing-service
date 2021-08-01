@@ -4,19 +4,22 @@ import Link from 'next/link';
 import Counter from 'src/components/Counter';
 import { authState, counterState } from 'src/store';
 import UserVO from 'src/vo/UserVO';
+import AppLayout from 'src/components/AppLayout';
 
 function EventManagerList({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div>
+    <AppLayout>
       <div>
-        <h1>EventManagerList</h1>
+        <div>
+          <h1>EventManagerList</h1>
+        </div>
+        <div>
+          <Counter />
+        </div>
       </div>
-      <div>
-        <Counter />
-      </div>
-    </div>
+    </AppLayout>
   );
 }
 

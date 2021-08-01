@@ -27,7 +27,7 @@ import {
   Tabs,
   Tab,
 } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
 /**
@@ -156,6 +156,24 @@ function a11yProps(index: number) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
+interface StyledTabsProps {
+  value: number;
+  onChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
+}
+
+const StyledTabs = withStyles({
+  indicator: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    '& > span': {
+      width: '100%',
+      backgroundColor: '#ffffff',
+    },
+  },
+})((props: StyledTabsProps) => (
+  <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />
+));
 
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
@@ -184,7 +202,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
     }
     setValue(index);
     setSidebar(subHeaderList[index].sidebar);
-  }, [router]);
+  }, [router.pathname]);
 
   const handleClickMenu = useCallback(
     (url: string) => {
@@ -235,15 +253,11 @@ function ApoLayout({ children }: ApoLayoutProps) {
         </Toolbar>
         <Divider></Divider>
         <Toolbar variant="dense">
-          <Tabs
-            value={value}
-            onChange={handleChangeTab}
-            aria-label="simple tabs example"
-          >
+          <StyledTabs value={value} onChange={handleChangeTab}>
             {subHeaderList.map((item, index) => (
               <Tab label={item.label} key={item.label} {...a11yProps(index)} />
             ))}
-          </Tabs>
+          </StyledTabs>
         </Toolbar>
       </AppBar>
       <Drawer
