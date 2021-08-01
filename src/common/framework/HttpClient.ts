@@ -53,7 +53,9 @@ function onRejectedResponse(
   error: AxiosError,
 ): Promise<NetworkError | ServiceError> {
   console.error(error);
-  return Promise.reject(new NetworkError());
+  return Promise.reject(
+    new NetworkError({ name: error.name, message: error.message }),
+  );
 }
 
 HttpClient.interceptors.response.use(onFulfilledResponse, onRejectedResponse);

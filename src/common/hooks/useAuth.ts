@@ -19,7 +19,7 @@ type User = {
   isLoggedIn: boolean;
 };
 
-export default function useUser({
+export default function useAuth({
   redirectTo = '',
   redirectIfFound = false,
 } = {}) {
@@ -30,14 +30,11 @@ export default function useUser({
   const handleAuthentication = async () => {
     try {
       const response = await HttpClient.get('/auth');
-      const { success, result } = await response.data;
-      if (success) {
-        setAuth(() => ({ user: result[0], isLoggedIn: true }));
-      } else {
-        setAuth(() => ({ user: null, isLoggedIn: false }));
-      }
+      const { result } = await response.data;
+      setAuth(() => ({ user: result[0], isLoggedIn: true }));
     } catch (e) {
       console.error(e);
+      setAuth(() => ({ user: null, isLoggedIn: false }));
     }
   };
 

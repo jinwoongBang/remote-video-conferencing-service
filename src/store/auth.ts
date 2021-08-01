@@ -11,7 +11,7 @@ export interface Auth {
 const authState = atom<Auth>({
   key: 'authState',
   default: {
-    isLoggedIn: false,
+    isLoggedIn: true,
     user: null,
   },
 });

@@ -1,7 +1,22 @@
+/**
+ * React
+ */
 import React, { useEffect } from 'react';
+
+/**
+ * Next
+ */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
-import Counter from 'src/components/Counter';
+
+/**
+ *  Material UI
+ */
+import { Grid } from '@material-ui/core';
+
+/**
+ * VO
+ */
 import UserVO from 'src/vo/UserVO';
 
 /**
@@ -14,14 +29,9 @@ function Preference({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <ApoLayout>
-      <div>
-        <div>
-          <h1>Preference</h1>
-        </div>
-        <div>
-          <Counter />
-        </div>
-      </div>
+      <Grid container>
+        <Grid item>환경설정</Grid>
+      </Grid>
     </ApoLayout>
   );
 }

@@ -43,7 +43,7 @@ import UserVO from 'src//vo/UserVO';
 /**
  * Hooks
  */
-import useUser from 'src/common/hooks/useUser';
+import useAuth from 'src/common/hooks/useAuth';
 
 import { Auth, handleAuthentication } from 'src/store/auth';
 import { tempFahrenheit, tempCelsius } from 'src/store/test';
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
-  const { auth } = useUser({ redirectTo: '/', redirectIfFound: true });
+  const { auth } = useAuth({ redirectTo: '/', redirectIfFound: true });
 
   const [isLoading, setIsLoading] = useState(false);
   const [id, setId] = useState<string>('');

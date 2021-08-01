@@ -56,7 +56,7 @@ import {
 /**
  * Hooks
  */
-import useUser from 'src/common/hooks/useUser';
+import useAuth from 'src/common/hooks/useAuth';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 
@@ -179,7 +179,7 @@ const StyledTabs = withStyles({
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
-  const { auth } = useUser({
+  const { auth } = useAuth({
     redirectTo: router.pathname,
     redirectIfFound: true,
   });
