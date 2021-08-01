@@ -84,13 +84,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawerContainer: {
     overflow: 'auto',
   },
-  content: {
-    border: '1xp solid tomato',
+  main: {
     flexGrow: 1,
-    // paddingTop: '112px',
-    maxWidth: `calc(100vw - ${drawerWidth}px)`,
-    minWidth: `${1440 - drawerWidth}px`,
-    // height: '120vh',
+    border: '1px solid tomato',
+    // maxWidth: `calc(100vw - ${drawerWidth}px)`,
+    // minWidth: `${1440 - drawerWidth}px`,
+  },
+  content: {
+    padding: '20px',
   },
 
   subHeader: {
@@ -272,10 +273,10 @@ function ApoLayout({ children }: ApoLayoutProps) {
         <div className={classes.drawerContainer}>{sidebar}</div>
       </Drawer>
 
-      <main className={classes.content}>
+      <main className={classes.main}>
         <Toolbar />
         <Toolbar variant="dense" />
-        <Container maxWidth={false} disableGutters>
+        <Container maxWidth="lg" disableGutters className={classes.content}>
           {auth.isLoggedIn && children}
         </Container>
       </main>
