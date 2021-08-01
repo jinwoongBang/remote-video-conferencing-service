@@ -14,13 +14,17 @@ import Link from 'next/link';
  */
 import {
   Button,
+  Checkbox,
   Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   TextField,
   Typography,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
+  Cancel,
   Copyright,
   Create,
   Mail,
@@ -101,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function Preference({
+function OperatorRegistration({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
@@ -117,7 +121,7 @@ function Preference({
             size="large"
             startIcon={<Person />}
           >
-            대표자 성명
+            아이디
           </Button>
           {/* <Typography variant="caption">대표자 성명</Typography> */}
         </Grid>
@@ -137,7 +141,7 @@ function Preference({
             size="large"
             startIcon={<PhoneAndroid />}
           >
-            대표 번호
+            이름
           </Button>
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
@@ -145,9 +149,6 @@ function Preference({
             fullWidth
             id="standard-required"
             placeholder="대표 휴대전화 번호를 입력해주세요."
-            InputProps={{
-              inputComponent: PhoneNumberMask as any,
-            }}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -159,7 +160,7 @@ function Preference({
             size="large"
             startIcon={<Mail />}
           >
-            대표 메일
+            비밀번호
           </Button>
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
@@ -170,7 +171,6 @@ function Preference({
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          {/* <Typography variant="caption">Copyright</Typography> */}
           <Button
             fullWidth
             color="primary"
@@ -178,7 +178,25 @@ function Preference({
             size="large"
             startIcon={<Copyright />}
           >
-            Copyright
+            핸드폰
+          </Button>
+        </Grid>
+        <Grid item xs={9} className={classes.inputContainer}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
+          />
+        </Grid>
+        <Grid item xs={3} className={classes.inputLabelContainer}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Copyright />}
+          >
+            이메일
           </Button>
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
@@ -187,6 +205,65 @@ function Preference({
             id="standard-required"
             placeholder="저작권 문구를 입력해주세요."
           />
+        </Grid>
+        <Grid item xs={3} className={classes.inputLabelContainer}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Copyright />}
+          >
+            관리 등급
+          </Button>
+        </Grid>
+        <Grid item xs={9} className={classes.inputContainer}>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={true}
+                  // onChange={handleChange}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="환경설정 관리"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={false}
+                  // onChange={handleChange}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="회원 관리"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={true}
+                  // onChange={handleChange}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="이벤트 관리"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={true}
+                  // onChange={handleChange}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="특별 관리"
+            />
+          </FormGroup>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Divider />
@@ -197,9 +274,18 @@ function Preference({
             color="primary"
             size="large"
             className={classes.modifyButton}
+            startIcon={<Cancel />}
+          >
+            취소
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            className={classes.modifyButton}
             startIcon={<Create />}
           >
-            수정
+            등록
           </Button>
         </Grid>
       </Grid>
@@ -220,4 +306,4 @@ export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
   };
 };
 
-export default Preference;
+export default OperatorRegistration;
