@@ -1,3 +1,6 @@
+export enum DashboardPath {
+  root = '/',
+}
 export enum PreferencePath {
   root = '/preference',
   operatorList = '/preference/operatorList',

@@ -22,6 +22,9 @@ import {
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
+import StyledListItem from 'src/components/sidebar/StyledListItem';
+import { DashboardPath } from 'src/common/path';
+
 function DashboardSidebar() {
   return (
     <List
@@ -31,12 +34,12 @@ function DashboardSidebar() {
         </ListSubheader>
       }
     >
-      <ListItem button key="현황판">
+      <StyledListItem pathname={DashboardPath.root}>
         <ListItemIcon>
           <Inbox />
         </ListItemIcon>
         <ListItemText primary="현황판" />
-      </ListItem>
+      </StyledListItem>
     </List>
   );
 }
