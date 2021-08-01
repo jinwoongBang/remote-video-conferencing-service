@@ -14,3 +14,14 @@ a {
 * {
   box-sizing: border-box;
 }
+
+table {width:100%;table-layout:fixed}
+table,th,td {border-spacing:0;border-collapse:collapse;*border-collapse:collapse;word-wrap: break-word;}
+.tbl_type table{width:100%; table-layout: fixed;}
+.tbl_type{border-top:1px solid #056ecc;border-bottom:1px solid #056ecc}
+.tbl_type tr:not(:last-child){border-bottom:1px solid #d2d2d2}
+.tbl_type th{background:#eef1f4;border-bottom:1px solid #d2d2d2;font-weight:700;text-align:center}
+.tbl_type th,
+.tbl_type td{padding:15px 30px;text-align:center; border-left:1px solid #d2d2d2}
+.tbl_type td{font-size:15px;line-height:20px; text-align: left;}
+.tbl_type+.tbl_type{margin-top:10px;}

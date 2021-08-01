@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useCallback, useEffect, useState } from 'react';
 
 /**
  * next
@@ -10,7 +10,7 @@ import Counter from 'src/components/Counter';
 /**
  * recoil
  */
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 
 /**
  * store
@@ -39,6 +39,10 @@ import PropTypes from "prop-types";
  * component
  */
 import ApoLayout from 'src/components/AppLayout';
+import { registrationUser, reqUserState } from 'src/store/reqUserAtom';
+import { reqUser } from 'src/vo';
+import HttpClient from 'src/common/framework/HttpClient';
+import OTAResponse from 'src/common/framework/OTAResponse';
 
 function TextMaskCustom(props) {
   const { inputRef, ...other } = props;
@@ -49,7 +53,7 @@ function TextMaskCustom(props) {
       ref={(ref) => {
         inputRef(ref ? ref.inputElement : null);
       }}
-      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      mask={['(', /[0-1]/, /[0-1]/, /[0-1]/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
       placeholderChar={'\u2000'}
       showMask
     />
@@ -60,12 +64,56 @@ TextMaskCustom.propTypes = {
   inputRef: PropTypes.func.isRequired,
 };
 
+function Registration() {
+  const valueRegistari = useRecoilValue(registrationUser)
+}
+
 function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
+
+  const setReqUserState = useSetRecoilState(reqUserState)
+  // const valueRegistari = useRecoilValue(registrationUser)
+  
+  const reqUserSetting = (): reqUser => ({
+    userPassword: userPw,
+    userName: name,
+    status: Number(status),
+    userId: userId,
+    event: event,
+    phone: phone.textmask,    
+    email: email,    
+    job: job,    
+    belongTo: belongTo,    
+    isUsedRecipt: isUsedRecipt,    
+    nationality: null,    
+    licenseNumber: null,    
+    specialListNumber: null,    
+    societyRrequest: null,    
+    depositAmount: null,
+  })
+
   const [auth, setAuth] = useRecoilState(authState);
-  const [age, setAge] = React.useState("");
+
+  const [status, setStatus] = useState<string>();
+  const [event, setEvent] = useState<string>();
+  const [userId, setUserId] = useState<string>();
+  const [userPw, setUserPw] = useState<string>();
+  const [name, setName] = useState<string>();
+  const [phone, setPhone] = React.useState({
+    textmask: "010",
+    numberformat: "1320"
+  });
+  // const [phone, setPhone] = React.useState({
+  //   textmask: "(010)    -    ",
+  //   numberformat: "1320"
+  // });
+  const [email, setEmail] = useState<string>();
+  const [job, setJob] = useState<string>();
+  const [belongTo, setBelongTo] = useState<string>();
+  const [isUsedRecipt, setIsUsedRecipt] = useState<string>();
+  const [age, setAge] = useState<string>("");
   
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -86,28 +134,104 @@ function UserRegistration({
       minWidth: 120
     },
   }));
-
-  const [values, setValues] = React.useState({
-    textmask: "(1  )    -    ",
-    numberformat: "1320"
-  });
   
-  const handleChange = (event) => {
-    setValues({
-      ...values,
+  const handleChangeStatus = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setStatus(value);
+    },
+    [],
+  );
+  
+  const handleChangeEvent = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setEvent(value);
+    },
+    [],
+  );
+  const handleChangeUserId = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setUserId(value);
+    },
+    [],
+  );
+  const handleChangeUserPw = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setUserPw(value);
+    },
+    [],
+  );
+  const handleChangeName = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setName(value);
+    },
+    [],
+  );
+  // const handleChangePhone = useCallback(
+  //   (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     const { name, value } = event.target;
+  //     setPhone(value);
+  //   },
+  //   [],
+  // );
+
+  const handleChangePhone = (event) => {
+    setPhone({
+      ...phone,
       [event.target.name]: event.target.value
     });
   };
+  
+  const handleChangeEmail = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setEmail(value);
+    },
+    [],
+  );
+  const handleChangeJob = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setJob(value);
+    },
+    [],
+  );
+  const handleChangeBelongTo = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setBelongTo(value);
+    },
+    [],
+  );
+  const handleChangeRecipt = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setIsUsedRecipt(value);
+    },
+    [],
+  );
 
-  const handleChangeAge = (event) => {
-    setAge(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`변경된 패스워드 name: ${event.target.name.value}`);
-    console.log(`변경된 패스워드 id: ${event.target.userId.text}`);
-    console.log(`변경된 패스워드 pw: ${event.target.userPw}`);
+    
+    try {
+      const payload = reqUserSetting()
+      console.log(`변경된 패스워드 reqUserSetting22: ${JSON.stringify(payload)}`);
+      const { data, status } = await HttpClient.post(
+        '/user',
+        payload as reqUser,
+      );
+      const { success, result } = new OTAResponse<UserVO>(data);
+      console.log("success: " + success + "  // result: " + result)
+      console.log("success: " + success + "  // result stringify: " + JSON.stringify(result))
+    } catch (error) {
+      setError({ isError: true, message: error.message });
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -126,11 +250,24 @@ function UserRegistration({
       <div className={classes.root}>
         <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="name">회원상태</label>
+          <Grid item xs={3}>
+          <label htmlFor="status">회원상태</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="name" label="회원상태" variant="outlined" autoComplete="name" required/>
+          <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="statusLabel">회원상태</InputLabel>
+              <Select
+                labelId="statusLabel"
+                id="status"
+                value={status}
+                onChange={handleChangeStatus}
+                label="UserStatus"
+                required
+              >              
+                <MenuItem value={"0"}>상태0</MenuItem>
+                <MenuItem value={"1"}>상태1</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -138,7 +275,7 @@ function UserRegistration({
           <label htmlFor="event">이벤트</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="event" label="이벤트" variant="outlined" autoComplete="event" required/>
+            <TextField id="event" label="이벤트" variant="outlined" onChange={handleChangeEvent} autoComplete="event" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -146,7 +283,7 @@ function UserRegistration({
           <label htmlFor="userId">아이디</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="userId" label="아이디" variant="outlined" autoComplete="userId" required/>
+            <TextField id="userId" label="아이디" variant="outlined" onChange={handleChangeUserId} autoComplete="userId" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -154,7 +291,7 @@ function UserRegistration({
           <label htmlFor="userPw">비밀번호</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="userPw" label="비밀번호" variant="outlined" autoComplete="userPw" required/>
+            <TextField id="userPw" label="비밀번호" variant="outlined" onChange={handleChangeUserPw} autoComplete="userPw" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -162,32 +299,33 @@ function UserRegistration({
           <label htmlFor="name">이름</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="name" label="이름" variant="outlined" autoComplete="name" required/>
+            <TextField id="name" label="이름" variant="outlined" onChange={handleChangeName} autoComplete="name" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={3} >
           <label htmlFor="phoneNumber">연락처</label>
           </Grid>
-          <Grid item xs={9}>
-            <TextField id="phoneNumber" label="연락처" variant="outlined" autoComplete="phoneNumber" required/>
-          </Grid>
+          <TextField id="phoneNumber" label="연락처" variant="outlined" onChange={handleChangePhone} autoComplete="email" required/>
+          {/* <Grid item xs={9}>
+            <FormControl required>
+              <InputLabel htmlFor="phoneNumber">연락처</InputLabel>
+              <Input
+                value={phone.textmask}
+                onChange={handleChangePhone}
+                name="textmask"
+                id="phoneNumber"
+                inputComponent={TextMaskCustom}
+              />
+            </FormControl>
+          </Grid> */}
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={3} >
           <label htmlFor="email">이메일</label>
           </Grid>
           <Grid item xs={9}>
-            <FormControl>
-            <InputLabel htmlFor="email">이메일</InputLabel>
-            <Input
-              value={values.textmask}
-              onChange={handleChange}
-              name="textmask"
-              id="email"
-              inputComponent={TextMaskCustom}
-            />
-          </FormControl>
+          <TextField id="email" label="이메일" variant="outlined" onChange={handleChangeEmail} autoComplete="email" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -195,7 +333,7 @@ function UserRegistration({
           <label htmlFor="job">직업</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="job" label="직업" variant="outlined" autoComplete="job" required/>
+            <TextField id="job" label="직업" variant="outlined" onChange={handleChangeJob} autoComplete="job" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -203,7 +341,7 @@ function UserRegistration({
           <label htmlFor="belongTo">소속</label>
           </Grid>
           <Grid item xs={9}>
-            <TextField id="belongTo" label="소속" variant="outlined" autoComplete="belongTo" required/>
+            <TextField id="belongTo" label="소속" variant="outlined" onChange={handleChangeBelongTo} autoComplete="belongTo" required/>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -216,9 +354,10 @@ function UserRegistration({
               <Select
                 labelId="isUsedReciptLabel"
                 id="isUsedRecipt"
-                value={age}
-                onChange={handleChangeAge}
-                label="Age"
+                value={isUsedRecipt}
+                onChange={handleChangeRecipt}
+                label="isUsedRecipt"
+                required
               >
               
                 <MenuItem value={1}>사용</MenuItem>
@@ -248,3 +387,8 @@ export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> = async ({
 };
 
 export default UserRegistration;
+
+function setError(arg0: { isError: boolean; message: any; }) {
+  throw new Error('Function not implemented.');
+}
+
