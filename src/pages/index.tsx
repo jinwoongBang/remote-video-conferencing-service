@@ -1,8 +1,27 @@
+/**
+ * React
+ */
 import React, { useEffect } from 'react';
+
+/**
+ * Next
+ */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
+
+/**
+ * Recoil
+ */
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import Counter from 'src/components/Counter';
+
+/**
+ * Material UI
+ */
+import { Grid } from '@material-ui/core';
+
+/**
+ * Store
+ */
 import { authState, counterState } from 'src/store';
 import UserVO from 'src/vo/UserVO';
 
@@ -10,23 +29,18 @@ import UserVO from 'src/vo/UserVO';
  * component
  */
 import ApoLayout from 'src/components/AppLayout';
+import DashboardList from 'src/components/DashboardList';
 
 function Home({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [auth, setAuth] = useRecoilState(authState);
 
   return (
     <ApoLayout>
-      <div>
-        <div>
-          <h1>대시보드</h1>
-          <h2>{auth.user && auth.user.userName}</h2>
-          <h2>{auth.user && auth.user.userId}</h2>
-          <h2>{auth.user && auth.user.userPassword}</h2>
-        </div>
-        <div>
-          <Counter />
-        </div>
-      </div>
+      <DashboardList />
+      {/* <Grid container>
+        <Grid item>
+        </Grid>
+      </Grid> */}
     </ApoLayout>
   );
 }
