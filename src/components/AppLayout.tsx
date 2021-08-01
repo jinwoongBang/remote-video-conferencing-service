@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   main: {
     flexGrow: 1,
-    border: '1px solid tomato',
+    // border: '1px solid tomato',
     // maxWidth: `calc(100vw - ${drawerWidth}px)`,
     // minWidth: `${1440 - drawerWidth}px`,
   },
