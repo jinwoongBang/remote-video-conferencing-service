@@ -56,6 +56,12 @@ export default function PreferenceSidebar() {
           </ListItemIcon>
           <ListItemText primary="운영자 목록" />
         </StyledListItem>
+        <StyledListItem pathname={PreferencePath.operatorRegistration}>
+          <ListItemIcon>
+            <Inbox />
+          </ListItemIcon>
+          <ListItemText primary="운영자 등록" />
+        </StyledListItem>
       </List>
       <List
         subheader={

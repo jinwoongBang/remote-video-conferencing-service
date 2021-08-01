@@ -240,10 +240,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         ))}
       </TableRow>
       <TableRow>
-        <TableCell align="left">환경설정</TableCell>
-        <TableCell align="left">회원관리</TableCell>
-        <TableCell align="left">이벤트관리</TableCell>
-        <TableCell align="left">특별관리</TableCell>
+        <TableCell align="center">환경설정</TableCell>
+        <TableCell align="center">회원관리</TableCell>
+        <TableCell align="center">이벤트관리</TableCell>
+        <TableCell align="center">특별관리</TableCell>
       </TableRow>
     </TableHead>
   );
