@@ -57,6 +57,7 @@ interface ErrorProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    minWidth: '500px',
     height: '100vh',
     padding: 0,
   },
@@ -67,6 +68,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100vh',
     backgroundColor: theme.palette.primary.main,
     boxShadow: '5px 0 10px rgba(0, 0, 0, 0.4)',
+    [theme.breakpoints.down('md')]: {
+      height: '200px',
+      marginBottom: '100px',
+    },
   },
   logo: {
     color: '#ffffff',
@@ -151,12 +156,18 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
     <main>
       <Container maxWidth={false} className={classes.root}>
         <Grid container>
-          <Grid item xs={6} className={classes.logoContainer}>
+          <Grid item xs={12} md={12} lg={5} className={classes.logoContainer}>
             <Typography variant="h1" className={classes.logo}>
               On The Air
             </Typography>
           </Grid>
-          <Grid item xs={6} className={classes.loginFormContainer}>
+          <Grid
+            item
+            xs={12}
+            md={12}
+            lg={7}
+            className={classes.loginFormContainer}
+          >
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2} justify="center">
                 <Grid item xs={3} className={classes.loginTitleContainer}>

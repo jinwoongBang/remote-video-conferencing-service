@@ -28,13 +28,13 @@ export class NetworkError extends Error implements OTAError {
   name: string;
   message: string;
 
-  constructor({ name, message }: ErrorProps) {
-    const _name = name || 'NETWORK ERROR';
-    const _message = message || 'Web Server Is Down.';
-    super(_message);
+  constructor() {
+    const name = 'NETWORK ERROR';
+    const message = 'Web Server Is Down.';
+    super(message);
     this.statusCode = 521;
     this.name = name;
-    this.message = _message;
+    this.message = message;
   }
 }
 
