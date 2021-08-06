@@ -42,6 +42,8 @@ import UserVO from 'src/vo/UserVO';
  * component
  */
 import ApoLayout from 'src/components/AppLayout';
+import PreferenceService from 'src/service/PreferenceService';
+import { PreferenceVO } from 'src/vo';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -126,6 +128,12 @@ function Preference({
             fullWidth
             id="standard-required"
             placeholder="대표자 성명을 입력해주세요."
+            value={
+              result.find(
+                (preference) =>
+                  preference.preferenceKey === 'REPRESENTATIVE_NAME',
+              )?.preferenceValue
+            }
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -208,16 +216,20 @@ function Preference({
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
-  params,
-}) => {
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      result: [],
-    },
+export const getStaticProps: GetStaticProps<{ result: PreferenceVO[] }> =
+  async ({ params }) => {
+    const preferenceList =
+      await PreferenceService.selectPreferenceListByGroupKey({
+        preferenceKey: 'SITE_INFORMATION',
+      });
+    console.log({ preferenceList });
+    // By returning { props: { posts } }, the Blog component
+    // will receive `posts` as a prop at build time
+    return {
+      props: {
+        result: preferenceList,
+      },
+    };
   };
-};
 
 export default Preference;

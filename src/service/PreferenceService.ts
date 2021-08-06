@@ -5,9 +5,13 @@ import connectionPool from 'src/db';
 import { PreferenceVO } from 'src/vo';
 
 class PreferenceService {
-  async selectPreferenceListByGroupKey({ preferenceKey }: PreferenceVO) {
+  async selectPreferenceListByGroupKey({
+    preferenceKey,
+  }: {
+    preferenceKey: string;
+  }) {
     const conn = await connectionPool.getConnection();
-    const rows = await conn.query(`
+    const groupPreferenceList = await conn.query(`
       SELECT
         *
       FROM
@@ -15,14 +19,28 @@ class PreferenceService {
       WHERE
         PREFERENCE_KEY = '${preferenceKey}'
     `);
-    const row = rows[0];
+    const groupPrefrence = new PreferenceVO(groupPreferenceList[0]);
+    const groupId = groupPrefrence.id;
 
-    const preference = new PreferenceVO(row);
+    const groupList = await conn.query(`
+      SELECT
+        *
+      FROM
+        TB_PREFERENCE
+      WHERE
+        PID = '${groupId}'
+    `);
 
-    const result = JSON.parse(JSON.stringify(preference));
+    const preferenceList: PreferenceVO[] = groupList.map((data: any) =>
+      Object.assign(data, PreferenceVO),
+    );
+
+    const result = JSON.parse(JSON.stringify(preferenceList));
 
     await conn.release();
 
     return result;
   }
 }
+
+export default new PreferenceService();
