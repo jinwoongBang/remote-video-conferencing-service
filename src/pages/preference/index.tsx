@@ -14,6 +14,7 @@ import Link from 'next/link';
  */
 import {
   Button,
+  CircularProgress,
   Divider,
   Grid,
   TextField,
@@ -49,6 +50,8 @@ import { PreferenceVO } from 'src/vo';
  * common
  */
 import { PreferenceKey } from 'src/common/preference';
+import HttpClient from 'src/common/framework/HttpClient';
+import OTAResponse from 'src/common/framework/OTAResponse';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -113,6 +116,8 @@ function Preference({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [name, setName] = useState<string>(
     () =>
       preferenceList.find(
@@ -172,6 +177,21 @@ function Preference({
     },
     [],
   );
+
+  const handleModifySiteInformation = async (event: React.MouseEvent) => {
+    setIsLoading(true);
+
+    try {
+      const { data, status } = await HttpClient.put('/preference', {
+        [PreferenceKey.RepresentativeName]: name,
+      });
+      const { success, result } = new OTAResponse<{ method: string }>(data);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <ApoLayout>
@@ -269,8 +289,10 @@ function Preference({
             size="large"
             className={classes.modifyButton}
             startIcon={<Create />}
+            onClick={handleModifySiteInformation}
+            disabled={isLoading}
           >
-            수정
+            {isLoading ? <CircularProgress size="1.8em" /> : '수정'}
           </Button>
         </Grid>
       </Grid>
