@@ -1,7 +1,7 @@
 /**
  * React
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 
 /**
  * Next
@@ -44,6 +44,11 @@ import UserVO from 'src/vo/UserVO';
 import ApoLayout from 'src/components/AppLayout';
 import PreferenceService from 'src/service/PreferenceService';
 import { PreferenceVO } from 'src/vo';
+
+/**
+ * common
+ */
+import { PreferenceKey } from 'src/common/preference';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -108,11 +113,64 @@ function Preference({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
-  const [representativeName, setRepresentativeName] = useState<string>(
+  const [name, setName] = useState<string>(
     () =>
       preferenceList.find(
-        ({ PREFERENCE_KEY }) => PREFERENCE_KEY === 'REPRESENTATIVE_NAME',
+        ({ PREFERENCE_KEY }) =>
+          PREFERENCE_KEY === PreferenceKey.RepresentativeName,
       )?.PREFERENCE_VALUE ?? '',
+  );
+
+  const [phoneNumber, setPhoneNumber] = useState<string>(
+    () =>
+      preferenceList.find(
+        ({ PREFERENCE_KEY }) =>
+          PREFERENCE_KEY === PreferenceKey.RepresentativePhone,
+      )?.PREFERENCE_VALUE ?? '',
+  );
+
+  const [mail, setMail] = useState<string>(
+    () =>
+      preferenceList.find(
+        ({ PREFERENCE_KEY }) =>
+          PREFERENCE_KEY === PreferenceKey.RepresentativeMail,
+      )?.PREFERENCE_VALUE ?? '',
+  );
+
+  const [copyright, setCopyright] = useState<string>(
+    () =>
+      preferenceList.find(
+        ({ PREFERENCE_KEY }) =>
+          PREFERENCE_KEY === PreferenceKey.CopyrightSignature,
+      )?.PREFERENCE_VALUE ?? '',
+  );
+
+  const handleChangeName = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setName(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangePhoneNumber = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPhoneNumber(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeMail = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setMail(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeCopyright = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setCopyright(event.target.value);
+    },
+    [],
   );
 
   return (
@@ -128,18 +186,17 @@ function Preference({
           >
             대표자 성명
           </Button>
-          {/* <Typography variant="caption">대표자 성명</Typography> */}
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
           <TextField
             fullWidth
             id="standard-required"
             placeholder="대표자 성명을 입력해주세요."
-            value={representativeName}
+            value={name}
+            onChange={handleChangeName}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          {/* <Typography variant="caption">대표 번호</Typography> */}
           <Button
             fullWidth
             color="primary"
@@ -158,10 +215,11 @@ function Preference({
             InputProps={{
               inputComponent: PhoneNumberMask as any,
             }}
+            value={phoneNumber}
+            onChange={handleChangePhoneNumber}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          {/* <Typography variant="caption">대표 메일</Typography> */}
           <Button
             fullWidth
             color="primary"
@@ -177,10 +235,11 @@ function Preference({
             fullWidth
             id="standard-required"
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
+            value={mail}
+            onChange={handleChangeMail}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          {/* <Typography variant="caption">Copyright</Typography> */}
           <Button
             fullWidth
             color="primary"
@@ -196,6 +255,8 @@ function Preference({
             fullWidth
             id="standard-required"
             placeholder="저작권 문구를 입력해주세요."
+            value={copyright}
+            onChange={handleChangeCopyright}
           />
         </Grid>
         <Grid item xs={12} className={classes.divider}>
@@ -226,9 +287,6 @@ export const getStaticProps: GetStaticProps<{
       preferenceKey: 'SITE_INFORMATION',
     },
   );
-  console.log({ preferenceList });
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
   return {
     props: {
       preferenceList,
