@@ -1,7 +1,7 @@
 /**
  * React
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 
 /**
  * Next
@@ -145,6 +145,34 @@ function Preference({
       )?.PREFERENCE_VALUE ?? '',
   );
 
+  const handleChangeName = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setName(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangePhoneNumber = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPhoneNumber(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeMail = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setMail(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeCopyright = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setCopyright(event.target.value);
+    },
+    [],
+  );
+
   return (
     <ApoLayout>
       <Grid container alignItems="center">
@@ -165,6 +193,7 @@ function Preference({
             id="standard-required"
             placeholder="대표자 성명을 입력해주세요."
             value={name}
+            onChange={handleChangeName}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -187,6 +216,7 @@ function Preference({
               inputComponent: PhoneNumberMask as any,
             }}
             value={phoneNumber}
+            onChange={handleChangePhoneNumber}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -206,6 +236,7 @@ function Preference({
             id="standard-required"
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
             value={mail}
+            onChange={handleChangeMail}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -225,6 +256,7 @@ function Preference({
             id="standard-required"
             placeholder="저작권 문구를 입력해주세요."
             value={copyright}
+            onChange={handleChangeCopyright}
           />
         </Grid>
         <Grid item xs={12} className={classes.divider}>
