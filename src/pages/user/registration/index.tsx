@@ -23,16 +23,29 @@ import UserVO from 'src//vo/UserVO';
  */
 import UserService from 'src/service/UserService';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+/**
+ *  Material UI
+ */
+import {
+  Button,
+  Divider,
+  Grid,
+  TextField,
+  Select,
+  MenuItem,
+  Typography,
+} from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import {
+  Copyright,
+  Create,
+  Mail,
+  Person,
+  PhoneAndroid,
+  Receipt,
+} from '@material-ui/icons';
+
 import MaskedInput from 'react-text-mask';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import PropTypes from 'prop-types';
 /**
@@ -84,6 +97,42 @@ function Registration() {
   const valueRegistari = useRecoilValue(registrationUser);
 }
 
+interface PhoneNumberMaskProps {
+  inputRef: (ref: HTMLInputElement | null) => void;
+}
+
+function PhoneNumberMask(props: PhoneNumberMaskProps) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref: any) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[
+        /[0]/,
+        /[1]/,
+        /[0]/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+      ]}
+      // placeholderChar={'\u2000'}
+      showMask
+      guide={true}
+      keepCharPositions={true}
+    />
+  );
+}
+
 function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -98,16 +147,17 @@ function UserRegistration({
     status: Number(status),
     userId: userId,
     event: event,
-    phone: phone.textmask,
+    phone: phone,
+    // phone: phone.textmask,
     email: email,
     job: job,
     belongTo: belongTo,
     isUsedRecipt: isUsedRecipt,
-    nationality: null,
-    licenseNumber: null,
-    specialListNumber: null,
-    societyRrequest: null,
-    depositAmount: null,
+    nationality: nationality ?? null,
+    licenseNumber: licenseNumber ?? null,
+    specialListNumber: specialListNumber ?? null,
+    societyRrequest: societyRrequest ?? null,
+    depositAmount: depositAmount ?? null,
   });
 
   const [auth, setAuth] = useRecoilState(authState);
@@ -117,21 +167,43 @@ function UserRegistration({
   const [userId, setUserId] = useState<string>();
   const [userPw, setUserPw] = useState<string>();
   const [name, setName] = useState<string>();
-  const [phone, setPhone] = React.useState({
-    textmask: '010',
-    numberformat: '1320',
-  });
   // const [phone, setPhone] = React.useState({
-  //   textmask: "(010)    -    ",
-  //   numberformat: "1320"
+  //   textmask: '010',
+  //   numberformat: '1320',
   // });
+  const [phone, setPhone] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [job, setJob] = useState<string>();
   const [belongTo, setBelongTo] = useState<string>();
   const [isUsedRecipt, setIsUsedRecipt] = useState<string>();
+  const [nationality, setNationality] = useState<string>();
+  const [licenseNumber, setLicenseNumber] = useState<string>();
+  const [specialListNumber, setSpecialListNumber] = useState<string>();
+  const [societyRrequest, setSocietyRrequest] = useState<string>();
+  const [depositAmount, setDepositAmount] = useState<string>();
   const [age, setAge] = useState<string>('');
 
   const useStyles = makeStyles((theme) => ({
+    inputLabelContainer: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: '15px',
+    },
+    inputContainer: {
+      padding: '15px',
+    },
+    buttonContaier: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      padding: '15px',
+    },
+    modifyButton: {
+      width: '200px',
+    },
+    divider: {
+      padding: '15px',
+    },
+
     root: {
       flexGrow: 1,
     },
@@ -195,12 +267,20 @@ function UserRegistration({
   //   [],
   // );
 
-  const handleChangePhone = (event: { target: { name: any; value: any } }) => {
-    setPhone({
-      ...phone,
-      [event.target.name]: event.target.value,
-    });
-  };
+  const handleChangePhone = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setPhone(value);
+    },
+    [],
+  );
+
+  // const handleChangePhone = (event: { target: { name: any; value: any } }) => {
+  //   setPhone({
+  //     ...phone,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // };
 
   const handleChangeEmail = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,6 +307,41 @@ function UserRegistration({
     (event: React.ChangeEvent<{ value: any; name?: string }>) => {
       const { name, value } = event.target;
       setIsUsedRecipt(value);
+    },
+    [],
+  );
+  const handleChangeNationality = useCallback(
+    (event: React.ChangeEvent<{ value: any; name?: string }>) => {
+      const { name, value } = event.target;
+      setNationality(value);
+    },
+    [],
+  );
+  const handleChangeLicenseNumber = useCallback(
+    (event: React.ChangeEvent<{ value: any; name?: string }>) => {
+      const { name, value } = event.target;
+      setLicenseNumber(value);
+    },
+    [],
+  );
+  const handleChangeSpecialListNumber = useCallback(
+    (event: React.ChangeEvent<{ value: any; name?: string }>) => {
+      const { name, value } = event.target;
+      setSpecialListNumber(value);
+    },
+    [],
+  );
+  const handleChangeSocietyRrequest = useCallback(
+    (event: React.ChangeEvent<{ value: any; name?: string }>) => {
+      const { name, value } = event.target;
+      setSocietyRrequest(value);
+    },
+    [],
+  );
+  const handleChangeDepositAmount = useCallback(
+    (event: React.ChangeEvent<{ value: any; name?: string }>) => {
+      const { name, value } = event.target;
+      setDepositAmount(value);
     },
     [],
   );
@@ -270,183 +385,380 @@ function UserRegistration({
 
   return (
     <ApoLayout>
-      <div className={classes.root}>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="status">회원상태</label>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="statusLabel">회원상태</InputLabel>
-                <Select
-                  labelId="statusLabel"
-                  id="status"
-                  value={status}
-                  onChange={handleChangeStatus}
-                  label="UserStatus"
-                  required
-                >
-                  <MenuItem value={'0'}>상태0</MenuItem>
-                  <MenuItem value={'1'}>상태1</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+      <form onSubmit={handleSubmit}>
+        <Grid className={classes.root} container alignItems="center">
+          <Grid item xs={1} className={classes.divider}>
+            <Divider />
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="event">이벤트</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="event"
-                label="이벤트"
-                variant="outlined"
-                onChange={handleChangeEvent}
-                autoComplete="event"
-                required
-              />
-            </Grid>
+          <Grid item xs={1} className={classes.divider}>
+            <label>필수</label>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="userId">아이디</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="userId"
-                label="아이디"
-                variant="outlined"
-                onChange={handleChangeUserId}
-                autoComplete="userId"
-                required
-              />
-            </Grid>
+          <Grid item xs={10} className={classes.divider}>
+            <Divider />
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="userPw">비밀번호</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="userPw"
-                label="비밀번호"
-                variant="outlined"
-                onChange={handleChangeUserPw}
-                autoComplete="userPw"
-                required
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="name">이름</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="name"
-                label="이름"
-                variant="outlined"
-                onChange={handleChangeName}
-                autoComplete="name"
-                required
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="phoneNumber">연락처</label>
-            </Grid>
-            <TextField
-              id="phoneNumber"
-              label="연락처"
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
               variant="outlined"
-              onChange={handleChangePhone}
-              autoComplete="email"
+              size="large"
+              startIcon={<Person />}
+            >
+              회원상태
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <Select
+              labelId="statusLabel"
+              id="status"
+              value={status}
+              onChange={handleChangeStatus}
+              label="UserStatus"
+              required
+            >
+              <MenuItem value={'0'}>상태0</MenuItem>
+              <MenuItem value={'1'}>상태1</MenuItem>
+            </Select>
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<PhoneAndroid />}
+            >
+              이벤트
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="TODO 서버에서 가져와서 리스트 보여주는거로 바꿔야함"
+              value={event}
+              onChange={handleChangeEvent}
               required
             />
-            {/* <Grid item xs={9}>
-            <FormControl required>
-              <InputLabel htmlFor="phoneNumber">연락처</InputLabel>
-              <Input
-                value={phone.textmask}
-                onChange={handleChangePhone}
-                name="textmask"
-                id="phoneNumber"
-                inputComponent={TextMaskCustom}
-              />
-            </FormControl>
-          </Grid> */}
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="email">이메일</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="email"
-                label="이메일"
-                variant="outlined"
-                onChange={handleChangeEmail}
-                autoComplete="email"
-                required
-              />
-            </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Mail />}
+            >
+              아이디
+            </Button>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="job">직업</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="job"
-                label="직업"
-                variant="outlined"
-                onChange={handleChangeJob}
-                autoComplete="job"
-                required
-              />
-            </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="회원 아이디를 입력해주세요."
+              value={userId}
+              onChange={handleChangeUserId}
+              required
+            />
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="belongTo">소속</label>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="belongTo"
-                label="소속"
-                variant="outlined"
-                onChange={handleChangeBelongTo}
-                autoComplete="belongTo"
-                required
-              />
-            </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              비밀번호
+            </Button>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <label htmlFor="isUsedRecipt">영수증 사용 여부</label>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="isUsedReciptLabel">영수증 사용 여부</InputLabel>
-                <Select
-                  labelId="isUsedReciptLabel"
-                  id="isUsedRecipt"
-                  value={isUsedRecipt}
-                  onChange={handleChangeRecipt}
-                  label="isUsedRecipt"
-                  required
-                >
-                  <MenuItem value={'1'}>사용</MenuItem>
-                  <MenuItem value={'0'}>사용안함</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="회원 비밀번호를 입력해주세요."
+              value={userPw}
+              onChange={handleChangeUserPw}
+              required
+            />
           </Grid>
-          <button type="submit">Register</button>
-        </form>
-      </div>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              이름
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="회원 이름을 입력해주세요."
+              value={name}
+              onChange={handleChangeName}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              연락처
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="휴대전화 번호를 입력해주세요."
+              InputProps={{
+                inputComponent: PhoneNumberMask as any,
+              }}
+              value={phone}
+              onChange={handleChangePhone}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              이메일
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="이메일을 입력해주세요. ex) ontheair@ontheair.com"
+              value={email}
+              onChange={handleChangeEmail}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              직업
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="직업을 입력해주세요."
+              value={job}
+              onChange={handleChangeJob}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              소속
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="소속을 입력해주세요."
+              value={belongTo}
+              onChange={handleChangeBelongTo}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              영수증 사용 여부
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <Select
+              labelId="isUsedReciptLabel"
+              id="isUsedRecipt"
+              value={isUsedRecipt}
+              onChange={handleChangeRecipt}
+              label="IsUsedRecipt"
+              required
+            >
+              <MenuItem value={'0'}>상태0</MenuItem>
+              <MenuItem value={'1'}>상태1</MenuItem>
+            </Select>
+          </Grid>
+
+          <Grid item xs={1} className={classes.divider}>
+            <Divider />
+          </Grid>
+          <Grid item xs={2} className={classes.divider}>
+            <label>선택 사항</label>
+          </Grid>
+          <Grid item xs={9} className={classes.divider}>
+            <Divider />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              국적
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="국적을 입력해주세요."
+              value={nationality}
+              onChange={handleChangeNationality}
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              면허 번호
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="면허 번호를 입력해주세요."
+              value={licenseNumber}
+              onChange={handleChangeLicenseNumber}
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              전문의번호
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="전문의번호를 입력해주세요."
+              value={specialListNumber}
+              onChange={handleChangeSpecialListNumber}
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              학회 요청 사항
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="학회 요청 사항을 입력해주세요."
+              value={societyRrequest}
+              onChange={handleChangeSocietyRrequest}
+            />
+          </Grid>
+
+          <Grid item xs={3} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Copyright />}
+            >
+              입금액
+            </Button>
+          </Grid>
+          <Grid item xs={9} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="입금액을 입력해주세요."
+              value={depositAmount}
+              onChange={handleChangeDepositAmount}
+            />
+          </Grid>
+
+          <Grid item xs={12} className={classes.divider}>
+            <Divider />
+          </Grid>
+
+          <Grid item xs={12} className={classes.buttonContaier}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              className={classes.modifyButton}
+              startIcon={<Create />}
+              type="submit"
+            >
+              회원 등록
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
     </ApoLayout>
   );
 }
