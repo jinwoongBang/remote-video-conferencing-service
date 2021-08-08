@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 /**
  * next
@@ -31,10 +31,10 @@ import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 /**
  * component
  */
@@ -43,12 +43,9 @@ import ApoLayout from 'src/components/AppLayout';
 function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-
-
-
   useEffect(() => {
     const user = userList[0] || null;
-  
+
     console.log('getStaticProps() :: useEffect (mount)');
     return () => {
       console.log('getStaticProps() :: useEffect (unmount)');
@@ -57,9 +54,7 @@ function UserRegistration({
 
   return (
     <ApoLayout>
-      <div >
-
-      </div>
+      <div></div>
     </ApoLayout>
   );
 }
