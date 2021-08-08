@@ -8,3 +8,12 @@ export enum PreferencePath {
   eventManagerList = '/preference/eventManagerList',
   eventManagerRegistration = '/preference/eventManagerRegistration',
 }
+
+export enum UserPath {
+  root = '/user',
+  registration = '/user/registration',
+  bulkRegistrationExcel = '/user/bulkRegistrationExcel',
+  bulkModifyExcel = '/user/bulkModifyExcel',
+  histroyList = '/user/histroyList',
+  historyElapsedTime = '/user/historyElapsedTime',
+}
