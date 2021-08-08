@@ -1,7 +1,7 @@
 /**
  * React
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 /**
  * Next
@@ -104,9 +104,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function Preference({
-  result,
+  preferenceList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
+
+  const [representativeName, setRepresentativeName] = useState<string>(
+    () =>
+      preferenceList.find(
+        ({ PREFERENCE_KEY }) => PREFERENCE_KEY === 'REPRESENTATIVE_NAME',
+      )?.PREFERENCE_VALUE ?? '',
+  );
 
   return (
     <ApoLayout>
@@ -128,12 +135,7 @@ function Preference({
             fullWidth
             id="standard-required"
             placeholder="대표자 성명을 입력해주세요."
-            value={
-              result.find(
-                (preference) =>
-                  preference.preferenceKey === 'REPRESENTATIVE_NAME',
-              )?.preferenceValue
-            }
+            value={representativeName}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -216,20 +218,22 @@ function Preference({
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ result: PreferenceVO[] }> =
-  async ({ params }) => {
-    const preferenceList =
-      await PreferenceService.selectPreferenceListByGroupKey({
-        preferenceKey: 'SITE_INFORMATION',
-      });
-    console.log({ preferenceList });
-    // By returning { props: { posts } }, the Blog component
-    // will receive `posts` as a prop at build time
-    return {
-      props: {
-        result: preferenceList,
-      },
-    };
+export const getStaticProps: GetStaticProps<{
+  preferenceList: PreferenceVO[];
+}> = async ({ params }) => {
+  const preferenceList = await PreferenceService.selectPreferenceListByGroupKey(
+    {
+      preferenceKey: 'SITE_INFORMATION',
+    },
+  );
+  console.log({ preferenceList });
+  // By returning { props: { posts } }, the Blog component
+  // will receive `posts` as a prop at build time
+  return {
+    props: {
+      preferenceList,
+    },
   };
+};
 
 export default Preference;
