@@ -9,7 +9,7 @@ class PreferenceService {
     preferenceKey,
   }: {
     preferenceKey: string;
-  }) {
+  }): Promise<PreferenceVO[]> {
     const conn = await connectionPool.getConnection();
     const groupPreferenceList: PreferenceVO[] = await conn.query(`
       SELECT
@@ -20,6 +20,7 @@ class PreferenceService {
         PREFERENCE_KEY = '${preferenceKey}'
     `);
     const groupId = groupPreferenceList[0].ID;
+    console.log({ groupId });
 
     const groupList = await conn.query(`
       SELECT
@@ -31,7 +32,7 @@ class PreferenceService {
     `);
 
     const preferenceList: PreferenceVO[] = groupList.map((data: any) =>
-      Object.assign(data, new PreferenceVO()),
+      Object.assign(new PreferenceVO(), data),
     );
 
     const result = JSON.parse(JSON.stringify(preferenceList));
