@@ -3,7 +3,6 @@
  */
 import connectionPool from 'src/db';
 import { PreferenceVO } from 'src/vo';
-
 class PreferenceService {
   async selectPreferenceListByGroupKey({
     preferenceKey,
@@ -40,6 +39,32 @@ class PreferenceService {
     await conn.release();
 
     return result;
+  }
+
+  async insertSiteInformation(preferenceList: PreferenceVO[]): Promise<number> {
+    const conn = await connectionPool.getConnection();
+
+    let resultCount = 0;
+
+    preferenceList.forEach(async (preference, index) => {
+      try {
+        const queryResult = await conn.query(`
+          UPDATE
+            TB_PREFERENCE
+          SET
+            PREFERENCE_VALUE = "${preference.PREFERENCE_VALUE}"
+          WHERE
+            PREFERENCE_KEY = '${preference.PREFERENCE_KEY}'
+        `);
+        resultCount = resultCount + queryResult.affectedRows;
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    await conn.release();
+
+    return resultCount;
   }
 }
 
