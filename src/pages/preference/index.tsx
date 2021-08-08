@@ -184,6 +184,9 @@ function Preference({
     try {
       const { data, status } = await HttpClient.put('/preference', {
         [PreferenceKey.RepresentativeName]: name,
+        [PreferenceKey.RepresentativePhone]: phoneNumber,
+        [PreferenceKey.RepresentativeMail]: mail,
+        [PreferenceKey.CopyrightSignature]: copyright,
       });
       const { success, result } = new OTAResponse<{ method: string }>(data);
       console.log(result);

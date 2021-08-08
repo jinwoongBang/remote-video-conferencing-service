@@ -46,27 +46,25 @@ class PreferenceService {
 
     let resultCount = 0;
 
-    preferenceList.forEach(async (preference) => {
+    preferenceList.forEach(async (preference, index) => {
       try {
-        await conn.query(`
+        const queryResult = await conn.query(`
           UPDATE
             TB_PREFERENCE
           SET
-            PREFERENCE_VALUE = '${preference.PREFERENCE_VALUE}'
+            PREFERENCE_VALUE = "${preference.PREFERENCE_VALUE}"
           WHERE
             PREFERENCE_KEY = '${preference.PREFERENCE_KEY}'
         `);
-        resultCount += 1;
+        resultCount = resultCount + queryResult.affectedRows;
       } catch (e) {
         console.error(e);
       }
     });
 
-    const result = JSON.parse(JSON.stringify(resultCount));
-
     await conn.release();
 
-    return result;
+    return resultCount;
   }
 }
 

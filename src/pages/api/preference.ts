@@ -73,6 +73,7 @@ async function doPut(
     preferenceList,
   );
 
+  console.log({ resultCount });
   const resultList = new Array(resultCount).fill('UPDATE');
 
   const response = new OTAResponse<PreferenceResponseEntity>();
