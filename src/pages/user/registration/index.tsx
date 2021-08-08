@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 /**
  * next
@@ -31,10 +31,10 @@ import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 /**
  * component
  */
@@ -44,7 +44,7 @@ import { reqUser } from 'src/vo';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 
-function TextMaskCustom(props) {
+function TextMaskCustom(props: { [x: string]: any; inputRef: any }) {
   const { inputRef, ...other } = props;
 
   return (
@@ -53,7 +53,23 @@ function TextMaskCustom(props) {
       ref={(ref) => {
         inputRef(ref ? ref.inputElement : null);
       }}
-      mask={['(', /[0-1]/, /[0-1]/, /[0-1]/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      mask={[
+        '(',
+        /[0-1]/,
+        /[0-1]/,
+        /[0-1]/,
+        ')',
+        ' ',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+      ]}
       placeholderChar={'\u2000'}
       showMask
     />
@@ -65,7 +81,7 @@ TextMaskCustom.propTypes = {
 };
 
 function Registration() {
-  const valueRegistari = useRecoilValue(registrationUser)
+  const valueRegistari = useRecoilValue(registrationUser);
 }
 
 function UserRegistration({
@@ -73,26 +89,26 @@ function UserRegistration({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   console.log('getStaticProps() :: no hooks');
 
-  const setReqUserState = useSetRecoilState(reqUserState)
+  const setReqUserState = useSetRecoilState(reqUserState);
   // const valueRegistari = useRecoilValue(registrationUser)
-  
+
   const reqUserSetting = (): reqUser => ({
     userPassword: userPw,
     userName: name,
     status: Number(status),
     userId: userId,
     event: event,
-    phone: phone.textmask,    
-    email: email,    
-    job: job,    
-    belongTo: belongTo,    
-    isUsedRecipt: isUsedRecipt,    
-    nationality: null,    
-    licenseNumber: null,    
-    specialListNumber: null,    
-    societyRrequest: null,    
+    phone: phone.textmask,
+    email: email,
+    job: job,
+    belongTo: belongTo,
+    isUsedRecipt: isUsedRecipt,
+    nationality: null,
+    licenseNumber: null,
+    specialListNumber: null,
+    societyRrequest: null,
     depositAmount: null,
-  })
+  });
 
   const [auth, setAuth] = useRecoilState(authState);
 
@@ -102,8 +118,8 @@ function UserRegistration({
   const [userPw, setUserPw] = useState<string>();
   const [name, setName] = useState<string>();
   const [phone, setPhone] = React.useState({
-    textmask: "010",
-    numberformat: "1320"
+    textmask: '010',
+    numberformat: '1320',
   });
   // const [phone, setPhone] = React.useState({
   //   textmask: "(010)    -    ",
@@ -113,8 +129,8 @@ function UserRegistration({
   const [job, setJob] = useState<string>();
   const [belongTo, setBelongTo] = useState<string>();
   const [isUsedRecipt, setIsUsedRecipt] = useState<string>();
-  const [age, setAge] = useState<string>("");
-  
+  const [age, setAge] = useState<string>('');
+
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -131,18 +147,18 @@ function UserRegistration({
     },
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120
+      minWidth: 120,
     },
   }));
-  
+
   const handleChangeStatus = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<{ value: unknown; name?: string }>) => {
       const { name, value } = event.target;
-      setStatus(value);
+      setStatus(value as string);
     },
     [],
   );
-  
+
   const handleChangeEvent = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
@@ -179,13 +195,13 @@ function UserRegistration({
   //   [],
   // );
 
-  const handleChangePhone = (event) => {
+  const handleChangePhone = (event: { target: { name: any; value: any } }) => {
     setPhone({
       ...phone,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
-  
+
   const handleChangeEmail = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
@@ -208,7 +224,7 @@ function UserRegistration({
     [],
   );
   const handleChangeRecipt = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<{ value: any; name?: string }>) => {
       const { name, value } = event.target;
       setIsUsedRecipt(value);
     },
@@ -217,17 +233,24 @@ function UserRegistration({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     try {
-      const payload = reqUserSetting()
-      console.log(`변경된 패스워드 reqUserSetting22: ${JSON.stringify(payload)}`);
+      const payload = reqUserSetting();
+      console.log(
+        `변경된 패스워드 reqUserSetting22: ${JSON.stringify(payload)}`,
+      );
       const { data, status } = await HttpClient.post(
         '/user',
         payload as reqUser,
       );
       const { success, result } = new OTAResponse<UserVO>(data);
-      console.log("success: " + success + "  // result: " + result)
-      console.log("success: " + success + "  // result stringify: " + JSON.stringify(result))
+      console.log('success: ' + success + '  // result: ' + result);
+      console.log(
+        'success: ' +
+          success +
+          '  // result stringify: ' +
+          JSON.stringify(result),
+      );
     } catch (error) {
       setError({ isError: true, message: error.message });
       console.error(error);
@@ -249,65 +272,100 @@ function UserRegistration({
     <ApoLayout>
       <div className={classes.root}>
         <form onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid item xs={3}>
-          <label htmlFor="status">회원상태</label>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="status">회원상태</label>
+            </Grid>
+            <Grid item xs={9}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="statusLabel">회원상태</InputLabel>
+                <Select
+                  labelId="statusLabel"
+                  id="status"
+                  value={status}
+                  onChange={handleChangeStatus}
+                  label="UserStatus"
+                  required
+                >
+                  <MenuItem value={'0'}>상태0</MenuItem>
+                  <MenuItem value={'1'}>상태1</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={9}>
-          <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="statusLabel">회원상태</InputLabel>
-              <Select
-                labelId="statusLabel"
-                id="status"
-                value={status}
-                onChange={handleChangeStatus}
-                label="UserStatus"
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="event">이벤트</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="event"
+                label="이벤트"
+                variant="outlined"
+                onChange={handleChangeEvent}
+                autoComplete="event"
                 required
-              >              
-                <MenuItem value={"0"}>상태0</MenuItem>
-                <MenuItem value={"1"}>상태1</MenuItem>
-              </Select>
-            </FormControl>
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="event">이벤트</label>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="userId">아이디</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="userId"
+                label="아이디"
+                variant="outlined"
+                onChange={handleChangeUserId}
+                autoComplete="userId"
+                required
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={9}>
-            <TextField id="event" label="이벤트" variant="outlined" onChange={handleChangeEvent} autoComplete="event" required/>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="userPw">비밀번호</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="userPw"
+                label="비밀번호"
+                variant="outlined"
+                onChange={handleChangeUserPw}
+                autoComplete="userPw"
+                required
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="userId">아이디</label>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="name">이름</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="name"
+                label="이름"
+                variant="outlined"
+                onChange={handleChangeName}
+                autoComplete="name"
+                required
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={9}>
-            <TextField id="userId" label="아이디" variant="outlined" onChange={handleChangeUserId} autoComplete="userId" required/>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="userPw">비밀번호</label>
-          </Grid>
-          <Grid item xs={9}>
-            <TextField id="userPw" label="비밀번호" variant="outlined" onChange={handleChangeUserPw} autoComplete="userPw" required/>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="name">이름</label>
-          </Grid>
-          <Grid item xs={9}>
-            <TextField id="name" label="이름" variant="outlined" onChange={handleChangeName} autoComplete="name" required/>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="phoneNumber">연락처</label>
-          </Grid>
-          <TextField id="phoneNumber" label="연락처" variant="outlined" onChange={handleChangePhone} autoComplete="email" required/>
-          {/* <Grid item xs={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="phoneNumber">연락처</label>
+            </Grid>
+            <TextField
+              id="phoneNumber"
+              label="연락처"
+              variant="outlined"
+              onChange={handleChangePhone}
+              autoComplete="email"
+              required
+            />
+            {/* <Grid item xs={9}>
             <FormControl required>
               <InputLabel htmlFor="phoneNumber">연락처</InputLabel>
               <Input
@@ -319,55 +377,75 @@ function UserRegistration({
               />
             </FormControl>
           </Grid> */}
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="email">이메일</label>
           </Grid>
-          <Grid item xs={9}>
-          <TextField id="email" label="이메일" variant="outlined" onChange={handleChangeEmail} autoComplete="email" required/>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="job">직업</label>
-          </Grid>
-          <Grid item xs={9}>
-            <TextField id="job" label="직업" variant="outlined" onChange={handleChangeJob} autoComplete="job" required/>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="belongTo">소속</label>
-          </Grid>
-          <Grid item xs={9}>
-            <TextField id="belongTo" label="소속" variant="outlined" onChange={handleChangeBelongTo} autoComplete="belongTo" required/>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={3} >
-          <label htmlFor="isUsedRecipt">영수증 사용 여부</label>
-          </Grid>
-          <Grid item xs={9}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="isUsedReciptLabel">영수증 사용 여부</InputLabel>
-              <Select
-                labelId="isUsedReciptLabel"
-                id="isUsedRecipt"
-                value={isUsedRecipt}
-                onChange={handleChangeRecipt}
-                label="isUsedRecipt"
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="email">이메일</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="email"
+                label="이메일"
+                variant="outlined"
+                onChange={handleChangeEmail}
+                autoComplete="email"
                 required
-              >
-              
-                <MenuItem value={1}>사용</MenuItem>
-                <MenuItem value={0}>사용안함</MenuItem>
-              </Select>
-            </FormControl>
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <button type="submit">Register</button>
-      </form>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="job">직업</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="job"
+                label="직업"
+                variant="outlined"
+                onChange={handleChangeJob}
+                autoComplete="job"
+                required
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="belongTo">소속</label>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                id="belongTo"
+                label="소속"
+                variant="outlined"
+                onChange={handleChangeBelongTo}
+                autoComplete="belongTo"
+                required
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <label htmlFor="isUsedRecipt">영수증 사용 여부</label>
+            </Grid>
+            <Grid item xs={9}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="isUsedReciptLabel">영수증 사용 여부</InputLabel>
+                <Select
+                  labelId="isUsedReciptLabel"
+                  id="isUsedRecipt"
+                  value={isUsedRecipt}
+                  onChange={handleChangeRecipt}
+                  label="isUsedRecipt"
+                  required
+                >
+                  <MenuItem value={'1'}>사용</MenuItem>
+                  <MenuItem value={'0'}>사용안함</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <button type="submit">Register</button>
+        </form>
       </div>
     </ApoLayout>
   );
@@ -388,7 +466,6 @@ export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> = async ({
 
 export default UserRegistration;
 
-function setError(arg0: { isError: boolean; message: any; }) {
+function setError(arg0: { isError: boolean; message: any }) {
   throw new Error('Function not implemented.');
 }
-
