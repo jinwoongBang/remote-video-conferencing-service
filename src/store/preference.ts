@@ -5,6 +5,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
 import { PreferenceKey } from 'src/common/preference';
 
 type SiteInformationProps = {
+  isInit: boolean;
   name: string;
   phoneNumber: string;
   mail: string;
@@ -14,6 +15,7 @@ type SiteInformationProps = {
 export const siteInformationState = atom<SiteInformationProps>({
   key: 'insertPreferenceBySiteInformationParamState',
   default: {
+    isInit: false,
     name: '',
     phoneNumber: '',
     mail: '',
@@ -21,18 +23,22 @@ export const siteInformationState = atom<SiteInformationProps>({
   },
 });
 
-export const InsertSiteInformationSelector = selector<{ method: string }[]>({
-  key: 'InsertPreferenceBySiteInformation',
+export const callInsertSiteInformation = selector<{ method: string }[]>({
+  key: 'callInsertSiteInformation',
   get: async ({ get }) => {
     const param = get(siteInformationState);
-    const { data, status }: AxiosResponse<OTAResponse<{ method: string }>> =
-      await HttpClient.put('/preference', {
-        [PreferenceKey.RepresentativeName]: param.name,
-        [PreferenceKey.RepresentativePhone]: param.phoneNumber,
-        [PreferenceKey.RepresentativeMail]: param.mail,
-        [PreferenceKey.CopyrightSignature]: param.copyright,
-      });
+    if (param.isInit) {
+      const { data, status }: AxiosResponse<OTAResponse<{ method: string }>> =
+        await HttpClient.put('/preference', {
+          [PreferenceKey.RepresentativeName]: param.name,
+          [PreferenceKey.RepresentativePhone]: param.phoneNumber,
+          [PreferenceKey.RepresentativeMail]: param.mail,
+          [PreferenceKey.CopyrightSignature]: param.copyright,
+        });
 
-    return data.result;
+      return data.result;
+    }
+
+    return [];
   },
 });

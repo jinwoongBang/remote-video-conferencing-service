@@ -77,7 +77,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
  * store
  */
 import {
-  InsertSiteInformationSelector,
+  callInsertSiteInformation,
   siteInformationState,
 } from 'src/store/preference';
 
@@ -144,7 +144,7 @@ function Preference({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
-  const insertLoadable = useRecoilValueLoadable(InsertSiteInformationSelector);
+  const insertLoadable = useRecoilValueLoadable(callInsertSiteInformation);
   const setInsertParam = useSetRecoilState(siteInformationState);
 
   useEffect(() => {
@@ -215,6 +215,7 @@ function Preference({
 
   const handleModifySiteInformation = (event: React.MouseEvent) => {
     const param = {
+      isInit: true,
       name,
       phoneNumber,
       mail,
@@ -335,14 +336,14 @@ function Preference({
 export const getStaticProps: GetStaticProps<{
   preferenceList: PreferenceVO[];
 }> = async ({ params }) => {
-  // const preferenceList = await PreferenceService.selectPreferenceListByGroupKey(
-  //   {
-  //     preferenceKey: 'SITE_INFORMATION',
-  //   },
-  // );
+  const preferenceList = await PreferenceService.selectPreferenceListByGroupKey(
+    {
+      preferenceKey: 'SITE_INFORMATION',
+    },
+  );
   return {
     props: {
-      preferenceList: [],
+      preferenceList,
     },
   };
 };
