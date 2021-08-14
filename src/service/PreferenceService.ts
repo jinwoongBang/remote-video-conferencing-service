@@ -64,10 +64,10 @@ class PreferenceService {
         resultCount = resultCount + queryResult.affectedRows;
       } catch (e) {
         console.error(e);
+      } finally {
+        await conn.release();
       }
     });
-
-    await conn.release();
 
     return resultCount;
   }

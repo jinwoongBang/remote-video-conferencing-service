@@ -1,13 +1,32 @@
 /**
  * React
  */
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  Component,
+  ErrorInfo,
+  ReactNode,
+} from 'react';
 
 /**
  * Next
  */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
+
+/**
+ * Recoil
+ */
+import {
+  RecoilState,
+  useRecoilState,
+  useRecoilValue,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from 'recoil';
 
 /**
  *  Material UI
@@ -25,6 +44,7 @@ import {
   Copyright,
   Create,
   Mail,
+  PanoramaSharp,
   Person,
   PhoneAndroid,
 } from '@material-ui/icons';
@@ -52,6 +72,14 @@ import { PreferenceVO } from 'src/vo';
 import { PreferenceKey } from 'src/common/preference';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
+
+/**
+ * store
+ */
+import {
+  InsertSiteInformationSelector,
+  siteInformationState,
+} from 'src/store/preference';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -116,6 +144,13 @@ function Preference({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
+  const insertLoadable = useRecoilValueLoadable(InsertSiteInformationSelector);
+  const setInsertParam = useSetRecoilState(siteInformationState);
+
+  useEffect(() => {
+    console.log({ insertLoadable });
+  }, [insertLoadable.state]);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [name, setName] = useState<string>(
@@ -178,22 +213,15 @@ function Preference({
     [],
   );
 
-  const handleModifySiteInformation = async (event: React.MouseEvent) => {
-    setIsLoading(true);
-
-    try {
-      const { data, status } = await HttpClient.put('/preference', {
-        [PreferenceKey.RepresentativeName]: name,
-        [PreferenceKey.RepresentativePhone]: phoneNumber,
-        [PreferenceKey.RepresentativeMail]: mail,
-        [PreferenceKey.CopyrightSignature]: copyright,
-      });
-      const { success, result } = new OTAResponse<{ method: string }>(data);
-      console.log(result);
-    } catch (error) {
-      console.error(error);
-    }
-    setIsLoading(false);
+  const handleModifySiteInformation = (event: React.MouseEvent) => {
+    const param = {
+      name,
+      phoneNumber,
+      mail,
+      copyright,
+    };
+    console.log(`handleModifySiteInformation() :: ${param}`);
+    setInsertParam(param);
   };
 
   return (
@@ -307,14 +335,14 @@ function Preference({
 export const getStaticProps: GetStaticProps<{
   preferenceList: PreferenceVO[];
 }> = async ({ params }) => {
-  const preferenceList = await PreferenceService.selectPreferenceListByGroupKey(
-    {
-      preferenceKey: 'SITE_INFORMATION',
-    },
-  );
+  // const preferenceList = await PreferenceService.selectPreferenceListByGroupKey(
+  //   {
+  //     preferenceKey: 'SITE_INFORMATION',
+  //   },
+  // );
   return {
     props: {
-      preferenceList,
+      preferenceList: [],
     },
   };
 };
