@@ -77,7 +77,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
  * store
  */
 import {
-  callInsertSiteInformation,
+  insertSiteInformationSelector,
   siteInformationState,
 } from 'src/store/preference';
 
@@ -150,8 +150,8 @@ function Preference({
   /**
    * Recoil
    */
-  const insertLoadable = useRecoilValueLoadable(callInsertSiteInformation);
-  const setInsertParam = useSetRecoilState(siteInformationState);
+  const insertLoadable = useRecoilValueLoadable(insertSiteInformationSelector);
+  const requestInsertSiteInformation = useSetRecoilState(siteInformationState);
 
   /**
    * useMemo
@@ -201,7 +201,7 @@ function Preference({
    */
   useEffect(() => {
     return () => {
-      setInsertParam((state) => ({ ...state, isInit: false }));
+      requestInsertSiteInformation((state) => ({ ...state, isInit: false }));
     };
   }, []);
 
@@ -245,7 +245,7 @@ function Preference({
         mail,
         copyright,
       };
-      setInsertParam(param);
+      requestInsertSiteInformation(param);
     },
     [name, phoneNumber, mail, copyright],
   );

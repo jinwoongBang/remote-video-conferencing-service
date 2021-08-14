@@ -279,7 +279,7 @@ function OperatorRegistration({
                 <Checkbox
                   checked={true}
                   // onChange={handleChange}
-                  name="checkedB"
+                  name="PREFERENCE_ROLE"
                   color="primary"
                 />
               }
@@ -290,7 +290,7 @@ function OperatorRegistration({
                 <Checkbox
                   checked={false}
                   // onChange={handleChange}
-                  name="checkedB"
+                  name="USER_ROLE"
                   color="primary"
                 />
               }
@@ -301,7 +301,7 @@ function OperatorRegistration({
                 <Checkbox
                   checked={true}
                   // onChange={handleChange}
-                  name="checkedB"
+                  name="EVENT_ROLE"
                   color="primary"
                 />
               }
@@ -312,7 +312,7 @@ function OperatorRegistration({
                 <Checkbox
                   checked={true}
                   // onChange={handleChange}
-                  name="checkedB"
+                  name="SPECIAL_ROLE"
                   color="primary"
                 />
               }

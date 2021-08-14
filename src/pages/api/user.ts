@@ -16,25 +16,27 @@ export default async function handler(
   res: NextApiResponse<OTAResponse<Data>>,
 ) {
   const { method, body } = req;
-  console.log("api user req:: " + method + "  // body:: " + JSON.stringify(body));
-  
-  const reqUser = (body as reqUser)
-  console.log("// reqUser:: " + JSON.stringify(reqUser));
+  console.log(
+    'api user req:: ' + method + '  // body:: ' + JSON.stringify(body),
+  );
 
-  const checkUser = await UserService.selectUserIdCheck(reqUser.userId ?? '')
+  const reqUser = body as reqUser;
+  console.log('// reqUser:: ' + JSON.stringify(reqUser));
+
+  const checkUser = await UserService.selectUserIdCheck(reqUser.userId ?? '');
 
   const seminarResponse = new OTAResponse<Data>();
 
-  if(!checkUser){
-    console.log("api user:: exist user: " );
+  if (!checkUser) {
+    console.log('api user:: exist user: ');
     seminarResponse.success = false;
     res.send(seminarResponse);
-    return
+    return;
   }
 
   const data = await UserService.insertUser(reqUser);
 
-  console.log("api user:: insert data: " + data);
+  console.log('api user:: insert data: ' + data);
 
   const result: Data[] = [
     { id: 20, name: 'before1' },

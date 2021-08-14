@@ -23,8 +23,8 @@ export const siteInformationState = atom<SiteInformationProps>({
   },
 });
 
-export const callInsertSiteInformation = selector<{ method: string }[]>({
-  key: 'callInsertSiteInformation',
+export const insertSiteInformationSelector = selector<{ method: string }[]>({
+  key: 'insertSiteInformationSelector',
   get: async ({ get }) => {
     let result: { method: string }[] = [];
     const param = get(siteInformationState);
