@@ -196,6 +196,18 @@ function Preference({
       )?.PREFERENCE_VALUE ?? '',
   );
 
+  /**
+   * useEffect
+   */
+  useEffect(() => {
+    return () => {
+      setInsertParam((state) => ({ ...state, isInit: false }));
+    };
+  }, []);
+
+  /**
+   * useCallback
+   */
   const handleChangeName = useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
       setName(event.target.value);
@@ -224,16 +236,6 @@ function Preference({
     [],
   );
 
-  /**
-   * useEffect
-   */
-  useEffect(() => {
-    console.log({ insertLoadable });
-  }, [insertLoadable.state]);
-
-  /**
-   * useCallback
-   */
   const handleModifySiteInformation = useCallback(
     (event: React.MouseEvent) => {
       const param = {
