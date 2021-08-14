@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { atom, selector, selectorFamily } from 'recoil';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
-import { PreferenceKey } from 'src/common/preference';
+import { PreferenceKey } from 'src/common/enum/preference';
 
 export type SiteInformationProps = {
   isInit: boolean;

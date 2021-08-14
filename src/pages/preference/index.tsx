@@ -69,7 +69,7 @@ import { PreferenceVO } from 'src/vo';
 /**
  * common
  */
-import { PreferenceKey } from 'src/common/preference';
+import { PreferenceKey } from 'src/common/enum/preference';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 

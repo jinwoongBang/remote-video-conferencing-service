@@ -48,6 +48,9 @@ import UserVO from 'src/vo/UserVO';
  * component
  */
 import ApoLayout from 'src/components/AppLayout';
+import { AuthorityVO } from 'src/vo';
+import AuthorityService from 'src/service/AuthorityService';
+import { AuthorityKey } from 'src/common/enum/authority';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -109,7 +112,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function OperatorRegistration({
-  result,
+  autorityList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
@@ -121,6 +124,16 @@ function OperatorRegistration({
   const [password, setPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [mail, setMail] = useState<string>('');
+  const [authority, setAuthority] = useState(() => {
+    const auth: {
+      [key: string]: boolean;
+    } = {};
+    autorityList.forEach((item) => {
+      auth[item.AUTHORITY_KEY as string];
+    });
+
+    return auth;
+  });
 
   /**
    * useCallback
@@ -152,6 +165,14 @@ function OperatorRegistration({
   const handleChangeMail = useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
       setMail(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeAuthority = useCallback(
+    (event: React.ChangeEvent<{ name: string; checked: boolean }>) => {
+      const { checked } = event.target;
+      setAuthority((state) => ({ ...state, [name]: checked }));
     },
     [],
   );
@@ -274,50 +295,22 @@ function OperatorRegistration({
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
           <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={true}
-                  // onChange={handleChange}
-                  name="PREFERENCE_ROLE"
-                  color="primary"
+            {autorityList.map((item: AuthorityVO) => {
+              return (
+                <FormControlLabel
+                  key={item.ID}
+                  control={
+                    <Checkbox
+                      checked={authority[item.AUTHORITY_KEY]}
+                      onChange={handleChangeAuthority}
+                      name={item.AUTHORITY_KEY}
+                      color="primary"
+                    />
+                  }
+                  label={item.NAME}
                 />
-              }
-              label="환경설정 관리"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={false}
-                  // onChange={handleChange}
-                  name="USER_ROLE"
-                  color="primary"
-                />
-              }
-              label="회원 관리"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={true}
-                  // onChange={handleChange}
-                  name="EVENT_ROLE"
-                  color="primary"
-                />
-              }
-              label="이벤트 관리"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={true}
-                  // onChange={handleChange}
-                  name="SPECIAL_ROLE"
-                  color="primary"
-                />
-              }
-              label="특별 관리"
-            />
+              );
+            })}
           </FormGroup>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
@@ -349,16 +342,16 @@ function OperatorRegistration({
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
-  params,
-}) => {
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      result: [],
-    },
+export const getStaticProps: GetStaticProps<{ autorityList: AuthorityVO[] }> =
+  async ({ params }) => {
+    const autorityList = await AuthorityService.selectAuthorityListByKeys({
+      authorityKeys: Object.values(AuthorityKey),
+    });
+    return {
+      props: {
+        autorityList,
+      },
+    };
   };
-};
 
 export default OperatorRegistration;

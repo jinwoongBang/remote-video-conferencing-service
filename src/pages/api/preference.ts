@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OTAResponse from 'src/common/framework/OTAResponse';
-import { PreferenceKey } from 'src/common/preference';
+import { PreferenceKey } from 'src/common/enum/preference';
 import PreferenceService from 'src/service/PreferenceService';
 import { PreferenceVO } from 'src/vo';
 
