@@ -213,17 +213,19 @@ function Preference({
     [],
   );
 
-  const handleModifySiteInformation = (event: React.MouseEvent) => {
-    const param = {
-      isInit: true,
-      name,
-      phoneNumber,
-      mail,
-      copyright,
-    };
-    console.log(`handleModifySiteInformation() :: ${param}`);
-    setInsertParam(param);
-  };
+  const handleModifySiteInformation = useCallback(
+    (event: React.MouseEvent) => {
+      const param = {
+        isInit: true,
+        name,
+        phoneNumber,
+        mail,
+        copyright,
+      };
+      setInsertParam(param);
+    },
+    [name, phoneNumber, mail, copyright],
+  );
 
   return (
     <ApoLayout>

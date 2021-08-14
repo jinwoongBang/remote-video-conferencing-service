@@ -4,7 +4,7 @@ import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import { PreferenceKey } from 'src/common/preference';
 
-type SiteInformationProps = {
+export type SiteInformationProps = {
   isInit: boolean;
   name: string;
   phoneNumber: string;
@@ -13,7 +13,7 @@ type SiteInformationProps = {
 };
 
 export const siteInformationState = atom<SiteInformationProps>({
-  key: 'insertPreferenceBySiteInformationParamState',
+  key: 'siteInformationState',
   default: {
     isInit: false,
     name: '',
@@ -26,8 +26,14 @@ export const siteInformationState = atom<SiteInformationProps>({
 export const callInsertSiteInformation = selector<{ method: string }[]>({
   key: 'callInsertSiteInformation',
   get: async ({ get }) => {
+    let result: { method: string }[] = [];
     const param = get(siteInformationState);
-    if (param.isInit) {
+
+    if (!param.isInit) {
+      return result;
+    }
+
+    try {
       const { data, status }: AxiosResponse<OTAResponse<{ method: string }>> =
         await HttpClient.put('/preference', {
           [PreferenceKey.RepresentativeName]: param.name,
@@ -35,10 +41,11 @@ export const callInsertSiteInformation = selector<{ method: string }[]>({
           [PreferenceKey.RepresentativeMail]: param.mail,
           [PreferenceKey.CopyrightSignature]: param.copyright,
         });
-
-      return data.result;
+      result = data.result;
+    } catch (error) {
+      console.error(error);
     }
 
-    return [];
+    return result;
   },
 });
