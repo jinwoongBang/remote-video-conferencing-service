@@ -139,19 +139,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+/**
+ * Default Function
+ */
 function Preference({
   preferenceList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
+  /**
+   * Recoil
+   */
   const insertLoadable = useRecoilValueLoadable(callInsertSiteInformation);
   const setInsertParam = useSetRecoilState(siteInformationState);
 
-  useEffect(() => {
-    console.log({ insertLoadable });
-  }, [insertLoadable.state]);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  /**
+   * useState
+   */
+  const isLoading = useMemo(
+    () => insertLoadable.state === 'loading',
+    [insertLoadable.state],
+  );
 
   const [name, setName] = useState<string>(
     () =>
@@ -213,6 +221,16 @@ function Preference({
     [],
   );
 
+  /**
+   * useEffect
+   */
+  useEffect(() => {
+    console.log({ insertLoadable });
+  }, [insertLoadable.state]);
+
+  /**
+   * useCallback
+   */
   const handleModifySiteInformation = useCallback(
     (event: React.MouseEvent) => {
       const param = {
@@ -248,6 +266,7 @@ function Preference({
             placeholder="대표자 성명을 입력해주세요."
             value={name}
             onChange={handleChangeName}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -271,6 +290,7 @@ function Preference({
             }}
             value={phoneNumber}
             onChange={handleChangePhoneNumber}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -291,6 +311,7 @@ function Preference({
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
             value={mail}
             onChange={handleChangeMail}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -311,6 +332,7 @@ function Preference({
             placeholder="저작권 문구를 입력해주세요."
             value={copyright}
             onChange={handleChangeCopyright}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={12} className={classes.divider}>
