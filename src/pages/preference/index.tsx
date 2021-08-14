@@ -154,13 +154,16 @@ function Preference({
   const setInsertParam = useSetRecoilState(siteInformationState);
 
   /**
-   * useState
+   * useMemo
    */
   const isLoading = useMemo(
     () => insertLoadable.state === 'loading',
     [insertLoadable.state],
   );
 
+  /**
+   * useState
+   */
   const [name, setName] = useState<string>(
     () =>
       preferenceList.find(

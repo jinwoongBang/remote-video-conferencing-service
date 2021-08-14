@@ -1,7 +1,7 @@
 /**
  * React
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 /**
  * Next
@@ -30,6 +30,8 @@ import {
   Mail,
   Person,
   PhoneAndroid,
+  SecurityRounded,
+  SecuritySharp,
 } from '@material-ui/icons';
 
 /**
@@ -96,6 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     padding: '15px',
+    gap: '10px',
   },
   modifyButton: {
     width: '200px',
@@ -109,6 +112,49 @@ function OperatorRegistration({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
+
+  /**
+   * useState
+   */
+  const [userId, setUserId] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [mail, setMail] = useState<string>('');
+
+  /**
+   * useCallback
+   */
+  const handleChangeId = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setUserId(event.target.value);
+    },
+    [],
+  );
+  const handleChangeName = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setName(event.target.value);
+    },
+    [],
+  );
+  const handleChangePassword = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPassword(event.target.value);
+    },
+    [],
+  );
+  const handleChangePhoneNumber = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPhoneNumber(event.target.value);
+    },
+    [],
+  );
+  const handleChangeMail = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setMail(event.target.value);
+    },
+    [],
+  );
 
   return (
     <ApoLayout>
@@ -130,6 +176,8 @@ function OperatorRegistration({
             fullWidth
             id="standard-required"
             placeholder="대표자 성명을 입력해주세요."
+            value={userId}
+            onChange={handleChangeId}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -149,16 +197,17 @@ function OperatorRegistration({
             fullWidth
             id="standard-required"
             placeholder="대표 휴대전화 번호를 입력해주세요."
+            value={name}
+            onChange={handleChangeName}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          {/* <Typography variant="caption">대표 메일</Typography> */}
           <Button
             fullWidth
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<Mail />}
+            startIcon={<SecuritySharp />}
           >
             비밀번호
           </Button>
@@ -168,6 +217,8 @@ function OperatorRegistration({
             fullWidth
             id="standard-required"
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
+            value={password}
+            onChange={handleChangePassword}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -176,7 +227,7 @@ function OperatorRegistration({
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<Copyright />}
+            startIcon={<PhoneAndroid />}
           >
             핸드폰
           </Button>
@@ -186,6 +237,8 @@ function OperatorRegistration({
             fullWidth
             id="standard-required"
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
+            value={phoneNumber}
+            onChange={handleChangePhoneNumber}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -194,7 +247,7 @@ function OperatorRegistration({
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<Copyright />}
+            startIcon={<Mail />}
           >
             이메일
           </Button>
@@ -203,7 +256,9 @@ function OperatorRegistration({
           <TextField
             fullWidth
             id="standard-required"
-            placeholder="저작권 문구를 입력해주세요."
+            placeholder="이메일을 입력해주세요."
+            value={mail}
+            onChange={handleChangeMail}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -270,8 +325,8 @@ function OperatorRegistration({
         </Grid>
         <Grid item xs={12} className={classes.buttonContaier}>
           <Button
-            variant="contained"
-            color="primary"
+            variant="outlined"
+            color="secondary"
             size="large"
             className={classes.modifyButton}
             startIcon={<Cancel />}
