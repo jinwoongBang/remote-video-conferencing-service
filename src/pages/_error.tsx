@@ -1,5 +1,5 @@
 import React from 'react';
-
+import NextError from 'next/error';
 interface ErrorProps {
   statusCode: number;
 }
@@ -20,11 +20,12 @@ interface ErrorInitialProps {
  */
 function Error({ statusCode }: ErrorProps) {
   return (
-    <p>
-      {statusCode
-        ? `An error ${statusCode} occurred on server`
-        : 'An error occurred on client'}
-    </p>
+    <NextError statusCode={statusCode} />
+    // <p>
+    //   {statusCode
+    //     ? `An error ${statusCode} occurred on server`
+    //     : 'An error occurred on client'}
+    // </p>
   );
 }
 

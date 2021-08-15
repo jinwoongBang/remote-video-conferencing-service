@@ -128,6 +128,7 @@ function OperatorRegistration({
     const auth: {
       [key: string]: boolean;
     } = {};
+
     autorityList.forEach((item) => {
       auth[item.AUTHORITY_KEY as string];
     });
