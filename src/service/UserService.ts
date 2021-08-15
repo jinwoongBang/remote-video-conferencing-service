@@ -43,17 +43,17 @@ class UserService {
       `);
     const row = rows[0];
 
-    const user = new UserVO({
-      userName: row.NAME,
-      userId: row.USER_ID,
-      userPassword: row.PASSWORD,
-    });
+    // const user = new UserVO({
+    //   userName: row.NAME,
+    //   userId: row.USER_ID,
+    //   userPassword: row.PASSWORD,
+    // });
 
-    const result = JSON.parse(JSON.stringify(user));
+    // const result = JSON.parse(JSON.stringify(user));
 
     await conn.release();
 
-    return result;
+    return row;
   }
 
   async selectUserIdCheck(userId: String) {

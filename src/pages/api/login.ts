@@ -40,6 +40,7 @@ class Login {
     } catch (error) {
       console.error(error);
       response.status(401);
+      otaResponse.message = error.message;
       otaResponse.success = false;
     }
 

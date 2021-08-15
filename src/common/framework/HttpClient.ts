@@ -53,6 +53,18 @@ function onRejectedResponse(
   error: AxiosError,
 ): Promise<NetworkError | ServiceError> {
   console.error(error);
+  const { response, code, message } = error;
+  if (response) {
+    const { status, data } = response as AxiosResponse<OTAResponse<any>>;
+    return Promise.reject(
+      new InternalServerError({
+        statusCode: status,
+        name: message,
+        message: message,
+      }),
+    );
+  }
+
   return Promise.reject(new NetworkError());
 }
 
