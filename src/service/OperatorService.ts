@@ -32,7 +32,7 @@ class OperatorService extends OTAService {
         ) VALUES (
             0,
             0,
-            '${param.authorities}',
+            ${param.authorities ? `'${param.authorities}'` : null},
             '${param.userId}',
             '${param.password}',
             '${param.name}',

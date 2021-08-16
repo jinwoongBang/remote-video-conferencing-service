@@ -282,6 +282,7 @@ function OperatorRegistration({
             placeholder="대표자 성명을 입력해주세요."
             value={userId}
             onChange={handleChangeId}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -302,6 +303,7 @@ function OperatorRegistration({
             placeholder="대표 휴대전화 번호를 입력해주세요."
             value={name}
             onChange={handleChangeName}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -322,6 +324,7 @@ function OperatorRegistration({
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
             value={password}
             onChange={handleChangePassword}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -342,6 +345,7 @@ function OperatorRegistration({
             placeholder="대표 메일을 입력해주세요. ex) ontheair@ontheair.com"
             value={phoneNumber}
             onChange={handleChangePhoneNumber}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -362,6 +366,7 @@ function OperatorRegistration({
             placeholder="이메일을 입력해주세요."
             value={mail}
             onChange={handleChangeMail}
+            disabled={isLoading}
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -378,7 +383,6 @@ function OperatorRegistration({
         <Grid item xs={9} className={classes.inputContainer}>
           <FormGroup row>
             {authorityList.map((item: AuthorityVO) => {
-              console.log(item.AUTHORITY_KEY);
               return (
                 <FormControlLabel
                   key={item.ID}
