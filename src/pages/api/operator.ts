@@ -50,7 +50,7 @@ function doPost(
   res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
 ) {
   const param = req.body as OperatorPostParam;
-  OperatorService.insertOperator(param.user);
+  const resultCount = OperatorService.insertOperator(param.user);
   const response = new OTAResponse<OperatorResponseEntity>();
   const result: OperatorResponseEntity[] = [];
   response.result = result;

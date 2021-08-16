@@ -6,8 +6,6 @@ import UserService from 'src/service/UserService';
 import UserVO from 'src/vo/UserVO';
 
 type NextIronRequest = NextApiRequest & { session: Session };
-type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-
 class Login {
   private request: NextIronRequest;
   private response: NextApiResponse;
