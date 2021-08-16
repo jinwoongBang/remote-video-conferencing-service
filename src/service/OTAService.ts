@@ -4,7 +4,7 @@
 import connectionPool from 'src/db';
 
 class OTAService {
-  async getConnection() {
+  protected async getConnection() {
     return await connectionPool.getConnection();
   }
 }

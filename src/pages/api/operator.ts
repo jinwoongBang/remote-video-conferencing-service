@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OTAResponse from 'src/common/framework/OTAResponse';
+import OperatorService from 'src/service/OperatorService';
 import { PreferenceVO, User } from 'src/vo';
 
 export interface OperatorResponseEntity {
@@ -8,7 +9,7 @@ export interface OperatorResponseEntity {
 }
 
 export type OperatorPostParam = {
-  param: User;
+  user: User;
 };
 
 export default function handler(
@@ -48,6 +49,8 @@ function doPost(
   req: NextApiRequest,
   res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
 ) {
+  const param = req.body as OperatorPostParam;
+  OperatorService.insertOperator(param.user);
   const response = new OTAResponse<OperatorResponseEntity>();
   const result: OperatorResponseEntity[] = [];
   response.result = result;
