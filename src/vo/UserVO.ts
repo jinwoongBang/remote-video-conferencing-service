@@ -1,3 +1,27 @@
+export interface User {
+  ID: number;
+  EVENT_ID: number;
+  AUTHORITIES: String;
+  ROOM_ID: number;
+  TYPE: number;
+  USER_ID: string;
+  PASSWORD: string;
+  NAME: string;
+  STATUS: number;
+  PHONE_NUMBER: string;
+  EMAIL: string;
+  DATE_OF_CREATED: number;
+  DATE_OF_MODIFIED: number;
+  DATE_OF_DELETED: number;
+  JOB: string;
+  BELONG_TO: string;
+  IS_USED_RECEIPT: number;
+  NATIONALITY: string;
+  LICENSE_NUMBER: number;
+  SPECIALIST_NUMBER: string;
+  SOCIETY_REQUEST: string;
+  DEPOSIT_AMOUNT: number;
+}
 class UserVO {
   userName: string;
   userPassword: string;

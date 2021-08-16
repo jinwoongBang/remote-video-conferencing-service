@@ -27,11 +27,13 @@ import {
   Cancel,
   Copyright,
   Create,
+  HowToReg,
   Mail,
   Person,
   PhoneAndroid,
   SecurityRounded,
   SecuritySharp,
+  VpnKey,
 } from '@material-ui/icons';
 
 /**
@@ -209,7 +211,7 @@ function OperatorRegistration({
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<PhoneAndroid />}
+            startIcon={<Person />}
           >
             이름
           </Button>
@@ -229,7 +231,7 @@ function OperatorRegistration({
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<SecuritySharp />}
+            startIcon={<VpnKey />}
           >
             비밀번호
           </Button>
@@ -289,7 +291,7 @@ function OperatorRegistration({
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<Copyright />}
+            startIcon={<HowToReg />}
           >
             관리 등급
           </Button>
