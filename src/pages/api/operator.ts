@@ -1,7 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import OTAResponse from 'src/common/framework/OTAResponse';
-import OperatorService from 'src/service/OperatorService';
+import OperatorService, {
+  InsertOperatorParam,
+} from 'src/service/OperatorService';
 import { PreferenceVO, User } from 'src/vo';
 
 export interface OperatorResponseEntity {
@@ -9,7 +11,7 @@ export interface OperatorResponseEntity {
 }
 
 export type OperatorPostParam = {
-  user: User;
+  user: InsertOperatorParam;
 };
 
 class OperatorAPI {
@@ -23,19 +25,25 @@ class OperatorAPI {
     this.method = req.method as HTTPMethod;
   }
 
-  async doPost() {
+  async doPost(param: OperatorPostParam) {
     const response = new OTAResponse<OperatorResponseEntity>();
-    const param = this.request.body as OperatorPostParam;
-    const resultCount = await OperatorService.insertOperator(param.user);
-    const isSuccess = resultCount === 1;
+    try {
+      const resultCount = await OperatorService.insertOperator(param.user);
+      const isSuccess = resultCount === 1;
 
-    const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-      method: 'INSERT',
-    });
-    response.result = result;
-    response.success = isSuccess;
+      const result: OperatorResponseEntity[] = new Array(resultCount).fill({
+        method: 'INSERT',
+      });
+      response.result = result;
+      response.success = isSuccess;
 
-    this.response.status(200).json(response);
+      this.response.status(200).json(response);
+    } catch (error) {
+      console.error(error);
+      response.success = false;
+      response.message = error.message;
+      this.response.status(500).json(response);
+    }
   }
 
   async handler() {
@@ -43,7 +51,7 @@ class OperatorAPI {
       case 'GET':
         break;
       case 'POST':
-        await this.doPost();
+        await this.doPost(this.request.body);
         break;
       case 'PUT':
         break;

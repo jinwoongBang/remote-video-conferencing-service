@@ -1,10 +1,20 @@
 import OTAService from 'src/service/OTAService';
 import { User } from 'src/vo';
 
+export interface InsertOperatorParam {
+  authorities: string;
+  userId: string;
+  password: string;
+  name: string;
+  phoneNumber: string;
+  mail: string;
+}
+
 class OperatorService extends OTAService {
-  async insertOperator(param: User) {
+  async insertOperator(param: InsertOperatorParam) {
     let conn;
     let resultCount = 0;
+    let error;
 
     try {
       conn = await this.getConnection();
@@ -22,21 +32,24 @@ class OperatorService extends OTAService {
         ) VALUES (
             0,
             0,
-            ${param.AUTHORITIES},
-            ${param.USER_ID},
-            ${param.PASSWORD},
-            ${param.NAME},
-            ${param.PHONE_NUMBER},
-            ${param.EMAIL},
+            '${param.authorities}',
+            '${param.userId}',
+            '${param.password}',
+            '${param.name}',
+            '${param.phoneNumber}',
+            '${param.mail}',
             2
         )
       `);
       resultCount = queryResult.affectedRows;
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
+      error = e;
     } finally {
       conn && (await conn.release());
     }
+
+    if (error) throw new Error(error.message);
 
     return resultCount;
   }

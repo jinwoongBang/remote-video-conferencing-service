@@ -1,13 +1,24 @@
 /**
  * React
  */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 
 /**
  * Next
  */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
+
+/**
+ * Recoil
+ */
+import {
+  RecoilState,
+  useRecoilState,
+  useRecoilValue,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from 'recoil';
 
 /**
  *  Material UI
@@ -53,6 +64,10 @@ import ApoLayout from 'src/components/AppLayout';
 import { AuthorityVO } from 'src/vo';
 import AuthorityService from 'src/service/AuthorityService';
 import { AuthorityKey } from 'src/common/enum/authority';
+import {
+  insertOperatorSelector,
+  insertOperatorState,
+} from 'src/store/operator';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -90,6 +105,35 @@ function PhoneNumberMask(props: PhoneNumberMaskProps) {
   );
 }
 
+const createHasAuthorityKeyList = (selectedAuthorities: {
+  [key: string]: boolean;
+}) => {
+  const list: string[] = [];
+  for (let auth in selectedAuthorities) {
+    const isAuth = selectedAuthorities[auth];
+    isAuth && list.push(auth);
+  }
+  return list;
+};
+
+const createAuthorityParam = (
+  selectedAuthorities: { [key: string]: boolean },
+  authorityList: AuthorityVO[],
+) => {
+  const hasAuthKeyList: string[] =
+    createHasAuthorityKeyList(selectedAuthorities);
+
+  return authorityList
+    .filter(
+      (item) =>
+        hasAuthKeyList.findIndex(
+          (hasAuthKey) => hasAuthKey === item.AUTHORITY_KEY,
+        ) !== -1,
+    )
+    .map((item) => item.ID)
+    .join('-');
+};
+
 const useStyles = makeStyles((theme: Theme) => ({
   inputLabelContainer: {
     display: 'flex',
@@ -114,9 +158,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function OperatorRegistration({
-  autorityList,
+  authorityList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
+
+  /**
+   * Recoil
+   */
+  const insertLoadable = useRecoilValueLoadable(insertOperatorSelector);
+  const requestInsertOperator = useSetRecoilState(insertOperatorState);
 
   /**
    * useState
@@ -126,17 +176,34 @@ function OperatorRegistration({
   const [password, setPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [mail, setMail] = useState<string>('');
-  const [authority, setAuthority] = useState(() => {
+  const [selectedAuthorities, setSelectedAuthorities] = useState(() => {
     const auth: {
       [key: string]: boolean;
     } = {};
 
-    autorityList.forEach((item) => {
-      auth[item.AUTHORITY_KEY as string];
+    authorityList.forEach((item) => {
+      auth[item.AUTHORITY_KEY as string] = false;
     });
-
+    console.log(auth);
     return auth;
   });
+
+  /**
+   * useMemo
+   */
+  const isLoading = useMemo(
+    () => insertLoadable.state === 'loading',
+    [insertLoadable.state],
+  );
+
+  /**
+   * useEffect
+   */
+  useEffect(() => {
+    return () => {
+      requestInsertOperator((state) => ({ ...state, isInit: false }));
+    };
+  }, []);
 
   /**
    * useCallback
@@ -174,11 +241,25 @@ function OperatorRegistration({
 
   const handleChangeAuthority = useCallback(
     (event: React.ChangeEvent<{ name: string; checked: boolean }>) => {
-      const { checked } = event.target;
-      setAuthority((state) => ({ ...state, [name]: checked }));
+      const { checked, name } = event.target;
+      console.log({ name, checked });
+      setSelectedAuthorities((state) => ({ ...state, [name]: checked }));
     },
     [],
   );
+
+  const handleSubmitOperator = useCallback(() => {
+    const param = {
+      isInit: true,
+      userId,
+      name,
+      password,
+      phoneNumber,
+      mail,
+      authorities: createAuthorityParam(selectedAuthorities, authorityList),
+    };
+    requestInsertOperator(param);
+  }, [userId, name, password, phoneNumber, mail, selectedAuthorities]);
 
   return (
     <ApoLayout>
@@ -193,7 +274,6 @@ function OperatorRegistration({
           >
             아이디
           </Button>
-          {/* <Typography variant="caption">대표자 성명</Typography> */}
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
           <TextField
@@ -205,7 +285,6 @@ function OperatorRegistration({
           />
         </Grid>
         <Grid item xs={3} className={classes.inputLabelContainer}>
-          {/* <Typography variant="caption">대표 번호</Typography> */}
           <Button
             fullWidth
             color="primary"
@@ -298,13 +377,14 @@ function OperatorRegistration({
         </Grid>
         <Grid item xs={9} className={classes.inputContainer}>
           <FormGroup row>
-            {autorityList.map((item: AuthorityVO) => {
+            {authorityList.map((item: AuthorityVO) => {
+              console.log(item.AUTHORITY_KEY);
               return (
                 <FormControlLabel
                   key={item.ID}
                   control={
                     <Checkbox
-                      checked={authority[item.AUTHORITY_KEY]}
+                      checked={selectedAuthorities[item.AUTHORITY_KEY]}
                       onChange={handleChangeAuthority}
                       name={item.AUTHORITY_KEY}
                       color="primary"
@@ -326,6 +406,7 @@ function OperatorRegistration({
             size="large"
             className={classes.modifyButton}
             startIcon={<Cancel />}
+            disabled={isLoading}
           >
             취소
           </Button>
@@ -335,6 +416,8 @@ function OperatorRegistration({
             size="large"
             className={classes.modifyButton}
             startIcon={<Create />}
+            onClick={handleSubmitOperator}
+            disabled={isLoading}
           >
             등록
           </Button>
@@ -345,14 +428,14 @@ function OperatorRegistration({
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ autorityList: AuthorityVO[] }> =
+export const getStaticProps: GetStaticProps<{ authorityList: AuthorityVO[] }> =
   async ({ params }) => {
-    const autorityList = await AuthorityService.selectAuthorityListByKeys({
+    const authorityList = await AuthorityService.selectAuthorityListByKeys({
       authorityKeys: Object.values(AuthorityKey),
     });
     return {
       props: {
-        autorityList,
+        authorityList,
       },
     };
   };
