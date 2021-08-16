@@ -12,57 +12,47 @@ export type OperatorPostParam = {
   user: User;
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-) {
-  const { method } = req;
+class OperatorAPI {
+  private request: NextApiRequest;
+  private response: NextApiResponse;
+  private method?: HTTPMethod;
 
-  switch (method) {
-    case 'GET':
-      doGet(req, res);
-      break;
-    case 'POST':
-      doPost(req, res);
-      break;
-    case 'PUT':
-      doPut(req, res);
-      break;
-    default:
-      throw new Error('지정된 Method API 가 존재하지 않습니다.');
+  constructor(req: NextApiRequest, res: NextApiResponse) {
+    this.request = req;
+    this.response = res;
+    this.method = req.method as HTTPMethod;
+  }
+
+  async doPost() {
+    const response = new OTAResponse<OperatorResponseEntity>();
+    const param = this.request.body as OperatorPostParam;
+    const resultCount = await OperatorService.insertOperator(param.user);
+    const isSuccess = resultCount === 1;
+
+    const result: OperatorResponseEntity[] = new Array(resultCount).fill({
+      method: 'INSERT',
+    });
+    response.result = result;
+    response.success = isSuccess;
+
+    this.response.status(200).json(response);
+  }
+
+  async handler() {
+    switch (this.method) {
+      case 'GET':
+        break;
+      case 'POST':
+        await this.doPost();
+        break;
+      case 'PUT':
+        break;
+      default:
+        throw new Error('지정된 Method API 가 존재하지 않습니다.');
+    }
   }
 }
 
-function doGet(
-  req: NextApiRequest,
-  res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-) {
-  const query = req.query;
-  console.log({ query });
-  const response = new OTAResponse<OperatorResponseEntity>();
-  const result: OperatorResponseEntity[] = [];
-  response.result = result;
-  res.status(200).json(response);
-}
-
-function doPost(
-  req: NextApiRequest,
-  res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-) {
-  const param = req.body as OperatorPostParam;
-  const resultCount = OperatorService.insertOperator(param.user);
-  const response = new OTAResponse<OperatorResponseEntity>();
-  const result: OperatorResponseEntity[] = [];
-  response.result = result;
-  res.status(200).json(response);
-}
-
-async function doPut(
-  req: NextApiRequest,
-  res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-) {
-  const response = new OTAResponse<OperatorResponseEntity>();
-  const result: OperatorResponseEntity[] = [];
-  response.result = result;
-  res.status(200).json(response);
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  new OperatorAPI(req, res).handler();
 }
