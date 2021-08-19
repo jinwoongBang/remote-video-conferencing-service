@@ -10,23 +10,27 @@ type SelectUserProps = {
   password: string;
 };
 class UserService {
-  async selectUserList() {
+  async selectUserList(userId?: string) {
     const conn = await connectionPool.getConnection();
-    const rows = await conn.query('SELECT * FROM TB_USER'); // 쿼리 실행
-    const row = rows[0];
-
-    const user = new UserVO({
-      userName: row.AUTHORITIES,
-      userId: row.USER_ID,
-      userPassword: row.PASSWORD,
-    });
-
-    let userList: UserVO[] = [user];
-    userList = JSON.parse(JSON.stringify(userList));
-
+    console.log('111selectUserList userId:: ', userId);
+    if (userId == null) {
+      console.log('222selectUserList userId:: ', userId);
+      userId = '';
+    }
+    console.log('selectUserList userId:: ', userId);
+    const rows = await conn.query(`
+      SELECT
+        * 
+      FROM 
+        TB_USER
+      WHERE
+        USER_ID LIKE '%${userId}%'  
+      `);
+    let userList2: UserVO[] = rows;
+    console.log('selectUserList:: ', userList2);
     await conn.release();
 
-    return userList;
+    return JSON.parse(JSON.stringify(userList2));
   }
 
   async selectUser({ userId, userPassword }: UserVO) {
