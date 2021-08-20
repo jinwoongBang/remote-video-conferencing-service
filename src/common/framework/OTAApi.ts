@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 abstract class OTAApi {
   private request: NextApiRequest;
   private response: NextApiResponse;
-  private method?: HTTPMethod;
 
   constructor(req: NextApiRequest, res: NextApiResponse) {
     this.request = req;
@@ -14,21 +13,24 @@ abstract class OTAApi {
     request: NextApiRequest,
     response: NextApiResponse,
   ): Promise<any>;
+
   protected abstract doPost(
     request: NextApiRequest,
     response: NextApiResponse,
   ): Promise<any>;
+
   protected abstract doPut(
     request: NextApiRequest,
     response: NextApiResponse,
   ): Promise<any>;
+
   protected abstract doDelete(
     request: NextApiRequest,
     response: NextApiResponse,
   ): Promise<any>;
 
-  protected async handler(method: string) {
-    switch (method) {
+  public async service() {
+    switch (this.request.method) {
       case 'GET':
         await this.doGet(this.request, this.response);
         break;
