@@ -16,24 +16,30 @@ const authState = atom<Auth>({
   },
 });
 
-export const handleAuthentication = selector({
-  key: 'handleAuthentication',
+export const forcedReloadAuthenticationState = atom({
+  key: 'forcedReloadAuthenticationState',
+  default: 0,
+});
+
+export const authenticationSelector = selector<User | null>({
+  key: 'authenticationSelector',
   get: async ({ get }) => {
-    console.log('handleAuthentication() get :: invoked');
+    get(forcedReloadAuthenticationState);
     let data: OTAResponse<User>;
+
     try {
       const response = await HttpClient.get('/auth');
       data = await response.data;
-      console.log({ handleAuthentication: data });
     } catch (error) {
       console.error(error);
+
       return null;
     }
 
     return data.result[0];
   },
-  set: async ({ set }, value) => {
-    console.log(`handleAuthentication() get :: invoked :: ${value}`);
+  set: ({ set }) => {
+    set(forcedReloadAuthenticationState, Math.random());
   },
 });
 

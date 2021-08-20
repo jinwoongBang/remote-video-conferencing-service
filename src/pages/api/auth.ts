@@ -3,7 +3,6 @@ import { Session } from 'next-iron-session';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import withSession from 'src/common/utils/session';
 import UserVO, { User } from 'src/vo/UserVO';
-// import { withIronSession, Session } from 'next-iron-session';
 
 type NextIronRequest = NextApiRequest & { session: Session };
 
