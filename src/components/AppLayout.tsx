@@ -192,10 +192,6 @@ function ApoLayout({ children }: ApoLayoutProps) {
   const setAuth = useSetRecoilState(authState);
 
   useEffect(() => {
-    console.log({ auth });
-  }, [auth]);
-
-  useEffect(() => {
     const { pathname } = router;
 
     let index = 0;

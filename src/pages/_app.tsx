@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode, useEffect } from 'react';
 
 /**
  * next
@@ -9,7 +9,7 @@ import NextError from 'next/error';
 /**
  * recoil
  */
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilSnapshot } from 'recoil';
 
 /**
  *  meterial ui
@@ -19,6 +19,8 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { GlobalTheme } from 'styles/GlobalTheme';
 
 import 'styles/globals.css';
+
+import RecoilDebugObserver from 'src/components/RecoilDebugObserver';
 interface Props {
   children: ReactNode;
 }
@@ -49,10 +51,12 @@ class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>
       <RecoilRoot>
+        <RecoilDebugObserver />
         <CssBaseline />
         <ThemeProvider theme={GlobalTheme}>
           <Component {...pageProps} />

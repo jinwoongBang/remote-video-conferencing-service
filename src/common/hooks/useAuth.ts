@@ -31,7 +31,6 @@ export default function useAuth({
     try {
       const response = await HttpClient.get('/auth');
       const { result } = await response.data;
-      console.log({ result });
       setAuth(() => ({ user: result[0], isLoggedIn: true }));
     } catch (e) {
       console.error(e);
