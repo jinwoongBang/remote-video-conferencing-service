@@ -38,7 +38,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
  * store
  */
 import { authState, counterState } from 'src/store';
-import UserVO from 'src//vo/UserVO';
+import UserVO, { User } from 'src//vo/UserVO';
 
 /**
  * Hooks
@@ -46,7 +46,6 @@ import UserVO from 'src//vo/UserVO';
 import useAuth from 'src/common/hooks/useAuth';
 
 import { Auth, handleAuthentication } from 'src/store/auth';
-import { tempFahrenheit, tempCelsius } from 'src/store/test';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import { OTAError } from 'src/common/framework/Error';
@@ -126,7 +125,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
         '/login',
         new UserVO({ userId: id, userPassword: password }),
       );
-      const { success, result } = new OTAResponse<UserVO>(data);
+      const { success, result } = new OTAResponse<User>(data);
       setAuth((auth) => ({ user: result[0], isLoggedIn: true }));
     } catch (error) {
       setError({ isError: true, message: error.message });
