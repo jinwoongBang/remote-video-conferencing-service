@@ -1,4 +1,4 @@
-import OTAService from 'src/service/OTAService';
+import OTAService from 'src/common/framework/OTAService';
 import { User } from 'src/vo';
 
 export interface InsertOperatorParam {
