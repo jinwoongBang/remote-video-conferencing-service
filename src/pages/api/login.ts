@@ -3,7 +3,7 @@ import { Session } from 'next-iron-session';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import withSession from 'src/common/utils/session';
 import UserService from 'src/service/UserService';
-import UserVO from 'src/vo/UserVO';
+import UserVO, { User } from 'src/vo/UserVO';
 
 type NextIronRequest = NextApiRequest & { session: Session };
 class Login {
@@ -20,11 +20,10 @@ class Login {
   async doPost() {
     const { request, response } = this;
     const requestBody: UserVO = request.body;
-    const otaResponse = new OTAResponse<UserVO>();
+    const otaResponse = new OTAResponse<User>();
 
     try {
-      const user: UserVO = await UserService.selectUser(requestBody);
-      console.log({ user });
+      const user: User = await UserService.selectUser(requestBody);
       if (!user) {
         throw new Error('일치하는 계정이 존재하지 않습니다.');
       }

@@ -1,11 +1,11 @@
 import { atom, selector, selectorFamily } from 'recoil';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
-import UserVO from '../vo/UserVO';
+import UserVO, { User } from '../vo/UserVO';
 
 export interface Auth {
   isLoggedIn: boolean;
-  user: null | UserVO;
+  user: null | User;
 }
 
 const authState = atom<Auth>({
@@ -20,7 +20,7 @@ export const handleAuthentication = selector({
   key: 'handleAuthentication',
   get: async ({ get }) => {
     console.log('handleAuthentication() get :: invoked');
-    let data: OTAResponse<UserVO>;
+    let data: OTAResponse<User>;
     try {
       const response = await HttpClient.get('/auth');
       data = await response.data;

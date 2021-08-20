@@ -192,6 +192,10 @@ function ApoLayout({ children }: ApoLayoutProps) {
   const setAuth = useSetRecoilState(authState);
 
   useEffect(() => {
+    console.log({ auth });
+  }, [auth]);
+
+  useEffect(() => {
     const { pathname } = router;
 
     let index = 0;
@@ -205,7 +209,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
     }
     setValue(index);
     setSidebar(subHeaderList[index].sidebar);
-  }, [router.pathname]);
+  }, [router, router.pathname]);
 
   const handleClickMenu = useCallback(
     (url: string) => {
@@ -246,7 +250,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
               <Typography variant="body1">On The Air 로고</Typography>
             </Grid>
             <Grid item xs={3} className={classes.rightContainer}>
-              <Typography variant="body1">{auth.user?.userName}</Typography>
+              <Typography variant="body1">{auth.user?.NAME}</Typography>
               <Typography variant="body2">님 께서 로그인하셨습니다.</Typography>
               <Button variant="outlined" color="inherit" onClick={handleLogout}>
                 로그아웃
