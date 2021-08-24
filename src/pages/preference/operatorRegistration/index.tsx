@@ -18,6 +18,8 @@ import {
   useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState,
+  useRecoilStateLoadable,
+  useResetRecoilState,
 } from 'recoil';
 
 /**
@@ -65,9 +67,12 @@ import { AuthorityVO } from 'src/vo';
 import AuthorityService from 'src/service/AuthorityService';
 import { AuthorityKey } from 'src/common/enum/authority';
 import {
+  getOperatorListSelector,
   insertOperatorSelector,
   insertOperatorState,
+  forcedReloadOperatorListState,
 } from 'src/store/operator';
+import OperatorVO from 'src/vo/OperatorVO';
 
 interface PhoneNumberMaskProps {
   inputRef: (ref: HTMLInputElement | null) => void;
@@ -167,6 +172,8 @@ function OperatorRegistration({
    */
   const insertLoadable = useRecoilValueLoadable(insertOperatorSelector);
   const requestInsertOperator = useSetRecoilState(insertOperatorState);
+  const resetInsertOperator = useResetRecoilState(insertOperatorState);
+  const reloadUserList = useSetRecoilState(forcedReloadOperatorListState);
 
   /**
    * useState
@@ -248,7 +255,7 @@ function OperatorRegistration({
     [],
   );
 
-  const handleSubmitOperator = useCallback(() => {
+  const handleSubmitOperator = useCallback(async () => {
     const param = {
       isInit: true,
       userId,
@@ -258,7 +265,9 @@ function OperatorRegistration({
       mail,
       authorities: createAuthorityParam(selectedAuthorities, authorityList),
     };
-    requestInsertOperator(param);
+    await requestInsertOperator(param);
+    await reloadUserList(new Date());
+    await resetInsertOperator();
   }, [userId, name, password, phoneNumber, mail, selectedAuthorities]);
 
   return (

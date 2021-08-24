@@ -19,7 +19,7 @@ import {
   Theme,
 } from '@material-ui/core/styles';
 
-import { Paper } from '@material-ui/core';
+import { CircularProgress, Paper, Grid } from '@material-ui/core';
 import {
   DataGrid,
   GridColDef,
@@ -109,7 +109,7 @@ function OperatorListTable() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        {userListLoadable.state === 'hasValue' && (
+        {userListLoadable.state === 'hasValue' ? (
           <DataGrid
             rows={userListLoadable.getValue().map((operator) => ({
               id: operator.ID,
@@ -120,6 +120,12 @@ function OperatorListTable() {
             // checkboxSelection
             disableSelectionOnClick
           />
+        ) : (
+          <Grid container justify="center">
+            <Grid item>
+              <CircularProgress />
+            </Grid>
+          </Grid>
         )}
       </Paper>
     </div>

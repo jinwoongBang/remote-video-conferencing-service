@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { atom, selector, selectorFamily } from 'recoil';
+import { atom, selector, selectorFamily, useResetRecoilState } from 'recoil';
 import * as _ from 'lodash';
 
 /**
@@ -27,7 +27,7 @@ export type InsertOperatorProps = {
 };
 
 export const insertOperatorState = atom<InsertOperatorProps>({
-  key: 'siteInformationState',
+  key: 'insertOperatorState',
   default: {
     isInit: false,
     userId: '',
