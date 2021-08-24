@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import OTAApi from 'src/common/framework/OTAApi';
+import OTAController from 'src/common/framework/OTAController';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import OperatorService, {
   InsertOperatorParam,
@@ -15,7 +15,7 @@ export type OperatorPostParam = {
   user: InsertOperatorParam;
 };
 
-class OperatorAPI extends OTAApi {
+class OperatorController extends OTAController {
   constructor(request: NextApiRequest, response: NextApiResponse) {
     super(request, response);
   }
@@ -63,5 +63,5 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  await new OperatorAPI(req, res).service();
+  await new OperatorController(req, res).service();
 }

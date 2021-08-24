@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-abstract class OTAApi {
+abstract class OTAController {
   private request: NextApiRequest;
   private response: NextApiResponse;
 
@@ -49,4 +49,4 @@ abstract class OTAApi {
   }
 }
 
-export default OTAApi;
+export default OTAController;
