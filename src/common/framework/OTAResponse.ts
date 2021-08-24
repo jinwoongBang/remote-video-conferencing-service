@@ -19,9 +19,6 @@ export type PaginationType = {
 export type ReferenceType = PaginationType; // | ETCType1 | ETCTYPE2 ...
 
 class OTAResponse<T extends OnTheAirVO> {
-  // map(arg0: (x: any) => { regDate: any }): any {
-  //   throw new Error('Method not implemented.');
-  // }
   result: T[];
   reference?: ReferenceType;
   success: boolean;
