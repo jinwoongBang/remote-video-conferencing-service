@@ -12,6 +12,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
  * Service
  */
 import { InsertOperatorParam } from 'src/service/OperatorService';
+import { User } from 'src/vo';
 
 export type InsertOperatorProps = {
   isInit?: boolean;
@@ -56,5 +57,35 @@ export const insertOperatorSelector = selector<{ method: string }[]>({
     }
 
     return result;
+  },
+});
+
+export const getOperatorListState = atom<User[]>({
+  key: 'getOperatorListState',
+  default: [],
+});
+
+export const forcedReloadOperatorListState = atom<Date>({
+  key: 'forcedReloadOperatorListState',
+  default: new Date(),
+});
+
+export const getOperatorListSelector = selector<User[]>({
+  key: 'insertOperatorSelector',
+  get: async ({ get }) => {
+    get(forcedReloadOperatorListState);
+    let result: User[] = [];
+    try {
+      const { data, status }: AxiosResponse<OTAResponse<User>> =
+        await HttpClient.get('/operator');
+      result = data.result;
+    } catch (error) {
+      console.error(error);
+    }
+
+    return result;
+  },
+  set: ({ set }) => {
+    set(forcedReloadOperatorListState, new Date());
   },
 });

@@ -34,13 +34,13 @@ export default function useAuth({
       setAuth(() => ({ user: result[0], isLoggedIn: true }));
     } catch (e) {
       console.error(e);
-      setAuth(() => ({ user: null, isLoggedIn: false }));
+      setAuth((state) => ({ ...state, user: null, isLoggedIn: false }));
     }
   };
 
   useEffect(() => {
     handleAuthentication();
-  }, [router, router.pathname]);
+  }, [router.pathname]);
 
   useEffect(() => {
     if (auth.isLoggedIn) {

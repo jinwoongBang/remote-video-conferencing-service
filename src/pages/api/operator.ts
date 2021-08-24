@@ -21,9 +21,22 @@ class OperatorController extends OTAController {
   }
 
   protected async doGet(
-    request: NextApiRequest,
-    response: NextApiResponse<any>,
-  ): Promise<any> {}
+    req: NextApiRequest,
+    res: NextApiResponse<any>,
+  ): Promise<any> {
+    const response = new OTAResponse<User>();
+    try {
+      const userList = await OperatorService.selectOperator();
+      response.result = userList;
+      response.success = true;
+      res.status(200).json(response);
+    } catch (error) {
+      console.error(error);
+      response.success = false;
+      response.message = error.message;
+      res.status(500).json(response);
+    }
+  }
 
   protected async doPost(
     req: NextApiRequest,
