@@ -14,7 +14,7 @@ const withSession = (handler: NextIronHandler) =>
     password:
       process.env.SECRET_COOKIE_PASSWORD ||
       'complex_password_at_least_32_characters_long',
-    cookieName: 'next-iron-session/examples/next.js',
+    cookieName: 'on-the-air/access-token',
     cookieOptions: {
       // the next line allows to use the session in non-https environments like
       // Next.js dev mode (http://localhost:3000)

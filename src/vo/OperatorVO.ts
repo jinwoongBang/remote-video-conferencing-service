@@ -8,9 +8,17 @@ class OperatorVO extends OnTheAirVO {
   AUTHORITIES?: string;
   DATE_OF_CREATED?: Date;
   LOG_COUNT?: number;
+  PREFERENCE_ROLE: boolean;
+  USER_ROLE: boolean;
+  EVENT_ROLE: boolean;
+  SPECIAL_ROLE: boolean;
 
-  get AUTH_USER() {
-    return 'true';
+  constructor() {
+    super();
+    this.PREFERENCE_ROLE = true;
+    this.USER_ROLE = true;
+    this.EVENT_ROLE = true;
+    this.SPECIAL_ROLE = true;
   }
 }
 

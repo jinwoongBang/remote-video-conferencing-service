@@ -55,7 +55,6 @@ const columns: GridColDef[] = [
   {
     field: 'NAME',
     headerName: '이름',
-    // description: 'This column has a value getter and is not sortable.',
     width: 150,
   },
   {
@@ -81,7 +80,7 @@ const columns: GridColDef[] = [
   {
     field: 'LOG_COUNT',
     headerName: '로그 횟수',
-    width: 90,
+    width: 150,
   },
   {
     field: 'DATE_OF_CREATED',
@@ -117,8 +116,8 @@ function OperatorListTable() {
               ...operator,
             }))}
             columns={columns}
-            pageSize={5}
-            checkboxSelection
+            pageSize={100}
+            // checkboxSelection
             disableSelectionOnClick
           />
         )}

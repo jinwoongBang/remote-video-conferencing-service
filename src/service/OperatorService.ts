@@ -18,9 +18,7 @@ class OperatorService extends OTAService {
       FROM
         TB_USER
       WHERE
-        TYPE = 2
-      AND
-        STATUS = 1;
+        TYPE = 2;
     `);
 
     return result;
@@ -37,7 +35,8 @@ class OperatorService extends OTAService {
           NAME,
           PHONE_NUMBER,
           EMAIL,
-          TYPE
+          TYPE,
+          STATUS
       ) VALUES (
           0,
           0,
@@ -47,7 +46,8 @@ class OperatorService extends OTAService {
           '${param.name}',
           '${param.phoneNumber}',
           '${param.mail}',
-          2
+          2,
+          1
       )
     `);
 
