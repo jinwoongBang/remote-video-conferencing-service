@@ -62,11 +62,6 @@ export const insertOperatorSelector = selector<{ method: string }[]>({
   },
 });
 
-export const getOperatorListState = atom<User[]>({
-  key: 'getOperatorListState',
-  default: [],
-});
-
 export const forcedReloadOperatorListState = atom<Date>({
   key: 'forcedReloadOperatorListState',
   default: new Date(),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 /**
  * Recoil
  */
@@ -29,7 +29,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  IconButton,
+  Collapse,
+  Box,
+  Typography,
 } from '@material-ui/core';
+
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+
 import {
   DataGrid,
   GridColDef,
@@ -47,6 +54,10 @@ import OperatorVO from 'src/vo/OperatorVO';
  * Components
  */
 import Loading from 'src/components/Loading';
+
+type OperatorRowProps = {
+  operator: OperatorVO;
+};
 
 const columns: GridColDef[] = [
   {
@@ -115,6 +126,84 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const useRowStyles = makeStyles({
+  root: {
+    '& > *': {
+      borderBottom: 'unset',
+    },
+  },
+});
+
+function OperatorRow({ operator }: OperatorRowProps) {
+  const classes = useRowStyles();
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpenCollapse = useCallback(() => {
+    setOpen((state) => !state);
+  }, []);
+
+  return (
+    <>
+      <TableRow className={classes.root}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={handleOpenCollapse}
+          >
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {operator.ID}
+        </TableCell>
+        <TableCell align="right">{operator.STATUS}</TableCell>
+        <TableCell align="right">{operator.USER_ID}</TableCell>
+        <TableCell align="right">{operator.NAME}</TableCell>
+        <TableCell align="right">
+          {operator.PREFERENCE_ROLE ? 'O' : 'X'}
+        </TableCell>
+        <TableCell align="right">{operator.USER_ROLE ? 'O' : 'X'}</TableCell>
+        <TableCell align="right">{operator.EVENT_ROLE ? 'O' : 'X'}</TableCell>
+        <TableCell align="right">{operator.SPECIAL_ROLE ? 'O' : 'X'}</TableCell>
+        <TableCell align="right">{operator.LOG_COUNT}</TableCell>
+        <TableCell align="right">{operator.DATE_OF_CREATED}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={11}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <Typography variant="h6" gutterBottom component="div">
+                상세정보
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Customer</TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                    <TableCell align="right">Total price ($)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    {new Array(4).fill(0).map((item, index) => (
+                      <TableCell key={index} component="th" scope="row">
+                        상세 정보 {index}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+}
+
 function OperatorListTable() {
   const classes = useStyles();
   const [userListLoadable, reloadUserList] = useRecoilStateLoadable<
@@ -123,8 +212,8 @@ function OperatorListTable() {
 
   return (
     <div className={classes.root}>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+      <TableContainer component={Paper} className={classes.paper}>
+        <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
               <TableCell />
@@ -141,20 +230,13 @@ function OperatorListTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {userListLoadable.state === 'hasValue' ? (
-              <DataGrid
-                rows={userListLoadable.getValue().map((operator) => ({
-                  id: operator.ID,
-                  ...operator,
-                }))}
-                columns={columns}
-                pageSize={100}
-                // checkboxSelection
-                disableSelectionOnClick
-              />
+            {userListLoadable.state === 'hasValue' ? (
+              userListLoadable
+                .getValue()
+                .map((user) => <OperatorRow key={user.ID} operator={user} />)
             ) : (
               <Loading />
-            )} */}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
