@@ -65,16 +65,19 @@ type OperatorItemProps = {
   operator: OperatorVO;
 };
 
-const useRowStyles = makeStyles({
+const useStyles = makeStyles({
   root: {
     '& > *': {
       borderBottom: 'unset',
     },
   },
+  box: {
+    background: 'rgb(241, 241, 241)',
+  },
 });
 
 function OperatorItem({ operator }: OperatorItemProps) {
-  const classes = useRowStyles();
+  const classes = useStyles();
 
   const [open, setOpen] = useState(false);
 
@@ -141,7 +144,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
         <TableCell align="center">{operator.LOG_COUNT}</TableCell>
         <TableCell align="center">{operator.dateOfCreated}</TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow className={classes.box}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={11}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>

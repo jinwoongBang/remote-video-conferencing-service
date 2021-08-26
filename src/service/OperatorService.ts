@@ -1,6 +1,10 @@
 import OTAService from 'src/common/framework/OTAService';
 import { User } from 'src/vo';
 
+export interface SelectOperatorParam {
+  currentPage: number;
+  count: number;
+}
 export interface InsertOperatorParam {
   authorities: string;
   userId: string;

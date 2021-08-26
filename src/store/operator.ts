@@ -62,6 +62,11 @@ export const insertOperatorSelector = selector<{ method: string }[]>({
   },
 });
 
+export const OperatorListPaginationState = atom<number>({
+  key: 'OperatorListPaginationState',
+  default: 1,
+});
+
 export const forcedReloadOperatorListState = atom<Date>({
   key: 'forcedReloadOperatorListState',
   default: new Date(),

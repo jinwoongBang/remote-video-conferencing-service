@@ -12,12 +12,7 @@ import clsx from 'clsx';
 /**
  * Material UI
  */
-import {
-  createStyles,
-  lighten,
-  makeStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import {
   CircularProgress,
@@ -34,14 +29,9 @@ import {
   Box,
   Typography,
 } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
-
-import {
-  DataGrid,
-  GridColDef,
-  GridValueGetterParams,
-} from '@material-ui/data-grid';
 
 /**
  * Store
@@ -63,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paper: {
     width: '100%',
-    height: 'calc(100vh - 200px)',
+    height: 'calc(100vh - 240px)',
     marginBottom: theme.spacing(2),
   },
 }));
@@ -112,6 +102,11 @@ function OperatorListTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Grid container justifyContent="center">
+        <Grid item>
+          <Pagination count={10} color="primary" />
+        </Grid>
+      </Grid>
     </div>
   );
 }
