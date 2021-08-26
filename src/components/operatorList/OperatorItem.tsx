@@ -33,6 +33,7 @@ import {
   Collapse,
   Box,
   Typography,
+  Button,
 } from '@material-ui/core';
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
@@ -78,7 +79,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
 
   return (
     <>
-      <TableRow className={classes.root}>
+      <TableRow className={classes.root} hover>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -128,6 +129,10 @@ function OperatorItem({ operator }: OperatorItemProps) {
                         상세 정보 {index}
                       </TableCell>
                     ))}
+                  </TableRow>
+                  <TableRow>
+                    <Button>수정</Button>
+                    <Button>삭제</Button>
                   </TableRow>
                 </TableBody>
               </Table>

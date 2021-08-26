@@ -45,7 +45,6 @@ import UserVO, { User } from 'src//vo/UserVO';
  */
 import useAuth from 'src/common/hooks/useAuth';
 
-import { Auth, handleAuthentication } from 'src/store/auth';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import { OTAError } from 'src/common/framework/Error';

@@ -12,7 +12,7 @@ import Router, { useRouter } from 'next/router';
  * Recoil
  */
 import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
-import authState, { Auth, handleAuthentication } from 'src/store/auth';
+import authState, { Auth } from 'src/store/authentication';
 import HttpClient from '../framework/HttpClient';
 
 type User = {

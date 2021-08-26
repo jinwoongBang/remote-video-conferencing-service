@@ -80,7 +80,7 @@ function OperatorListTable() {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>번호</TableCell>
+              <TableCell width={50}>번호</TableCell>
               <TableCell align="right">상태</TableCell>
               <TableCell align="right">아이디</TableCell>
               <TableCell align="right">이름</TableCell>

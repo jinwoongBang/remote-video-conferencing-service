@@ -29,9 +29,20 @@ import AppLayout from 'src/components/AppLayout';
 import OperatorListTable from 'src/components/operatorList/OperatorList';
 
 import UserVO from 'src/vo/UserVO';
+import { AuthorityVO } from 'src/vo';
+
+/**
+ * Common
+ */
+import { AuthorityKey } from 'src/common/enum/authority';
+
+/**
+ * Service
+ */
+import AuthorityService from 'src/service/AuthorityService';
 
 function OperatorList({
-  result,
+  authorityList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <AppLayout>
@@ -45,16 +56,16 @@ function OperatorList({
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ result: UserVO[] }> = async ({
-  params,
-}) => {
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      result: [],
-    },
+export const getStaticProps: GetStaticProps<{ authorityList: AuthorityVO[] }> =
+  async ({ params }) => {
+    const authorityList = await AuthorityService.selectAuthorityListByKeys({
+      authorityKeys: Object.values(AuthorityKey),
+    });
+    return {
+      props: {
+        authorityList,
+      },
+    };
   };
-};
 
 export default OperatorList;
