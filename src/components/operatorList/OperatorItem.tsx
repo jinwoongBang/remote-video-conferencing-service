@@ -36,7 +36,12 @@ import {
   Button,
 } from '@material-ui/core';
 
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Check,
+  Close,
+} from '@material-ui/icons';
 
 import {
   DataGrid,
@@ -92,19 +97,49 @@ function OperatorItem({ operator }: OperatorItemProps) {
         <TableCell component="th" scope="row">
           {operator.ID}
         </TableCell>
-        <TableCell align="right">
-          {operator.STATUS === 1 ? '활성' : '비활성'}
+        <TableCell align="center">
+          {operator.STATUS === 1 ? (
+            <Typography variant="caption" color="primary">
+              활성
+            </Typography>
+          ) : (
+            <Typography variant="caption" color="secondary">
+              비활성
+            </Typography>
+          )}
         </TableCell>
-        <TableCell align="right">{operator.USER_ID}</TableCell>
-        <TableCell align="right">{operator.NAME}</TableCell>
-        <TableCell align="right">
-          {operator.PREFERENCE_ROLE ? 'O' : 'X'}
+        <TableCell align="center">{operator.USER_ID || '-'}</TableCell>
+        <TableCell align="center">{operator.NAME || '-'}</TableCell>
+        <TableCell align="center">
+          {operator.PREFERENCE_ROLE ? (
+            <Check color="primary" />
+          ) : (
+            <Close color="secondary" />
+          )}
         </TableCell>
-        <TableCell align="right">{operator.USER_ROLE ? 'O' : 'X'}</TableCell>
-        <TableCell align="right">{operator.EVENT_ROLE ? 'O' : 'X'}</TableCell>
-        <TableCell align="right">{operator.SPECIAL_ROLE ? 'O' : 'X'}</TableCell>
-        <TableCell align="right">{operator.LOG_COUNT}</TableCell>
-        <TableCell align="right">{operator.dateOfCreated}</TableCell>
+        <TableCell align="center">
+          {operator.USER_ROLE ? (
+            <Check color="primary" />
+          ) : (
+            <Close color="secondary" />
+          )}
+        </TableCell>
+        <TableCell align="center">
+          {operator.EVENT_ROLE ? (
+            <Check color="primary" />
+          ) : (
+            <Close color="secondary" />
+          )}
+        </TableCell>
+        <TableCell align="center">
+          {operator.SPECIAL_ROLE ? (
+            <Check color="primary" />
+          ) : (
+            <Close color="secondary" />
+          )}
+        </TableCell>
+        <TableCell align="center">{operator.LOG_COUNT}</TableCell>
+        <TableCell align="center">{operator.dateOfCreated}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={11}>
