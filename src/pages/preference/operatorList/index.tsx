@@ -26,7 +26,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
  */
 import Counter from 'src/components/Counter';
 import AppLayout from 'src/components/AppLayout';
-import OperatorListTable from 'src/components/OperatorList';
+import OperatorListTable from 'src/components/operatorList/OperatorList';
 
 import UserVO from 'src/vo/UserVO';
 
