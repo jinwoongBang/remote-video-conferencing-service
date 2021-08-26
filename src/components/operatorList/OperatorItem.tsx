@@ -103,7 +103,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
         <TableCell align="right">{operator.EVENT_ROLE ? 'O' : 'X'}</TableCell>
         <TableCell align="right">{operator.SPECIAL_ROLE ? 'O' : 'X'}</TableCell>
         <TableCell align="right">{operator.LOG_COUNT}</TableCell>
-        <TableCell align="right">{operator.DATE_OF_CREATED}</TableCell>
+        <TableCell align="right">{operator.dateOfCreated}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={11}>
