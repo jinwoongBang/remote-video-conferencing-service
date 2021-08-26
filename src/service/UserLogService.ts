@@ -16,23 +16,6 @@ export interface UpdateUserLogParam {
 
 class UserLogService extends OTAService {
   async insertUserLog(param: InsertUserLogParam): Promise<number> {
-    // const result = await this.excuteQuery(`
-    //   INSERT INTO TB_USER_LOG(
-    //       USER_ID,
-    //       STATUS,
-    //       ACCESS_TOKEN,
-    //       ACCESS_IP,
-    //       ACCESS_ENV,
-    //       MESSAGE
-    //   ) VALUES (
-    //     ${param.userId},
-    //     1,
-    //     '${param.accessToken}',
-    //     '${param.accessIp}',
-    //     '${param.accessEnv}',
-    //     '${param.message}',
-    //   )
-    // `);
     const result = await this.excuteQuery(
       `
       INSERT INTO TB_USER_LOG(
@@ -50,7 +33,7 @@ class UserLogService extends OTAService {
         ?,
         ?
       )
-    `,
+      `,
       [
         param.userId,
         param.accessToken,

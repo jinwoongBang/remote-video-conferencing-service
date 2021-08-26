@@ -33,6 +33,11 @@ import { getOperatorListSelector } from 'src/store/operator';
 import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
 
+/**
+ * Components
+ */
+import Loading from 'src/components/Loading';
+
 const columns: GridColDef[] = [
   {
     field: 'ID',
@@ -121,11 +126,7 @@ function OperatorListTable() {
             disableSelectionOnClick
           />
         ) : (
-          <Grid container justify="center">
-            <Grid item>
-              <CircularProgress />
-            </Grid>
-          </Grid>
+          <Loading />
         )}
       </Paper>
     </div>
