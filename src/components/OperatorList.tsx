@@ -19,7 +19,17 @@ import {
   Theme,
 } from '@material-ui/core/styles';
 
-import { CircularProgress, Paper, Grid } from '@material-ui/core';
+import {
+  CircularProgress,
+  Paper,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
 import {
   DataGrid,
   GridColDef,
@@ -113,22 +123,41 @@ function OperatorListTable() {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        {userListLoadable.state === 'hasValue' ? (
-          <DataGrid
-            rows={userListLoadable.getValue().map((operator) => ({
-              id: operator.ID,
-              ...operator,
-            }))}
-            columns={columns}
-            pageSize={100}
-            // checkboxSelection
-            disableSelectionOnClick
-          />
-        ) : (
-          <Loading />
-        )}
-      </Paper>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>번호</TableCell>
+              <TableCell align="right">상태</TableCell>
+              <TableCell align="right">아이디</TableCell>
+              <TableCell align="right">이름</TableCell>
+              <TableCell align="right">환경설정</TableCell>
+              <TableCell align="right">회원관리</TableCell>
+              <TableCell align="right">이벤트관리</TableCell>
+              <TableCell align="right">특별관리</TableCell>
+              <TableCell align="right">로그횟수</TableCell>
+              <TableCell align="right">등록일</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/* {userListLoadable.state === 'hasValue' ? (
+              <DataGrid
+                rows={userListLoadable.getValue().map((operator) => ({
+                  id: operator.ID,
+                  ...operator,
+                }))}
+                columns={columns}
+                pageSize={100}
+                // checkboxSelection
+                disableSelectionOnClick
+              />
+            ) : (
+              <Loading />
+            )} */}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
