@@ -1,8 +1,13 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 /**
  * Recoil
  */
-import { useRecoilStateLoadable, useRecoilValue } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilStateLoadable,
+  useRecoilValue,
+  useRecoilValueLoadable,
+} from 'recoil';
 
 /**
  * Library
@@ -36,7 +41,10 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 /**
  * Store
  */
-import { getOperatorListSelector } from 'src/store/operator';
+import {
+  getOperatorListSelector,
+  GetOperatorListSelectorType,
+} from 'src/store/operator';
 import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
 
@@ -56,17 +64,44 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100vh - 240px)',
     marginBottom: theme.spacing(2),
   },
+  tbody: {
+    width: '100%',
+  },
 }));
 
 function OperatorListTable() {
   const classes = useStyles();
-  const [userListLoadable, reloadUserList] = useRecoilStateLoadable<
-    OperatorVO[]
-  >(getOperatorListSelector);
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+
+  const userListLoadable = useRecoilValueLoadable<GetOperatorListSelectorType>(
+    getOperatorListSelector({ page: page - 1, returnCount: 10 }),
+  );
 
   const isLoading = useMemo(() => {
-    return userListLoadable.state === 'loading';
+    const { state } = userListLoadable;
+    return state !== 'hasError' && state === 'loading';
   }, [userListLoadable.state]);
+
+  const pagination = useMemo(() => {
+    const { state } = userListLoadable;
+    return state === 'hasValue'
+      ? userListLoadable.getValue().pagination
+      : undefined;
+  }, [userListLoadable.state]);
+
+  /**
+   * TODO:
+   *  prefetch 를 사용해 페이지네이션 정보를 받아와야함
+   */
+  useEffect(() => {}, []);
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<unknown>, value: number) => {
+      setPage(value);
+    },
+    [],
+  );
 
   return (
     <div className={classes.root}>
@@ -91,11 +126,13 @@ function OperatorListTable() {
               <TableCell align="center">등록일</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody className={classes.tbody}>
             {!isLoading ? (
               userListLoadable
                 .getValue()
-                .map((user) => <OperatorItem key={user.ID} operator={user} />)
+                .operatorList.map((user) => (
+                  <OperatorItem key={user.ID} operator={user} />
+                ))
             ) : (
               <Loading />
             )}
@@ -104,7 +141,13 @@ function OperatorListTable() {
       </TableContainer>
       <Grid container justifyContent="center">
         <Grid item>
-          <Pagination count={10} color="primary" />
+          <Pagination
+            disabled={isLoading || !pagination}
+            color="primary"
+            count={pageCount}
+            page={page}
+            onChange={handleChange}
+          />
         </Grid>
       </Grid>
     </div>

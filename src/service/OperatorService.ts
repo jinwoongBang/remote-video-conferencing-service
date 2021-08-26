@@ -15,8 +15,12 @@ export interface InsertOperatorParam {
 }
 
 class OperatorService extends OTAService {
-  async selectOperator(): Promise<User[]> {
-    const result = await this.excuteQuery(`
+  async selectOperator({
+    currentPage = 0,
+    count = 10,
+  }: SelectOperatorParam): Promise<User[]> {
+    const result = await this.excuteQuery(
+      `
       SELECT
         user.*,
         COUNT(log.ID) as LOG_COUNT
@@ -28,10 +32,29 @@ class OperatorService extends OTAService {
         user.ID = log.USER_ID
       WHERE
         user.TYPE = 2
-      GROUP BY user.ID;
-    `);
+      GROUP BY user.ID
+      ORDER BY user.ID ASC
+      LIMIT ${count}
+      OFFSET ${currentPage};
+    `,
+    );
 
     return result;
+  }
+
+  async selectOperatorCount(): Promise<number> {
+    const result = await this.excuteQuery(
+      `
+        SELECT
+          COUNT(*) as COUNT
+        FROM
+          TB_USER
+        WHERE
+          TYPE = 2
+    `,
+    );
+
+    return result[0].COUNT;
   }
 
   async insertOperator(param: InsertOperatorParam): Promise<number> {

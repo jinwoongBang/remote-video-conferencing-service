@@ -12,6 +12,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
 import AuthorityService from 'src/service/AuthorityService';
 import OperatorService, {
   InsertOperatorParam,
+  SelectOperatorParam,
 } from 'src/service/OperatorService';
 
 /**
@@ -29,6 +30,12 @@ export interface OperatorResponseEntity {
   method: string;
 }
 
+export type OperatorGetParam = {
+  currentPage: number;
+  count: number;
+  [key: string]: any;
+};
+
 export type OperatorPostParam = {
   user: InsertOperatorParam;
 };
@@ -42,11 +49,18 @@ class OperatorController extends OTAController {
 
   protected async doGet(
     req: NextApiRequest,
-    res: NextApiResponse<any>,
-  ): Promise<any> {
+    res: NextApiResponse<OTAResponse<OperatorVO>>,
+  ): Promise<void> {
+    const { count, currentPage } = req.query as OperatorGetParam;
+    const param = {
+      count,
+      currentPage,
+    };
+
     const response = new OTAResponse<OperatorVO>();
     try {
-      const userList = await OperatorService.selectOperator();
+      const userList = await OperatorService.selectOperator(param);
+      const userCount = await OperatorService.selectOperatorCount();
       const authorityList = await AuthorityService.selectAuthorityListByKeys({
         authorityKeys: Object.values(AuthorityKey),
       });
@@ -70,6 +84,12 @@ class OperatorController extends OTAController {
       });
 
       response.result = operatorList;
+      response.reference = {
+        pageNumber: Number(currentPage),
+        pageCount: Math.ceil(userCount / count),
+        itemCount: userCount,
+        returnCount: Number(count),
+      };
       response.success = true;
       res.status(200).json(response);
     } catch (error) {
@@ -80,10 +100,12 @@ class OperatorController extends OTAController {
     }
   }
 
+  createPagination() {}
+
   protected async doPost(
     req: NextApiRequest,
-    res: NextApiResponse<any>,
-  ): Promise<any> {
+    res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
+  ): Promise<void> {
     const param: OperatorPostParam = req.body;
     const response = new OTAResponse<OperatorResponseEntity>();
     try {

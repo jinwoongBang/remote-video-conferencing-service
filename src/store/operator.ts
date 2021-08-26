@@ -6,7 +6,10 @@ import * as _ from 'lodash';
  * Common
  */
 import HttpClient from 'src/common/framework/HttpClient';
-import OTAResponse from 'src/common/framework/OTAResponse';
+import OTAResponse, {
+  PaginationType,
+  ReferenceType,
+} from 'src/common/framework/OTAResponse';
 
 /**
  * Service
@@ -64,32 +67,47 @@ export const insertOperatorSelector = selector<{ method: string }[]>({
 
 export const OperatorListPaginationState = atom<number>({
   key: 'OperatorListPaginationState',
-  default: 1,
+  default: 0,
 });
 
 export const forcedReloadOperatorListState = atom<Date>({
   key: 'forcedReloadOperatorListState',
   default: new Date(),
 });
-
-export const getOperatorListSelector = selector<OperatorVO[]>({
+export interface GetOperatorListSelectorType {
+  operatorList: OperatorVO[];
+  pagination: PaginationType;
+}
+export const getOperatorListSelector = selectorFamily({
   key: 'getOperatorListSelector',
-  get: async ({ get }) => {
-    get(forcedReloadOperatorListState);
-    let result: OperatorVO[] = [];
-    try {
-      const { data, status }: AxiosResponse<OTAResponse<OperatorVO>> =
-        await HttpClient.get('/operator');
-      const responseData = new OTAResponse(data);
-      responseData.mappingData(OperatorVO);
-      result = responseData.result;
-    } catch (error) {
-      console.error(error);
-    }
+  get:
+    ({ page, returnCount }: { page: number; returnCount: number }) =>
+    async ({ get }) => {
+      const result: GetOperatorListSelectorType = {
+        operatorList: [],
+        pagination: {
+          pageCount: 0,
+          pageNumber: page,
+          itemCount: 0,
+          returnCount: returnCount,
+        },
+      };
+      try {
+        const { data, status }: AxiosResponse<OTAResponse<OperatorVO>> =
+          await HttpClient.get('/operator', {
+            params: { currentPage: page, count: returnCount },
+          });
+        const responseData = new OTAResponse(data);
+        responseData.mappingData(OperatorVO);
+        result.operatorList = responseData.result;
 
-    return result;
-  },
-  set: ({ set }) => {
-    set(forcedReloadOperatorListState, new Date());
-  },
+        if (responseData.reference) {
+          result.pagination = responseData.reference;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      return result;
+    },
 });
