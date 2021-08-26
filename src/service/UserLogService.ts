@@ -13,7 +13,7 @@ export interface UpdateUserLogParam {
   status: number;
   message: string;
 }
-
+export interface SelectUserLogParam {}
 class UserLogService extends OTAService {
   async insertUserLog(param: InsertUserLogParam): Promise<number> {
     const result = await this.excuteQuery(

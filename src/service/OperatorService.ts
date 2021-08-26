@@ -14,11 +14,17 @@ class OperatorService extends OTAService {
   async selectOperator(): Promise<User[]> {
     const result = await this.excuteQuery(`
       SELECT
-        *
+        user.*,
+        COUNT(log.ID) as LOG_COUNT
       FROM
-        TB_USER
+        TB_USER user
+      LEFT OUTER JOIN
+        TB_USER_LOG log
+      ON
+        user.ID = log.USER_ID
       WHERE
-        TYPE = 2;
+        user.TYPE = 2
+      GROUP BY user.ID;
     `);
 
     return result;
