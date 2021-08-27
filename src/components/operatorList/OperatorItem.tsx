@@ -36,6 +36,9 @@ import {
   Button,
   Chip,
   Divider,
+  DialogContentText,
+  DialogActions,
+  DialogContent,
 } from '@material-ui/core';
 
 import {
@@ -64,6 +67,7 @@ import OperatorVO from 'src/vo/OperatorVO';
  * Components
  */
 import Loading from 'src/components/Loading';
+import Modal from 'src/components/operatorList/Modal';
 
 type OperatorItemProps = {
   operator: OperatorVO;
@@ -110,10 +114,19 @@ function UserStatus({ status }: UserStatusProps) {
 function OperatorItem({ operator }: OperatorItemProps) {
   const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [modifyModalOpen, setModifyModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const handleOpenCollapse = useCallback(() => {
-    setOpen((state) => !state);
+    setDetailOpen((state) => !state);
+  }, []);
+
+  const handleOpenModifyModal = useCallback(() => {
+    setModifyModalOpen((state) => !state);
+  }, []);
+  const handleOpenDeleteModal = useCallback(() => {
+    setDeleteModalOpen((state) => !state);
   }, []);
 
   return (
@@ -125,7 +138,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
             size="small"
             onClick={handleOpenCollapse}
           >
-            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            {detailOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
@@ -173,7 +186,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
           colSpan={11}
           className={classes.collapseContainer}
         >
-          <Collapse in={open} timeout="auto" unmountOnExit>
+          <Collapse in={detailOpen} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Grid container alignItems="center" spacing={4}>
                 <Grid item xs={2}>
@@ -252,6 +265,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
                     variant="contained"
                     fullWidth
                     startIcon={<Edit />}
+                    onClick={handleOpenModifyModal}
                   >
                     수정
                   </Button>
@@ -262,6 +276,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
                     variant="outlined"
                     fullWidth
                     startIcon={<Delete />}
+                    onClick={handleOpenDeleteModal}
                   >
                     삭제
                   </Button>
@@ -271,6 +286,35 @@ function OperatorItem({ operator }: OperatorItemProps) {
           </Collapse>
         </TableCell>
       </TableRow>
+
+      <Modal
+        open={deleteModalOpen}
+        onOpen={handleOpenDeleteModal}
+        title="운영자 정보 삭제"
+      >
+        <DialogContent dividers>
+          <DialogContentText id="alert-dialog-description">
+            정말로 삭제하시겠습니까?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleOpenDeleteModal}
+            color="secondary"
+            variant="outlined"
+          >
+            취소
+          </Button>
+          <Button
+            onClick={handleOpenDeleteModal}
+            color="primary"
+            variant="outlined"
+            autoFocus
+          >
+            확인
+          </Button>
+        </DialogActions>
+      </Modal>
     </>
   );
 }
