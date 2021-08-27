@@ -117,6 +117,8 @@ function UserStatus({ status }: UserStatusProps) {
 function OperatorItem({ operator }: OperatorItemProps) {
   const classes = useStyles();
 
+  // const deleteOperator = useRecoil;
+
   const [detailOpen, setDetailOpen] = useState(false);
   const [modifyModalOpen, setModifyModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -128,9 +130,12 @@ function OperatorItem({ operator }: OperatorItemProps) {
   const handleOpenModifyModal = useCallback(() => {
     setModifyModalOpen((state) => !state);
   }, []);
+
   const handleOpenDeleteModal = useCallback(() => {
     setDeleteModalOpen((state) => !state);
   }, []);
+
+  const handleSubmitDeleteOperator = useCallback(() => {}, []);
 
   return (
     <>

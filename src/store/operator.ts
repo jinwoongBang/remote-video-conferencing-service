@@ -18,7 +18,11 @@ import { InsertOperatorParam } from 'src/service/OperatorService';
 import { User } from 'src/vo';
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 import OperatorVO from 'src/vo/OperatorVO';
+import { OperatorResponseEntity } from 'src/pages/api/operator';
 
+/**
+ * Insert Operator
+ */
 export type InsertOperatorProps = {
   isInit?: boolean;
   userId: string;
@@ -65,6 +69,9 @@ export const insertOperatorSelector = selector<{ method: string }[]>({
   },
 });
 
+/**
+ * Get Operator
+ */
 export const OperatorListPaginationState = atom<number>({
   key: 'OperatorListPaginationState',
   default: 0,
@@ -98,6 +105,34 @@ export const getOperatorListSelector = selectorFamily({
         if (responseData.reference) {
           result.pagination = responseData.reference;
         }
+      } catch (error) {
+        console.error(error);
+      }
+
+      return result;
+    },
+});
+
+/**
+ * Delete Operator
+ */
+export const deleteOperatorSelector = selectorFamily({
+  key: 'deleteOperatorSelector',
+  get:
+    ({ id }: { id: number }) =>
+    async ({ get }) => {
+      let result = 0;
+
+      try {
+        const {
+          data,
+          status,
+        }: AxiosResponse<OTAResponse<OperatorResponseEntity>> =
+          await HttpClient.delete('/operator', {
+            params: { id },
+          });
+        const responseData = new OTAResponse<OperatorResponseEntity>(data);
+        result = responseData.result.length;
       } catch (error) {
         console.error(error);
       }

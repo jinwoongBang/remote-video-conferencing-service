@@ -55,6 +55,7 @@ import PhoneNumberMask from 'src/components/maskInput/Phonenumber';
  * store
  */
 import { authorityState } from 'src/store/authority';
+import { AuthorityVO } from 'src/vo';
 
 const AntSwitch = withStyles((theme: Theme) =>
   createStyles({
@@ -124,9 +125,8 @@ function ModifyForm({ operator }: ModifyFormProps) {
     const auth: {
       [key: string]: boolean;
     } = {};
-
     authorityList.forEach((item) => {
-      auth[item.AUTHORITY_KEY as string] = false;
+      auth[item.AUTHORITY_KEY as string] = operator[item.AUTHORITY_KEY];
     });
     return auth;
   });
