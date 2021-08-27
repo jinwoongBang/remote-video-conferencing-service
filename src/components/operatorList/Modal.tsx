@@ -9,17 +9,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 type ModalProps = {
   open: boolean;
   onOpen: () => void;
-
+  maxWidth: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
   title: string;
   children: JSX.Element | JSX.Element[];
 };
 
-function Modal({ open, title, children, onOpen }: ModalProps) {
+function Modal({ open, title, children, onOpen, maxWidth }: ModalProps) {
   return (
     <Dialog
       open={open}
       onClose={onOpen}
-      maxWidth="xs"
+      maxWidth={maxWidth}
       fullWidth={true}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"

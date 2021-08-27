@@ -20,7 +20,7 @@ abstract class OTAService {
       console.error(e);
       error = e;
     } finally {
-      conn && (await conn.release());
+      await conn?.release();
     }
 
     if (error) throw error;

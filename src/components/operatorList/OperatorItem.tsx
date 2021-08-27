@@ -39,6 +39,7 @@ import {
   DialogContentText,
   DialogActions,
   DialogContent,
+  TextField,
 } from '@material-ui/core';
 
 import {
@@ -48,6 +49,7 @@ import {
   Close,
   Edit,
   Delete,
+  Person,
 } from '@material-ui/icons';
 
 import {
@@ -68,6 +70,7 @@ import OperatorVO from 'src/vo/OperatorVO';
  */
 import Loading from 'src/components/Loading';
 import Modal from 'src/components/operatorList/Modal';
+import ModifyForm from 'src/components/operatorList/ModifyForm';
 
 type OperatorItemProps = {
   operator: OperatorVO;
@@ -288,9 +291,36 @@ function OperatorItem({ operator }: OperatorItemProps) {
       </TableRow>
 
       <Modal
+        open={modifyModalOpen}
+        onOpen={handleOpenModifyModal}
+        title="운영자 정보 수정"
+        maxWidth="md"
+      >
+        <ModifyForm operator={operator} />
+        <DialogActions>
+          <Button
+            onClick={handleOpenModifyModal}
+            color="secondary"
+            variant="outlined"
+          >
+            취소
+          </Button>
+          <Button
+            onClick={handleOpenModifyModal}
+            color="primary"
+            variant="outlined"
+            autoFocus
+          >
+            확인
+          </Button>
+        </DialogActions>
+      </Modal>
+
+      <Modal
         open={deleteModalOpen}
         onOpen={handleOpenDeleteModal}
         title="운영자 정보 삭제"
+        maxWidth="xs"
       >
         <DialogContent dividers>
           <DialogContentText id="alert-dialog-description">
