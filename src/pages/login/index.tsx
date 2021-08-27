@@ -168,7 +168,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
             className={classes.loginFormContainer}
           >
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={2} justify="center">
+              <Grid container spacing={2} justifyContent="center">
                 <Grid item xs={3} className={classes.loginTitleContainer}>
                   <Typography
                     variant="caption"

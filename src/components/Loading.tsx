@@ -10,8 +10,8 @@ const useStyles = makeStyles(() => ({
 function Loading() {
   const classes = useStyles();
   return (
-    <Grid container justify="center">
-      <Grid item xs={5}>
+    <Grid container justifyContent="center">
+      <Grid item>
         <CircularProgress />
       </Grid>
     </Grid>

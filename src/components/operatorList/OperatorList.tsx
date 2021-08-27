@@ -75,7 +75,7 @@ function OperatorListTable() {
   const [pageCount, setPageCount] = useState(0);
 
   const userListLoadable = useRecoilValueLoadable<GetOperatorListSelectorType>(
-    getOperatorListSelector({ page: page - 1, returnCount: 10 }),
+    getOperatorListSelector({ page: page - 1, returnCount: 20 }),
   );
 
   const isLoading = useMemo(() => {
@@ -134,7 +134,11 @@ function OperatorListTable() {
                   <OperatorItem key={user.ID} operator={user} />
                 ))
             ) : (
-              <Loading />
+              <TableRow>
+                <TableCell colSpan={11}>
+                  <Loading />
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
@@ -144,7 +148,7 @@ function OperatorListTable() {
           <Pagination
             disabled={isLoading || !pagination}
             color="primary"
-            count={pageCount}
+            count={pagination?.pageCount}
             page={page}
             onChange={handleChange}
           />

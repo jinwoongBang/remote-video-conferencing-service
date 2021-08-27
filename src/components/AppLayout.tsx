@@ -241,7 +241,7 @@ function ApoLayout({ children }: ApoLayoutProps) {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Grid container justify="space-between">
+          <Grid container justifyContent="space-between">
             <Grid item xs={6} className={classes.logoContainer}>
               <Typography variant="body1">On The Air 로고</Typography>
             </Grid>

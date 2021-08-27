@@ -1,7 +1,7 @@
-import { createMuiTheme } from '@material-ui/core';
+import { createTheme } from '@material-ui/core/styles';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-export const GlobalTheme = createMuiTheme({
+export const GlobalTheme = createTheme({
   typography: {
     fontSize: 10,
   },
