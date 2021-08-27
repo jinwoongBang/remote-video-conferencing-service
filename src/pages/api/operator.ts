@@ -32,7 +32,7 @@ export interface OperatorResponseEntity {
 
 export type OperatorGetParam = {
   currentPage: number;
-  count: number;
+  returnCount: number;
   [key: string]: any;
 };
 
@@ -51,10 +51,10 @@ class OperatorController extends OTAController {
     req: NextApiRequest,
     res: NextApiResponse<OTAResponse<OperatorVO>>,
   ): Promise<void> {
-    const { count, currentPage } = req.query as OperatorGetParam;
+    const { returnCount, currentPage } = req.query as OperatorGetParam;
     const param = {
-      count,
-      currentPage,
+      returnCount: Number(returnCount),
+      currentPage: Number(currentPage),
     };
 
     const response = new OTAResponse<OperatorVO>();
@@ -86,9 +86,9 @@ class OperatorController extends OTAController {
       response.result = operatorList;
       response.reference = {
         pageNumber: Number(currentPage),
-        pageCount: Math.ceil(userCount / count),
+        pageCount: Math.ceil(userCount / returnCount),
         itemCount: userCount,
-        returnCount: Number(count),
+        returnCount: Number(returnCount),
       };
       response.success = true;
       res.status(200).json(response);
@@ -99,8 +99,6 @@ class OperatorController extends OTAController {
       res.status(500).json(response);
     }
   }
-
-  createPagination() {}
 
   protected async doPost(
     req: NextApiRequest,

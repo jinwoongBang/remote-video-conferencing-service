@@ -3,7 +3,7 @@ import { User } from 'src/vo';
 
 export interface SelectOperatorParam {
   currentPage: number;
-  count: number;
+  returnCount: number;
 }
 export interface InsertOperatorParam {
   authorities: string;
@@ -17,7 +17,7 @@ export interface InsertOperatorParam {
 class OperatorService extends OTAService {
   async selectOperator({
     currentPage = 0,
-    count = 10,
+    returnCount = 10,
   }: SelectOperatorParam): Promise<User[]> {
     const result = await this.excuteQuery(
       `
@@ -34,7 +34,7 @@ class OperatorService extends OTAService {
         user.TYPE = 2
       GROUP BY user.ID
       ORDER BY user.ID ASC
-      LIMIT ${count}
+      LIMIT ${returnCount}
       OFFSET ${currentPage};
     `,
     );

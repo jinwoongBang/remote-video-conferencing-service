@@ -29,7 +29,15 @@ abstract class OTAController {
     response: NextApiResponse,
   ): Promise<any>;
 
+  public createPaginationParam() {}
+
   public async service() {
+    const { method, body, query, url } = this.request;
+    console.log(
+      `[${method}] url : ${url}, query : ${JSON.stringify(
+        query,
+      )}, body: ${JSON.stringify(body)}`,
+    );
     switch (this.request.method) {
       case 'GET':
         await this.doGet(this.request, this.response);

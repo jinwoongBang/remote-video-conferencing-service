@@ -267,7 +267,6 @@ function OperatorRegistration({
     };
     await requestInsertOperator(param);
     await reloadUserList(new Date());
-    await resetInsertOperator();
   }, [userId, name, password, phoneNumber, mail, selectedAuthorities]);
 
   return (
