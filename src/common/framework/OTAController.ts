@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { PaginationType } from './OTAResponse';
 
 abstract class OTAController {
   private request: NextApiRequest;
@@ -29,14 +30,12 @@ abstract class OTAController {
     response: NextApiResponse,
   ): Promise<any>;
 
-  public createPaginationParam() {}
-
   public async service() {
     const { method, body, query, url } = this.request;
     console.log(
-      `[${method}] url : ${url}, query : ${JSON.stringify(
-        query,
-      )}, body: ${JSON.stringify(body)}`,
+      `[${method}] url : ${url}, query : ${
+        query ? JSON.stringify(query) : 'null'
+      }, body: ${body ? JSON.stringify(body) : 'null'}`,
     );
     switch (this.request.method) {
       case 'GET':

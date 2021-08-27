@@ -35,7 +35,7 @@ class OperatorService extends OTAService {
       GROUP BY user.ID
       ORDER BY user.ID ASC
       LIMIT ${returnCount}
-      OFFSET ${currentPage};
+      OFFSET ${currentPage * returnCount};
     `,
     );
 

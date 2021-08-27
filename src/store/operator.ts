@@ -76,7 +76,7 @@ export const forcedReloadOperatorListState = atom<Date>({
 });
 export interface GetOperatorListSelectorType {
   operatorList: OperatorVO[];
-  pagination: PaginationType;
+  pagination?: PaginationType;
 }
 export const getOperatorListSelector = selectorFamily({
   key: 'getOperatorListSelector',
@@ -85,12 +85,6 @@ export const getOperatorListSelector = selectorFamily({
     async ({ get }) => {
       const result: GetOperatorListSelectorType = {
         operatorList: [],
-        pagination: {
-          pageCount: 0,
-          pageNumber: page,
-          itemCount: 0,
-          returnCount: returnCount,
-        },
       };
       try {
         const { data, status }: AxiosResponse<OTAResponse<OperatorVO>> =

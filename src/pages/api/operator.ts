@@ -31,9 +31,9 @@ export interface OperatorResponseEntity {
 }
 
 export type OperatorGetParam = {
-  currentPage: number;
-  returnCount: number;
-  [key: string]: any;
+  currentPage: string;
+  returnCount: string;
+  [key: string]: string | string[];
 };
 
 export type OperatorPostParam = {
@@ -51,16 +51,18 @@ class OperatorController extends OTAController {
     req: NextApiRequest,
     res: NextApiResponse<OTAResponse<OperatorVO>>,
   ): Promise<void> {
-    const { returnCount, currentPage } = req.query as OperatorGetParam;
+    const queryParam = req.query as OperatorGetParam;
+    const returnCount = Number(queryParam.returnCount);
+    const currentPage = Number(queryParam.currentPage);
     const param = {
-      returnCount: Number(returnCount),
-      currentPage: Number(currentPage),
+      returnCount,
+      currentPage,
     };
 
     const response = new OTAResponse<OperatorVO>();
     try {
+      const totalUserCount = await OperatorService.selectOperatorCount();
       const userList = await OperatorService.selectOperator(param);
-      const userCount = await OperatorService.selectOperatorCount();
       const authorityList = await AuthorityService.selectAuthorityListByKeys({
         authorityKeys: Object.values(AuthorityKey),
       });
@@ -83,13 +85,8 @@ class OperatorController extends OTAController {
         return operator;
       });
 
+      response.setPagination(currentPage, totalUserCount, returnCount);
       response.result = operatorList;
-      response.reference = {
-        pageNumber: Number(currentPage),
-        pageCount: Math.ceil(userCount / returnCount),
-        itemCount: userCount,
-        returnCount: Number(returnCount),
-      };
       response.success = true;
       res.status(200).json(response);
     } catch (error) {
@@ -138,5 +135,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  await new OperatorController(req, res).service();
+  const controller = new OperatorController(req, res);
+  await controller.service();
 }
