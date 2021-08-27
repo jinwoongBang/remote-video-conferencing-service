@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
+/**
+ * React
+ */
+import React, { useState, useCallback } from 'react';
 
+/**
+ * Recoil
+ */
+import { useRecoilValue } from 'recoil';
+
+/**
+ * MUI
+ */
 import {
   DialogContent,
   DialogContentText,
@@ -19,10 +30,31 @@ import {
   FormGroup,
 } from '@material-ui/core';
 import { makeStyles, withStyles, Theme, createStyles } from '@material-ui/core';
-import { Person } from '@material-ui/icons';
+import {
+  EnhancedEncryption,
+  HowToReg,
+  Lock,
+  Mail,
+  PermIdentity,
+  Person,
+  Phone,
+  VerifiedUser,
+} from '@material-ui/icons';
 
+/**
+ * VO
+ */
 import OperatorVO from 'src/vo/OperatorVO';
-import { useCallback } from 'react';
+
+/**
+ * Components
+ */
+import PhoneNumberMask from 'src/components/maskInput/Phonenumber';
+
+/**
+ * store
+ */
+import { authorityState } from 'src/store/authority';
 
 const AntSwitch = withStyles((theme: Theme) =>
   createStyles({
@@ -77,8 +109,27 @@ type ModifyFormProps = {
 
 function ModifyForm({ operator }: ModifyFormProps) {
   const classes = useStyles();
+
+  const authorityList = useRecoilValue(authorityState);
+
   const [name, setName] = useState(operator.NAME || '');
   const [status, setStatus] = useState(operator.STATUS || 0);
+  const [password, setPassword] = useState(operator.PASSWORD || '');
+  const [passwordConfirm, setPasswordConfirm] = useState(
+    operator.PASSWORD || '',
+  );
+  const [phoneNumber, setPhoneNumber] = useState(operator.PHONE_NUMBER || '');
+  const [email, setEmail] = useState(operator.EMAIL || '');
+  const [selectedAuthorities, setSelectedAuthorities] = useState(() => {
+    const auth: {
+      [key: string]: boolean;
+    } = {};
+
+    authorityList.forEach((item) => {
+      auth[item.AUTHORITY_KEY as string] = false;
+    });
+    return auth;
+  });
 
   const handleChangeName = useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
@@ -94,6 +145,40 @@ function ModifyForm({ operator }: ModifyFormProps) {
     [],
   );
 
+  const handleChangePassword = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPassword(event.target.value);
+    },
+    [],
+  );
+  const handleChangePasswordConfirm = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPasswordConfirm(event.target.value);
+    },
+    [],
+  );
+  const handleChangePhoneNumber = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setPhoneNumber(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeEmail = useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      setEmail(event.target.value);
+    },
+    [],
+  );
+
+  const handleChangeAuthority = useCallback(
+    (event: React.ChangeEvent<{ name: string; checked: boolean }>) => {
+      const { checked, name } = event.target;
+      setSelectedAuthorities((state) => ({ ...state, [name]: checked }));
+    },
+    [],
+  );
+
   return (
     <DialogContent dividers>
       <DialogContentText id="alert-dialog-description">
@@ -104,7 +189,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<HowToReg />}
               disableRipple
             >
               상태
@@ -132,7 +217,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<PermIdentity />}
               disableRipple
             >
               아이디
@@ -170,7 +255,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<Lock />}
               disableRipple
             >
               비밀번호
@@ -181,8 +266,8 @@ function ModifyForm({ operator }: ModifyFormProps) {
               fullWidth
               id="standard-required"
               placeholder="비밀번호를 입력해주세요."
-              value={name}
-              onChange={handleChangeName}
+              value={password}
+              onChange={handleChangePassword}
             />
           </Grid>
           {/*  */}
@@ -192,7 +277,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<EnhancedEncryption />}
               disableRipple
             >
               비밀번호 확인
@@ -203,8 +288,8 @@ function ModifyForm({ operator }: ModifyFormProps) {
               fullWidth
               id="standard-required"
               placeholder="비밀번호를 입력해주세요."
-              value={name}
-              onChange={handleChangeName}
+              value={passwordConfirm}
+              onChange={handleChangePasswordConfirm}
             />
           </Grid>
           {/*  */}
@@ -214,7 +299,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<Phone />}
               disableRipple
             >
               핸드폰
@@ -223,10 +308,12 @@ function ModifyForm({ operator }: ModifyFormProps) {
           <Grid item xs={10} className={classes.inputContainer}>
             <TextField
               fullWidth
-              id="standard-required"
-              placeholder="비밀번호를 입력해주세요."
-              value={name}
-              onChange={handleChangeName}
+              placeholder="휴대전화 번호를 입력해주세요."
+              InputProps={{
+                inputComponent: PhoneNumberMask as any,
+              }}
+              value={phoneNumber}
+              onChange={handleChangePhoneNumber}
             />
           </Grid>
           {/*  */}
@@ -236,7 +323,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<Mail />}
               disableRipple
             >
               이메일
@@ -246,9 +333,9 @@ function ModifyForm({ operator }: ModifyFormProps) {
             <TextField
               fullWidth
               id="standard-required"
-              placeholder="비밀번호를 입력해주세요."
-              value={name}
-              onChange={handleChangeName}
+              placeholder="이메일을 입력해주세요."
+              value={email}
+              onChange={handleChangeEmail}
             />
           </Grid>
           {/*  */}
@@ -258,7 +345,7 @@ function ModifyForm({ operator }: ModifyFormProps) {
               color="primary"
               variant="outlined"
               size="large"
-              startIcon={<Person />}
+              startIcon={<VerifiedUser />}
               disableRipple
             >
               관리등급
@@ -266,30 +353,22 @@ function ModifyForm({ operator }: ModifyFormProps) {
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
             <FormGroup row>
-              <FormControlLabel
-                control={
-                  <Checkbox checked={false} name="Role" color="primary" />
-                }
-                label="환경설정"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox checked={false} name="Role" color="primary" />
-                }
-                label="회원관리"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox checked={false} name="Role" color="primary" />
-                }
-                label="이벤트관리"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox checked={false} name="Role" color="primary" />
-                }
-                label="특별관리"
-              />
+              {authorityList.map((item: AuthorityVO) => {
+                return (
+                  <FormControlLabel
+                    key={item.ID}
+                    control={
+                      <Checkbox
+                        checked={selectedAuthorities[item.AUTHORITY_KEY]}
+                        onChange={handleChangeAuthority}
+                        name={item.AUTHORITY_KEY}
+                        color="primary"
+                      />
+                    }
+                    label={item.NAME}
+                  />
+                );
+              })}
             </FormGroup>
           </Grid>
         </Grid>

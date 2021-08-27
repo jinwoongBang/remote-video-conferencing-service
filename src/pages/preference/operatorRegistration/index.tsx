@@ -47,6 +47,7 @@ import {
   SecurityRounded,
   SecuritySharp,
   VpnKey,
+  VerifiedUser,
 } from '@material-ui/icons';
 
 /**
@@ -191,7 +192,6 @@ function OperatorRegistration({
     authorityList.forEach((item) => {
       auth[item.AUTHORITY_KEY as string] = false;
     });
-    console.log(auth);
     return auth;
   });
 
@@ -249,7 +249,6 @@ function OperatorRegistration({
   const handleChangeAuthority = useCallback(
     (event: React.ChangeEvent<{ name: string; checked: boolean }>) => {
       const { checked, name } = event.target;
-      console.log({ name, checked });
       setSelectedAuthorities((state) => ({ ...state, [name]: checked }));
     },
     [],
@@ -383,7 +382,7 @@ function OperatorRegistration({
             color="primary"
             variant="outlined"
             size="large"
-            startIcon={<HowToReg />}
+            startIcon={<VerifiedUser />}
           >
             관리 등급
           </Button>

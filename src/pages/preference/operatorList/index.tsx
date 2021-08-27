@@ -10,6 +10,11 @@ import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
 
 /**
+ * Recoil
+ */
+import { useSetRecoilState } from 'recoil';
+
+/**
  *  Material UI
  */
 import {
@@ -40,10 +45,17 @@ import { AuthorityKey } from 'src/common/enum/authority';
  * Service
  */
 import AuthorityService from 'src/service/AuthorityService';
+import { authorityState } from 'src/store/authority';
 
 function OperatorList({
   authorityList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const setAuthorityList = useSetRecoilState(authorityState);
+
+  useEffect(() => {
+    setAuthorityList(authorityList);
+  }, []);
+
   return (
     <AppLayout>
       <Grid container>
