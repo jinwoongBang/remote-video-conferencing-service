@@ -5,7 +5,10 @@ class OperatorVO extends OnTheAirVO {
   ID?: number;
   STATUS?: number;
   USER_ID?: string;
+  PASSWORD?: string;
   NAME?: string;
+  PHONE_NUMBER?: string;
+  EMAIL?: string;
   AUTHORITIES?: string;
   DATE_OF_CREATED?: string;
   LOG_COUNT?: number;

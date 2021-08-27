@@ -34,6 +34,8 @@ import {
   Box,
   Typography,
   Button,
+  Chip,
+  Divider,
 } from '@material-ui/core';
 
 import {
@@ -41,6 +43,8 @@ import {
   KeyboardArrowUp,
   Check,
   Close,
+  Edit,
+  Delete,
 } from '@material-ui/icons';
 
 import {
@@ -64,8 +68,11 @@ import Loading from 'src/components/Loading';
 type OperatorItemProps = {
   operator: OperatorVO;
 };
+type UserStatusProps = {
+  status?: number;
+};
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& > *': {
       borderBottom: 'unset',
@@ -74,7 +81,31 @@ const useStyles = makeStyles({
   box: {
     background: 'rgb(241, 241, 241)',
   },
-});
+  chip: {
+    width: '100%',
+  },
+  collapseContainer: {
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
+  },
+  detailContentsContainer: {
+    display: 'flex',
+    '& > *:not(:last-child)': {
+      marginRight: '10px',
+    },
+  },
+}));
+
+function UserStatus({ status }: UserStatusProps) {
+  return status === 1 ? (
+    <Typography variant="caption" color="primary">
+      활성
+    </Typography>
+  ) : (
+    <Typography variant="caption" color="secondary">
+      비활성
+    </Typography>
+  );
+}
 
 function OperatorItem({ operator }: OperatorItemProps) {
   const classes = useStyles();
@@ -101,15 +132,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
           {operator.ID}
         </TableCell>
         <TableCell align="center">
-          {operator.STATUS === 1 ? (
-            <Typography variant="caption" color="primary">
-              활성
-            </Typography>
-          ) : (
-            <Typography variant="caption" color="secondary">
-              비활성
-            </Typography>
-          )}
+          <UserStatus status={operator?.STATUS} />
         </TableCell>
         <TableCell align="center">{operator.USER_ID || '-'}</TableCell>
         <TableCell align="center">{operator.NAME || '-'}</TableCell>
@@ -145,35 +168,105 @@ function OperatorItem({ operator }: OperatorItemProps) {
         <TableCell align="center">{operator.dateOfCreated}</TableCell>
       </TableRow>
       <TableRow className={classes.box}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={11}>
+        <TableCell
+          style={{ paddingBottom: 0, paddingTop: 0 }}
+          colSpan={11}
+          className={classes.collapseContainer}
+        >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                상세정보
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    {new Array(4).fill(0).map((item, index) => (
-                      <TableCell key={index} component="th" scope="row">
-                        상세 정보 {index}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                  <TableRow>
-                    <Button>수정</Button>
-                    <Button>삭제</Button>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <Grid container alignItems="center" spacing={4}>
+                <Grid item xs={2}>
+                  <Chip
+                    className={classes.chip}
+                    label="상태"
+                    // color="primary"
+                    variant="default"
+                  />
+                </Grid>
+                <Grid item xs={9} className={classes.detailContentsContainer}>
+                  <UserStatus status={operator?.STATUS} />
+                  <Typography variant="caption">
+                    [ 총 : {operator.LOG_COUNT} 회, 최근 로그인 시간 :{' '}
+                    {operator.dateOfCreated} ]
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container alignItems="center" spacing={4}>
+                <Grid item xs={2}>
+                  <Chip
+                    className={classes.chip}
+                    label="관리자 정보"
+                    variant="default"
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.detailContentsContainer}>
+                  <Typography variant="body1">{operator.NAME}</Typography>
+                  <Typography variant="caption">
+                    ( ID : {operator.USER_ID} )
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Chip
+                    className={classes.chip}
+                    label="비밀번호"
+                    variant="default"
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.detailContentsContainer}>
+                  <Typography variant="body1">{operator.PASSWORD}</Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container alignItems="center" spacing={4}>
+                <Grid item xs={2}>
+                  <Chip
+                    className={classes.chip}
+                    label="핸드폰"
+                    variant="default"
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.detailContentsContainer}>
+                  <Typography variant="body1">
+                    {operator.PHONE_NUMBER || '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Chip
+                    className={classes.chip}
+                    label="이메일"
+                    variant="default"
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.detailContentsContainer}>
+                  <Typography variant="body1">
+                    {operator.EMAIL || '-'}
+                  </Typography>
+                </Grid>
+              </Grid>
+              {/* <Divider /> */}
+              <Grid container justifyContent="flex-end" spacing={1}>
+                <Grid item>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                    startIcon={<Edit />}
+                  >
+                    수정
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="secondary"
+                    variant="outlined"
+                    fullWidth
+                    startIcon={<Delete />}
+                  >
+                    삭제
+                  </Button>
+                </Grid>
+              </Grid>
             </Box>
           </Collapse>
         </TableCell>
