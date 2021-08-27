@@ -16,7 +16,7 @@ export interface InsertOperatorParam {
 }
 export type UpdateOperatorParam = OperatorVO;
 export type DeleteOperatorParam = {
-  id;
+  id: number;
 };
 
 class OperatorService extends OTAService {

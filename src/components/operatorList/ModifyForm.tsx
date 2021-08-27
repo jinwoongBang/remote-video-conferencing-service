@@ -15,6 +15,8 @@ import {
   SwitchProps,
   SwitchClassKey,
   FormControlLabel,
+  Checkbox,
+  FormGroup,
 } from '@material-ui/core';
 import { makeStyles, withStyles, Theme, createStyles } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
@@ -160,6 +162,135 @@ function ModifyForm({ operator }: ModifyFormProps) {
               value={name}
               onChange={handleChangeName}
             />
+          </Grid>
+          {/*  */}
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Person />}
+              disableRipple
+            >
+              비밀번호
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="비밀번호를 입력해주세요."
+              value={name}
+              onChange={handleChangeName}
+            />
+          </Grid>
+          {/*  */}
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Person />}
+              disableRipple
+            >
+              비밀번호 확인
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="비밀번호를 입력해주세요."
+              value={name}
+              onChange={handleChangeName}
+            />
+          </Grid>
+          {/*  */}
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Person />}
+              disableRipple
+            >
+              핸드폰
+            </Button>
+          </Grid>
+          <Grid item xs={10} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="비밀번호를 입력해주세요."
+              value={name}
+              onChange={handleChangeName}
+            />
+          </Grid>
+          {/*  */}
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Person />}
+              disableRipple
+            >
+              이메일
+            </Button>
+          </Grid>
+          <Grid item xs={10} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="비밀번호를 입력해주세요."
+              value={name}
+              onChange={handleChangeName}
+            />
+          </Grid>
+          {/*  */}
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Person />}
+              disableRipple
+            >
+              관리등급
+            </Button>
+          </Grid>
+          <Grid item xs={10} className={classes.inputContainer}>
+            <FormGroup row>
+              <FormControlLabel
+                control={
+                  <Checkbox checked={false} name="Role" color="primary" />
+                }
+                label="환경설정"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={false} name="Role" color="primary" />
+                }
+                label="회원관리"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={false} name="Role" color="primary" />
+                }
+                label="이벤트관리"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={false} name="Role" color="primary" />
+                }
+                label="특별관리"
+              />
+            </FormGroup>
           </Grid>
         </Grid>
       </DialogContentText>

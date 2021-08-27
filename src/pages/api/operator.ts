@@ -11,6 +11,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
  */
 import AuthorityService from 'src/service/AuthorityService';
 import OperatorService, {
+  DeleteOperatorParam,
   InsertOperatorParam,
   SelectOperatorParam,
 } from 'src/service/OperatorService';
@@ -38,6 +39,10 @@ export type OperatorGetParam = {
 
 export type OperatorPostParam = {
   user: InsertOperatorParam;
+};
+
+export type OperatorDeleteParam = {
+  id: number;
 };
 
 type OmitOperatorVO = Omit<OperatorVO, 'dateOfCreated'>;
@@ -127,8 +132,26 @@ class OperatorController extends OTAController {
 
   protected async doDelete(
     request: NextApiRequest,
-    response: NextApiResponse<any>,
-  ): Promise<any> {}
+    response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
+  ): Promise<void> {
+    const param: OperatorDeleteParam = request.body;
+    const otaResponse = new OTAResponse<OperatorResponseEntity>();
+    try {
+      const resultCount = await OperatorService.deleteOperator(param);
+      const isSuccess = resultCount === 1;
+      const result: OperatorResponseEntity[] = new Array(resultCount).fill({
+        method: 'DELETE',
+      });
+      otaResponse.result = result;
+      otaResponse.success = isSuccess;
+      response.status(200).json(otaResponse);
+    } catch (error) {
+      console.error(error);
+      otaResponse.success = false;
+      otaResponse.message = error.message;
+      response.status(500).json(otaResponse);
+    }
+  }
 }
 
 export default async function handler(
