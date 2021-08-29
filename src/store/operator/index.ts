@@ -20,20 +20,7 @@ import OnTheAirVO from 'src/vo/OnTheAirVO';
 import OperatorVO from 'src/vo/OperatorVO';
 import { OperatorResponseEntity } from 'src/pages/api/operator';
 
-/**
- * Insert Operator
- */
-export type InsertOperatorProps = {
-  isInit?: boolean;
-  userId: string;
-  name: string;
-  password: string;
-  phoneNumber: string;
-  mail: string;
-  authorities: string;
-};
-
-export const insertOperatorState = atom<InsertOperatorProps>({
+export const insertOperatorState = atom<InsertOperatorState>({
   key: 'insertOperatorState',
   default: {
     isInit: false,
@@ -46,7 +33,7 @@ export const insertOperatorState = atom<InsertOperatorProps>({
   },
 });
 
-export const insertOperatorSelector = selector<{ method: string }[]>({
+export const insertOperatorSelector = selector({
   key: 'insertOperatorSelector',
   get: async ({ get }) => {
     let result: { method: string }[] = [];
