@@ -15,7 +15,7 @@ import { RecoilRoot, useRecoilSnapshot } from 'recoil';
  *  meterial ui
  */
 import { CssBaseline } from '@material-ui/core';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { GlobalTheme } from 'styles/GlobalTheme';
 
 import 'styles/globals.css';

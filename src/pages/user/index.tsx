@@ -55,6 +55,10 @@ import {
   TextField,
   Typography,
   Box,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -69,6 +73,7 @@ import {
   SecuritySharp,
   VpnKey,
   Search,
+  ArrowDropDown,
 } from '@material-ui/icons';
 
 import { useRecoilValueLoadable } from 'recoil';
@@ -77,6 +82,7 @@ import {
   forceReloadUserListState,
   userListSelector,
 } from 'src/store/user';
+import Loading from 'src/components/Loading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inputLabelContainer: {
@@ -104,22 +110,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function UserView({
-  userList,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log('user getStaticProps() :: no hooks', userList);
-  const [auth, setAuth] = useRecoilState(authState);
-  const classes = useStyles();
-  // todo 0724 데이터가 들어가게 수정 필요 !!
-
-  // const boardList = useRecoilValueLoadable(boardListSelector);
+const Board = () => {
   const [users, reload] = useRecoilStateLoadable(userListSelector);
-  const [force, setForce] = useRecoilState(forceReloadUserListState);
-  const [userSearch, setUserSearchState] = useRecoilState(userSearchState);
 
-  console.log('click boardSearchState: ' + userSearch.userId);
-  console.log('click users: ', users?.contents);
-  console.log('users?.state: ', users?.state);
   let rows: GridRowsProp = useMemo(() => {
     return users?.state === 'hasValue'
       ? users.contents.result.map((x, index) => ({
@@ -133,27 +126,9 @@ function UserView({
           PhoneNumber: x.PHONE_NUMBER,
           email: x.EMAIL,
           loginInfo: x.STATUS,
-          management: 'management?? 뭐  넣ㅓㅏ', //todo 0810 회원쪽도 어떻게 넣을지 봐야할 듯
         }))!
       : [];
   }, [users.contents.result, users?.state]);
-
-  if (users?.state === 'hasValue') {
-    console.log('click users: ', users.contents.result[0]);
-    rows = users.contents.result.map((x, index) => ({
-      id: x.ID,
-      regDate: x.DATE_OF_CREATED,
-      eventCode: x.EVENT_ID,
-      status: x.STATUS,
-      userId: x.USER_ID,
-      pw: x.PASSWORD,
-      userName: x.NAME,
-      PhoneNumber: x.PHONE_NUMBER,
-      email: x.EMAIL,
-      loginInfo: x.STATUS,
-      management: 'management?? 뭐  넣ㅓㅏ', //todo 0810 회원쪽도 어떻게 넣을지 봐야할 듯
-    }));
-  }
 
   const columns: GridColDef[] = [
     { field: 'regDate', headerName: '가입일', width: 150 },
@@ -165,35 +140,50 @@ function UserView({
     { field: 'PhoneNumber', headerName: '연락처', width: 150 },
     { field: 'email', headerName: '이메일', width: 150 },
     { field: 'loginInfo', headerName: '로그인정보', width: 150 },
-    {
-      field: 'management',
-      headerName: '관리',
-      width: 150,
-      renderCell: () => (
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.modifyButton}
-          startIcon={<Person />}
-          onClick={handleSubmitResetOperator}
-        >
-          관리
-        </Button>
-      ),
-    },
   ];
 
-  console.log('row222row222: ', rows);
+  switch (users?.state) {
+    case 'hasValue':
+      return (
+        <div style={{ marginTop: 30, height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>
+      );
+
+    case 'hasError':
+      return <div>Error...</div>;
+
+    case 'loading':
+      return (
+        <div>
+          <Loading />
+        </div>
+      );
+  }
+};
+
+function UserView({
+  userList,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  console.log('user getStaticProps() :: no hooks', userList);
+  const [auth, setAuth] = useRecoilState(authState);
+  const classes = useStyles();
+
+  const [users, reload] = useRecoilStateLoadable(userListSelector);
+  const [force, setForce] = useRecoilState(forceReloadUserListState);
+  const [userSearch, setUserSearchState] = useRecoilState(userSearchState);
+
   const handleSubmitOperator = useCallback(() => {
     setUserSearchState({
-      userId: 'ram',
+      userId: 'operator',
+      name: '운영자 테스트',
     });
     reload(0 as any);
 
     console.log('click row222row222: ', users.contents.result);
   }, [reload, setUserSearchState, users.contents.result]);
-  const handleSubmitResetOperator = useCallback(() => {
+
+  const handleResetData = useCallback(() => {
     setUserSearchState({
       userId: '',
     });
@@ -219,214 +209,415 @@ function UserView({
     console.log('click event');
   }, []);
 
-  switch (users?.state) {
-    case 'hasValue':
-      return (
-        <ApoLayout>
-          <div>
-            <div>
-              <h1>User </h1>
-              <h2>{auth.user && auth.user.NAME}</h2>
-
-              <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell colSpan={12}>
-                        <h3>상세 검색조건</h3>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center" width="8%">
+  return (
+    <ApoLayout>
+      <div>
+        <div>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell variant="head" colSpan={12}>
+                    <h3>상세 검색조건</h3>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={12}>
+                    <Grid container alignItems="center" spacing={4}>
+                      <Grid item xs={1}>
                         가입날짜
-                      </TableCell>
-                      <TableCell colSpan={5} align="left">
-                        <Grid item xs={12}>
-                          <DatePicker
-                            selectsRange={true}
-                            startDate={startDate}
-                            endDate={endDate}
-                            onChange={(update: any) => {
-                              setDateRange(update);
-                            }}
-                            monthsShown={2}
-                            showMonthDropdown
-                            showYearDropdown
-                            dropdownMode="select"
-                            isClearable={true}
-                          />
-                        </Grid>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center" width="10%" colSpan={1}>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <DatePicker
+                          selectsRange={true}
+                          startDate={startDate}
+                          endDate={endDate}
+                          onChange={(update: any) => {
+                            setDateRange(update);
+                          }}
+                          monthsShown={2}
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                          isClearable={true}
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
                         상태
-                      </TableCell>
-                      <TableCell colSpan={5}>상태 radio</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center" width="10%" colSpan={1}>
-                        이벤트 명
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Grid item xs={12} className={classes.inputContainer}>
-                          <TextField
-                            fullWidth
-                            id="standard-required"
-                            placeholder="이벤트 명을 입력해주세요."
-                            variant="outlined"
-                          />
-                        </Grid>
-                      </TableCell>
-                      <TableCell align="center" width="10%" colSpan={1}>
-                        이벤트 코드
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Grid item xs={12} className={classes.inputContainer}>
-                          <TextField
-                            fullWidth
-                            id="standard-required"
-                            placeholder="이벤트 코드를 입력해주세요."
-                            variant="outlined"
-                          />
-                        </Grid>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center" width="10%">
+                      </Grid>
+                      <Grid item xs={6}>
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            row
+                            defaultValue="s1"
+                            aria-label="gender"
+                            name="customized-radios"
+                          >
+                            <FormControlLabel
+                              value="s1"
+                              control={<Radio />}
+                              label="상태1"
+                            />
+                            <FormControlLabel
+                              value="s2"
+                              control={<Radio />}
+                              label="상태2"
+                            />
+                            <FormControlLabel
+                              value="s3"
+                              control={<Radio />}
+                              label="Other"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={12}>
+                    <Grid container alignItems="center" spacing={4}>
+                      <Grid item xs={1}>
+                        이벤트코드
+                      </Grid>
+                      <Grid item xs={4}>
+                        <TextField
+                          fullWidth
+                          id="standard-required"
+                          placeholder="이벤트 코드를 입력해주세요."
+                          variant="outlined"
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
+                        이벤트명
+                      </Grid>
+                      <Grid item xs={6}>
+                        <TextField
+                          fullWidth
+                          id="standard-required"
+                          placeholder="이벤트 명을 입력해주세요."
+                          variant="outlined"
+                        />
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={12}>
+                    <Grid container alignItems="center" spacing={4}>
+                      <Grid item xs={1}>
                         회원명
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Grid item xs={12} className={classes.inputContainer}>
-                          <TextField
-                            fullWidth
-                            id="standard-required"
-                            placeholder="회원명을 입력해주세요.."
-                            variant="outlined"
-                          />
-                        </Grid>
-                      </TableCell>
-                      <TableCell align="center" width="10%">
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          fullWidth
+                          id="standard-required"
+                          placeholder="회원명을 입력해주세요.."
+                          variant="outlined"
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
                         회원 아이디
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Grid item xs={12} className={classes.inputContainer}>
-                          <TextField
-                            fullWidth
-                            id="standard-required"
-                            placeholder="회원 아이디를 입력해주세요."
-                            variant="outlined"
-                          />
-                        </Grid>
-                      </TableCell>
-                      <TableCell align="center" width="10%">
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
+                          fullWidth
+                          id="standard-required"
+                          placeholder="회원 아이디를 입력해주세요."
+                          variant="outlined"
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
                         핸드폰 번호
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Grid item xs={12} className={classes.inputContainer}>
-                          <TextField
-                            fullWidth
-                            id="standard-required"
-                            placeholder="핸드폰 번호를 입력해주세요."
-                            variant="outlined"
-                          />
-                        </Grid>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>검색 버튼</TableCell>
-                      <TableCell colSpan={2}>
-                        <Button
+                      </Grid>
+                      <Grid item xs={3}>
+                        <TextField
                           fullWidth
-                          color="primary"
+                          id="standard-required"
+                          placeholder="핸드폰 번호를 입력해주세요."
                           variant="outlined"
-                          size="large"
-                          startIcon={<Search />}
-                        >
-                          검색
-                        </Button>
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Button
-                          fullWidth
-                          color="primary"
-                          variant="outlined"
-                          size="large"
-                        >
-                          초기화
-                        </Button>
-                      </TableCell>
-                      <TableCell colSpan={2}>
-                        <Button
-                          fullWidth
-                          color="primary"
-                          variant="outlined"
-                          size="large"
-                        >
-                          엑셀
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                </Table>
-              </TableContainer>
-            </div>
+                        />
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                </TableRow>
 
-            <div style={{ height: 300, width: '100%' }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>
-            <Grid item xs={12} className={classes.buttonContaier}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.modifyButton}
-                startIcon={<Create />}
-                onClick={handleSubmitOperator}
-              ></Button>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.modifyButton}
-                startIcon={<Person />}
-                onClick={handleSubmitResetOperator}
-              ></Button>
-            </Grid>
-          </div>
-        </ApoLayout>
-      );
-    case 'loading':
-      return (
-        <ApoLayout>
-          <div>
-            <div>
-              <h1>User </h1>
-              <h2>{auth.user && auth.user.NAME}</h2>
-            </div>
+                <TableRow>
+                  <TableCell>검색 버튼</TableCell>
+                  <TableCell colSpan={2}>
+                    <Button
+                      fullWidth
+                      color="primary"
+                      variant="outlined"
+                      size="large"
+                      onClick={handleSubmitOperator}
+                      startIcon={<Search />}
+                    >
+                      검색
+                    </Button>
+                  </TableCell>
+                  <TableCell colSpan={2}>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      color="secondary"
+                      size="large"
+                      onClick={handleResetData}
+                    >
+                      초기화
+                    </Button>
+                  </TableCell>
+                  <TableCell colSpan={2}>
+                    <Button
+                      fullWidth
+                      color="inherit"
+                      variant="outlined"
+                      size="large"
+                    >
+                      엑셀
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+            </Table>
+          </TableContainer>
+        </div>
 
-            <div style={{ height: 300, width: '100%' }}>
-              <div>Loading...</div>
-            </div>
+        <Board />
+      </div>
+    </ApoLayout>
+  );
 
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.modifyButton}
-                startIcon={<Create />}
-                onClick={handleSubmitOperator}
-              >
-                등록
-              </Button>
-            </div>
-          </div>
-        </ApoLayout>
-      );
-    case 'hasError':
-      throw <div>Error...</div>;
-  }
+  // switch (users?.state) {
+  //   case 'hasValue':
+  //     return (
+  //       <ApoLayout>
+  //         <div>
+  //           <div>
+  //             <TableContainer component={Paper}>
+  //               <Table className={classes.table} aria-label="simple table">
+  //                 <TableHead>
+  //                   <TableRow>
+  //                     <TableCell variant="head" colSpan={12}>
+  //                       <h3>상세 검색조건</h3>
+  //                     </TableCell>
+  //                   </TableRow>
+  //                   <TableRow>
+  //                     <TableCell colSpan={12}>
+  //                       <Grid container alignItems="center" spacing={4}>
+  //                         <Grid item xs={1}>
+  //                           가입날짜
+  //                         </Grid>
+  //                         <Grid item xs={4}>
+  //                           <DatePicker
+  //                             selectsRange={true}
+  //                             startDate={startDate}
+  //                             endDate={endDate}
+  //                             onChange={(update: any) => {
+  //                               setDateRange(update);
+  //                             }}
+  //                             monthsShown={2}
+  //                             showMonthDropdown
+  //                             showYearDropdown
+  //                             dropdownMode="select"
+  //                             isClearable={true}
+  //                           />
+  //                         </Grid>
+  //                         <Grid item xs={1}>
+  //                           상태
+  //                         </Grid>
+  //                         <Grid item xs={6}>
+  //                           <FormControl component="fieldset">
+  //                             <RadioGroup
+  //                               row
+  //                               defaultValue="s1"
+  //                               aria-label="gender"
+  //                               name="customized-radios"
+  //                             >
+  //                               <FormControlLabel
+  //                                 value="s1"
+  //                                 control={<Radio />}
+  //                                 label="상태1"
+  //                               />
+  //                               <FormControlLabel
+  //                                 value="s2"
+  //                                 control={<Radio />}
+  //                                 label="상태2"
+  //                               />
+  //                               <FormControlLabel
+  //                                 value="s3"
+  //                                 control={<Radio />}
+  //                                 label="Other"
+  //                               />
+  //                             </RadioGroup>
+  //                           </FormControl>
+  //                         </Grid>
+  //                       </Grid>
+  //                     </TableCell>
+  //                   </TableRow>
+  //                   <TableRow>
+  //                     <TableCell colSpan={12}>
+  //                       <Grid container alignItems="center" spacing={4}>
+  //                         <Grid item xs={1}>
+  //                           이벤트코드
+  //                         </Grid>
+  //                         <Grid item xs={4}>
+  //                           <TextField
+  //                             fullWidth
+  //                             id="standard-required"
+  //                             placeholder="이벤트 코드를 입력해주세요."
+  //                             variant="outlined"
+  //                           />
+  //                         </Grid>
+  //                         <Grid item xs={1}>
+  //                           이벤트명
+  //                         </Grid>
+  //                         <Grid item xs={6}>
+  //                           <TextField
+  //                             fullWidth
+  //                             id="standard-required"
+  //                             placeholder="이벤트 명을 입력해주세요."
+  //                             variant="outlined"
+  //                           />
+  //                         </Grid>
+  //                       </Grid>
+  //                     </TableCell>
+  //                   </TableRow>
+  //                   <TableRow>
+  //                     <TableCell colSpan={12}>
+  //                       <Grid container alignItems="center" spacing={4}>
+  //                         <Grid item xs={1}>
+  //                           회원명
+  //                         </Grid>
+  //                         <Grid item xs={3}>
+  //                           <TextField
+  //                             fullWidth
+  //                             id="standard-required"
+  //                             placeholder="회원명을 입력해주세요.."
+  //                             variant="outlined"
+  //                           />
+  //                         </Grid>
+  //                         <Grid item xs={1}>
+  //                           회원 아이디
+  //                         </Grid>
+  //                         <Grid item xs={3}>
+  //                           <TextField
+  //                             fullWidth
+  //                             id="standard-required"
+  //                             placeholder="회원 아이디를 입력해주세요."
+  //                             variant="outlined"
+  //                           />
+  //                         </Grid>
+  //                         <Grid item xs={1}>
+  //                           핸드폰 번호
+  //                         </Grid>
+  //                         <Grid item xs={3}>
+  //                           <TextField
+  //                             fullWidth
+  //                             id="standard-required"
+  //                             placeholder="핸드폰 번호를 입력해주세요."
+  //                             variant="outlined"
+  //                           />
+  //                         </Grid>
+  //                       </Grid>
+  //                     </TableCell>
+  //                   </TableRow>
+
+  //                   <TableRow>
+  //                     <TableCell>검색 버튼</TableCell>
+  //                     <TableCell colSpan={2}>
+  //                       <Button
+  //                         fullWidth
+  //                         color="primary"
+  //                         variant="outlined"
+  //                         size="large"
+  //                         startIcon={<Search />}
+  //                       >
+  //                         검색
+  //                       </Button>
+  //                     </TableCell>
+  //                     <TableCell colSpan={2}>
+  //                       <Button
+  //                         fullWidth
+  //                         variant="outlined"
+  //                         color="secondary"
+  //                         size="large"
+  //                       >
+  //                         초기화
+  //                       </Button>
+  //                     </TableCell>
+  //                     <TableCell colSpan={2}>
+  //                       <Button
+  //                         fullWidth
+  //                         color="inherit"
+  //                         variant="outlined"
+  //                         size="large"
+  //                       >
+  //                         엑셀
+  //                       </Button>
+  //                     </TableCell>
+  //                   </TableRow>
+  //                 </TableHead>
+  //               </Table>
+  //             </TableContainer>
+  //           </div>
+
+  //           <Board />
+  //           {/* <div style={{ marginTop: 30, height: 300, width: '100%' }}>
+  //             <DataGrid rows={rows} columns={columns} />
+  //           </div> */}
+  //           <Grid item xs={12} className={classes.buttonContaier}>
+  //             <Button
+  //               variant="contained"
+  //               color="primary"
+  //               size="large"
+  //               className={classes.modifyButton}
+  //               startIcon={<Create />}
+  //               onClick={handleSubmitOperator}
+  //             ></Button>
+  //             <Button
+  //               variant="contained"
+  //               color="primary"
+  //               size="large"
+  //               className={classes.modifyButton}
+  //               startIcon={<Person />}
+  //               onClick={handleSubmitResetOperator}
+  //             ></Button>
+  //           </Grid>
+  //         </div>
+  //       </ApoLayout>
+  //     );
+  //   case 'loading':
+  //     return (
+  //       <ApoLayout>
+  //         <div>
+  //           <div>
+  //             <h1>User </h1>
+  //             <h2>{auth.user && auth.user.NAME}</h2>
+  //           </div>
+
+  //           <div style={{ height: 300, width: '100%' }}>
+  //             <div>Loading...</div>
+  //           </div>
+
+  //           <div>
+  //             <Button
+  //               variant="contained"
+  //               color="primary"
+  //               size="large"
+  //               className={classes.modifyButton}
+  //               startIcon={<Create />}
+  //               onClick={handleSubmitOperator}
+  //             >
+  //               등록
+  //             </Button>
+  //           </div>
+  //         </div>
+  //       </ApoLayout>
+  //     );
+  //   case 'hasError':
+  //     throw <div>Error...</div>;
+  // }
 }
 
 // This function gets called at build time

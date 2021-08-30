@@ -14,7 +14,9 @@ import { User } from 'src/vo/UserVO';
 export interface UserSearch {
   userId?: string;
   name?: string;
-  message?: string;
+  phoneNumber?: string;
+  eventCode?: string;
+  eventName?: string;
 }
 
 //가입 날짜

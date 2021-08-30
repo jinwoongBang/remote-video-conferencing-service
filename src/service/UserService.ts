@@ -13,6 +13,27 @@ type SelectUserProps = {
 class UserService {
   async selectUserList(query?: UserSearch) {
     const conn = await connectionPool.getConnection();
+    let queryName = '';
+    if (query?.name != null) {
+      queryName = `AND NAME LIKE '%${query?.name ?? ''}%'`;
+    }
+
+    let queryPhoneNumber = '';
+    if (query?.phoneNumber != null) {
+      queryName = `AND PHONE_NUMBER LIKE '%${query?.phoneNumber ?? ''}%'`;
+    }
+
+    let queryEventCode = '';
+    if (query?.eventCode != null) {
+      queryName = `AND NAME EVENT_ID '%${query?.eventCode ?? ''}%'`;
+    }
+
+    let queryEventName = '';
+    if (query?.eventName != null) {
+      queryName = `AND NAME EVENT_ID '%${query?.eventName ?? ''}%'`;
+    }
+
+    console.log('queryName: ', queryName);
 
     const rows = await conn.query(`
       SELECT
@@ -20,7 +41,11 @@ class UserService {
       FROM 
         TB_USER
       WHERE
-        USER_ID LIKE '%${query?.userId ?? ''}%'  
+        USER_ID LIKE '%${query?.userId ?? ''}%' 
+        ${queryName}  
+        ${queryPhoneNumber}  
+        ${queryEventCode}  
+        ${queryEventName}  
       `);
     let userList2: UserVO[] = rows;
     console.log('selectUserList:: ', userList2);

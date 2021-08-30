@@ -8,19 +8,19 @@ abstract class OTAService {
     return await connectionPool.getConnection();
   }
 
-  protected async excuteQuery(query: string) {
+  protected async excuteQuery(query: string, param?: any[]) {
     let error;
     let conn;
     let result;
 
     try {
       conn = await this.getConnection();
-      result = conn.query(query);
+      result = param ? await conn.query(query, param) : await conn.query(query);
     } catch (e) {
       console.error(e);
       error = e;
     } finally {
-      conn && (await conn.release());
+      await conn?.release();
     }
 
     if (error) throw error;

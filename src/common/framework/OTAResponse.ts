@@ -19,9 +19,6 @@ export type PaginationType = {
 export type ReferenceType = PaginationType; // | ETCType1 | ETCTYPE2 ...
 
 class OTAResponse<T extends OnTheAirVO> {
-  // map(arg0: (x: any) => { regDate: any }): any {
-  //   throw new Error('Method not implemented.');
-  // }
   result: T[];
   reference?: ReferenceType;
   success: boolean;
@@ -34,6 +31,15 @@ class OTAResponse<T extends OnTheAirVO> {
     this.success = json?.success || true;
     this.code = json?.code || 200;
     this.message = json?.message || '성공';
+  }
+
+  setPagination(pageNumber = 0, totalCount = 0, returnCount = 10) {
+    this.reference = {
+      pageNumber,
+      pageCount: Math.ceil(totalCount / returnCount),
+      itemCount: totalCount,
+      returnCount,
+    };
   }
 
   mappingData(responseEntity: new () => T) {

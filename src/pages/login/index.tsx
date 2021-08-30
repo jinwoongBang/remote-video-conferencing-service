@@ -45,7 +45,6 @@ import UserVO, { User } from 'src//vo/UserVO';
  */
 import useAuth from 'src/common/hooks/useAuth';
 
-import { Auth, handleAuthentication } from 'src/store/auth';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import { OTAError } from 'src/common/framework/Error';
@@ -169,7 +168,7 @@ function Login({ userList }: InferGetStaticPropsType<typeof getStaticProps>) {
             className={classes.loginFormContainer}
           >
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={2} justify="center">
+              <Grid container spacing={2} justifyContent="center">
                 <Grid item xs={3} className={classes.loginTitleContainer}>
                   <Typography
                     variant="caption"

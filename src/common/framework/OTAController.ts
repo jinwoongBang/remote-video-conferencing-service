@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { PaginationType } from './OTAResponse';
 
-abstract class OTAApi {
+abstract class OTAController {
   private request: NextApiRequest;
   private response: NextApiResponse;
 
@@ -30,6 +31,12 @@ abstract class OTAApi {
   ): Promise<any>;
 
   public async service() {
+    const { method, body, query, url } = this.request;
+    console.log(
+      `[${method}] url : ${url}, query : ${
+        query ? JSON.stringify(query) : 'null'
+      }, body: ${body ? JSON.stringify(body) : 'null'}`,
+    );
     switch (this.request.method) {
       case 'GET':
         await this.doGet(this.request, this.response);
@@ -49,4 +56,4 @@ abstract class OTAApi {
   }
 }
 
-export default OTAApi;
+export default OTAController;

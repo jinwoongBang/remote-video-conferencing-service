@@ -6,8 +6,9 @@ import OTAResponse from 'src/common/framework/OTAResponse';
 type NextIronRequest = NextApiRequest & { session: Session };
 
 async function handler(req: NextIronRequest, res: NextApiResponse) {
-  await req.session.destroy();
-  const response = await new OTAResponse();
+  req.session.unset('user');
+  req.session.destroy();
+  const response = new OTAResponse();
   res.statusCode = 200;
   // res.send('Logged out');
   res.send(response);

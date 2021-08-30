@@ -1,2 +1,2 @@
 export { default as counterState } from './counter';
-export { default as authState } from './auth';
+export { default as authState } from './authentication';

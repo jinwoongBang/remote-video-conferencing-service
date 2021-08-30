@@ -1,6 +1,11 @@
 import OTAService from 'src/common/framework/OTAService';
 import { User } from 'src/vo';
+import OperatorVO from 'src/vo/OperatorVO';
 
+export interface SelectOperatorParam {
+  currentPage: number;
+  returnCount: number;
+}
 export interface InsertOperatorParam {
   authorities: string;
   userId: string;
@@ -9,21 +14,52 @@ export interface InsertOperatorParam {
   phoneNumber: string;
   mail: string;
 }
+export type UpdateOperatorParam = OperatorVO;
+export type DeleteOperatorParam = {
+  id: number;
+};
 
 class OperatorService extends OTAService {
-  async selectOperator(): Promise<User[]> {
-    const result = await this.excuteQuery(`
+  async selectOperator({
+    currentPage = 0,
+    returnCount = 10,
+  }: SelectOperatorParam): Promise<User[]> {
+    const result = await this.excuteQuery(
+      `
       SELECT
-        *
+        user.*,
+        COUNT(log.ID) as LOG_COUNT
       FROM
-        TB_USER
+        TB_USER user
+      LEFT OUTER JOIN
+        TB_USER_LOG log
+      ON
+        user.ID = log.USER_ID
       WHERE
-        TYPE = 2
-      AND
-        STATUS = 1;
-    `);
+        user.TYPE = 2
+      GROUP BY user.ID
+      ORDER BY user.ID ASC
+      LIMIT ${returnCount}
+      OFFSET ${currentPage * returnCount};
+    `,
+    );
 
     return result;
+  }
+
+  async selectOperatorCount(): Promise<number> {
+    const result = await this.excuteQuery(
+      `
+        SELECT
+          COUNT(*) as COUNT
+        FROM
+          TB_USER
+        WHERE
+          TYPE = 2
+    `,
+    );
+
+    return result[0].COUNT;
   }
 
   async insertOperator(param: InsertOperatorParam): Promise<number> {
@@ -37,7 +73,8 @@ class OperatorService extends OTAService {
           NAME,
           PHONE_NUMBER,
           EMAIL,
-          TYPE
+          TYPE,
+          STATUS
       ) VALUES (
           0,
           0,
@@ -47,8 +84,50 @@ class OperatorService extends OTAService {
           '${param.name}',
           '${param.phoneNumber}',
           '${param.mail}',
-          2
+          2,
+          1
       )
+    `);
+
+    return result.affectedRows;
+  }
+
+  async updateOperator(param: UpdateOperatorParam): Promise<number> {
+    let setParam = '';
+
+    Object.keys(param).forEach((operatorKey, index) => {
+      const value = param[operatorKey];
+      if (value) {
+        setParam += `${
+          setParam.length !== 0 && 'AND'
+        }${operatorKey} = ${value}`;
+      }
+    });
+
+    const result = await this.excuteQuery(`
+      UPDATE
+        TB_USER
+      SET
+        ${setParam}
+      AND
+        DATE_OF_MODIFIED = NOW()
+      WHERE
+        ID = ${param.ID}
+    `);
+
+    return result.affectedRows;
+  }
+
+  async deleteOperator(param: DeleteOperatorParam): Promise<number> {
+    const result = await this.excuteQuery(`
+      UPDATE
+        TB_USER
+      SET
+        IS_DELETD = 1
+      AND
+        DATE_OF_DELETED = NOW()
+      WHERE
+        ID = ${param.id}
     `);
 
     return result.affectedRows;
