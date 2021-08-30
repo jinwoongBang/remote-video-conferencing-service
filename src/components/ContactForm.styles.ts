@@ -1,5 +1,6 @@
-import { createStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, Theme } from '@material-ui/core/styles';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (theme: Theme) =>
   createStyles({
     '@global': {
@@ -12,4 +13,4 @@ export default (theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'center',
     },
-  })
+  });
