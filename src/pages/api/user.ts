@@ -54,7 +54,7 @@ export default async function handler(
 
   switch (method) {
     case 'GET':
-      seminarResponse.result = await UserService.selectUserList(querys.userId);
+      seminarResponse.result = await UserService.selectUserList(querys);
       res.status(200).json(seminarResponse);
       break;
     case 'POST':

@@ -54,6 +54,7 @@ import {
   Grid,
   TextField,
   Typography,
+  Box,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -226,13 +227,16 @@ function UserView({
             <div>
               <h1>User </h1>
               <h2>{auth.user && auth.user.NAME}</h2>
+
               <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell width="10%" rowSpan={5}>
-                        상세 검색조건
+                      <TableCell colSpan={12}>
+                        <h3>상세 검색조건</h3>
                       </TableCell>
+                    </TableRow>
+                    <TableRow>
                       <TableCell align="center" width="8%">
                         가입날짜
                       </TableCell>
@@ -240,7 +244,6 @@ function UserView({
                         <Grid item xs={12}>
                           <DatePicker
                             selectsRange={true}
-                            c
                             startDate={startDate}
                             endDate={endDate}
                             onChange={(update: any) => {

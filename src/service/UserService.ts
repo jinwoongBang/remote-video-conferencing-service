@@ -2,6 +2,7 @@
  * db
  */
 import connectionPool from 'src/db';
+import { UserSearch } from 'src/store/user';
 import { reqUser } from 'src/vo';
 import UserVO from 'src/vo/UserVO';
 
@@ -10,21 +11,16 @@ type SelectUserProps = {
   password: string;
 };
 class UserService {
-  async selectUserList(userId?: string) {
+  async selectUserList(query?: UserSearch) {
     const conn = await connectionPool.getConnection();
-    console.log('111selectUserList userId:: ', userId);
-    if (userId == null) {
-      console.log('222selectUserList userId:: ', userId);
-      userId = '';
-    }
-    console.log('selectUserList userId:: ', userId);
+
     const rows = await conn.query(`
       SELECT
         * 
       FROM 
         TB_USER
       WHERE
-        USER_ID LIKE '%${userId}%'  
+        USER_ID LIKE '%${query?.userId ?? ''}%'  
       `);
     let userList2: UserVO[] = rows;
     console.log('selectUserList:: ', userList2);

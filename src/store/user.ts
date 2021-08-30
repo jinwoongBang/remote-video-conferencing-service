@@ -21,7 +21,7 @@ export interface UserSearch {
 //상태 - 심사중 활동 정지
 //이벤트명
 //이벤트코드
-//검색어
+//검색어 - 회원명, 회원아이디, 핸드폰 번호
 //검색버튼 - 검색, 초기화, 엑셀
 export const userSearchState = atom<UserSearch>({
   key: 'userSearchState',

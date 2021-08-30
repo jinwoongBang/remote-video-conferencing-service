@@ -374,7 +374,6 @@ function UserRegistration({
 
   useEffect(() => {
     const user = userList[0] || null;
-    setAuth((currVal) => ({ ...currVal, user }));
     console.log('getStaticProps() :: useEffect (mount)');
     return () => {
       console.log('getStaticProps() :: useEffect (unmount)');
