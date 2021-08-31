@@ -66,7 +66,7 @@ import UserVO from 'src/vo/UserVO';
 import ApoLayout from 'src/components/AppLayout';
 import { AuthorityVO } from 'src/vo';
 import AuthorityService from 'src/service/AuthorityService';
-import { AuthorityKey } from 'src/common/enum/authority';
+import { AuthorityKey, ParentsAuthorityKey } from 'src/common/enum/authority';
 import {
   getOperatorListSelector,
   insertOperatorSelector,
@@ -453,8 +453,8 @@ function OperatorRegistration({
 // This function gets called at build time
 export const getStaticProps: GetStaticProps<{ authorityList: AuthorityVO[] }> =
   async ({ params }) => {
-    const authorityList = await AuthorityService.selectAuthorityListByKeys({
-      authorityKeys: Object.values(AuthorityKey),
+    const authorityList = await AuthorityService.selectAuthorityListByParents({
+      authorityKeys: [ParentsAuthorityKey.OperatorRole],
     });
     return {
       props: {

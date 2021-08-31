@@ -4,3 +4,6 @@ export enum AuthorityKey {
   EventRole = 'EVENT_ROLE',
   SpecialRole = 'SPECIAL_ROLE',
 }
+export enum ParentsAuthorityKey {
+  OperatorRole = 'OPERATOR_ROLE',
+}

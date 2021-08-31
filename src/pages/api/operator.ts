@@ -28,7 +28,7 @@ import { PreferenceVO, User } from 'src/vo';
 /**
  * Enum
  */
-import { AuthorityKey } from 'src/common/enum/authority';
+import { AuthorityKey, ParentsAuthorityKey } from 'src/common/enum/authority';
 import OperatorVO from 'src/vo/OperatorVO';
 
 export interface OperatorResponseEntity {
@@ -76,9 +76,11 @@ class OperatorController extends OTAController {
     try {
       const totalUserCount = await OperatorService.selectOperatorCount();
       const userList = await OperatorService.selectOperatorList(param);
-      const authorityList = await AuthorityService.selectAuthorityListByKeys({
-        authorityKeys: Object.values(AuthorityKey),
-      });
+      const authorityList = await AuthorityService.selectAuthorityListByParents(
+        {
+          authorityKeys: [ParentsAuthorityKey.OperatorRole],
+        },
+      );
 
       const operatorList = userList.map((user) => {
         const operator: OperatorVO = Object.assign(new OperatorVO(), user);

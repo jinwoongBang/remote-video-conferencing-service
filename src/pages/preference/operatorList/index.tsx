@@ -43,7 +43,7 @@ import { AuthorityVO } from 'src/vo';
 /**
  * Common
  */
-import { AuthorityKey } from 'src/common/enum/authority';
+import { AuthorityKey, ParentsAuthorityKey } from 'src/common/enum/authority';
 
 /**
  * Service
@@ -79,8 +79,8 @@ function OperatorList({
 // This function gets called at build time
 export const getStaticProps: GetStaticProps<{ authorityList: AuthorityVO[] }> =
   async ({ params }) => {
-    const authorityList = await AuthorityService.selectAuthorityListByKeys({
-      authorityKeys: Object.values(AuthorityKey),
+    const authorityList = await AuthorityService.selectAuthorityListByParents({
+      authorityKeys: [ParentsAuthorityKey.OperatorRole],
     });
     return {
       props: {

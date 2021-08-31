@@ -1,21 +1,17 @@
 /**
  * db
  */
+import OTAService from 'src/common/framework/OTAService';
 import connectionPool from 'src/db';
 import { AuthorityVO } from 'src/vo';
 
-class AuthorityService {
+class AuthorityService extends OTAService {
   async selectAuthorityListByKeys({
     authorityKeys,
   }: {
     authorityKeys: string[];
   }): Promise<AuthorityVO[]> {
-    const conn = await connectionPool.getConnection();
-
-    let authorityList: AuthorityVO[] = [];
-
-    try {
-      const list: AuthorityVO[] = await conn.query(`
+    const list = await this.excuteQuery(`
       SELECT
         *
       FROM
@@ -24,18 +20,35 @@ class AuthorityService {
         AUTHORITY_KEY in (${authorityKeys
           .map((authorityKey) => `'${authorityKey}'`)
           .join(',')})
-    `);
+  `);
 
-      authorityList = list.map((data: any) =>
-        Object.assign(new AuthorityVO(), data),
-      );
-    } catch (e) {
-      console.error(e);
-    } finally {
-      await conn.release();
-    }
+    return list;
+  }
 
-    return JSON.parse(JSON.stringify(authorityList));
+  async selectAuthorityListByParents({
+    authorityKeys,
+  }: {
+    authorityKeys: string[];
+  }): Promise<AuthorityVO[]> {
+    const list = await this.excuteQuery(`
+      SELECT
+        *
+      FROM
+        TB_AUTHORITY
+      WHERE
+        PID IN (
+          SELECT
+            ID
+          FROM
+            TB_AUTHORITY
+          WHERE
+            AUTHORITY_KEY in (${authorityKeys
+              .map((authorityKey) => `'${authorityKey}'`)
+              .join(',')})
+        )
+  `);
+
+    return list;
   }
 }
 

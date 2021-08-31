@@ -25,7 +25,7 @@ abstract class OTAService {
 
     if (error) throw error;
 
-    return result;
+    return JSON.parse(JSON.stringify(result));
   }
 
   protected createWhereClause(
