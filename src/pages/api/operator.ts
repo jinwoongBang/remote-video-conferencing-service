@@ -1,5 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+import * as _ from 'lodash';
+
 /**
  * Framework
  */
@@ -13,7 +16,7 @@ import AuthorityService from 'src/service/AuthorityService';
 import OperatorService, {
   DeleteOperatorParam,
   InsertOperatorParam,
-  SelectOperatorParam,
+  SelectOperatorListParam,
   UpdateOperatorParam,
 } from 'src/service/OperatorService';
 
@@ -72,7 +75,7 @@ class OperatorController extends OTAController {
     const response = new OTAResponse<OperatorVO>();
     try {
       const totalUserCount = await OperatorService.selectOperatorCount();
-      const userList = await OperatorService.selectOperator(param);
+      const userList = await OperatorService.selectOperatorList(param);
       const authorityList = await AuthorityService.selectAuthorityListByKeys({
         authorityKeys: Object.values(AuthorityKey),
       });
@@ -114,6 +117,21 @@ class OperatorController extends OTAController {
     const param: OperatorPostParam = req.body;
     const response = new OTAResponse<OperatorResponseEntity>();
     try {
+      const userId = param.user.userId;
+      if (_.isEmpty(userId)) {
+        throw new Error('아이디를 입력해주세요.');
+      }
+
+      const isDuplication = !_.isEmpty(
+        await OperatorService.selectOperatorByUserId({
+          userId,
+        }),
+      );
+
+      if (isDuplication) {
+        throw new Error('중복된 아이디 입니다.');
+      }
+
       const resultCount = await OperatorService.insertOperator(param.user);
       const isSuccess = resultCount === 1;
       const result: OperatorResponseEntity[] = new Array(resultCount).fill({

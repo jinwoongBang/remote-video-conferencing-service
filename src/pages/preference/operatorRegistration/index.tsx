@@ -265,7 +265,19 @@ function OperatorRegistration({
       authorities: createAuthorityParam(selectedAuthorities, authorityList),
     };
     await requestInsertOperator(param);
-    await reloadUserList(new Date());
+    // await reloadUserList((state) => state + 1);
+
+    setUserId('');
+    setName('');
+    setPassword('');
+    setPhoneNumber('');
+    setMail('');
+    setSelectedAuthorities((state) => {
+      for (const key in state) {
+        state[key] = false;
+      }
+      return state;
+    });
   }, [userId, name, password, phoneNumber, mail, selectedAuthorities]);
 
   return (

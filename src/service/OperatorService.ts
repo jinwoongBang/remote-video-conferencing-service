@@ -3,9 +3,12 @@ import OTAService from 'src/common/framework/OTAService';
 import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
 
-export interface SelectOperatorParam {
+export interface SelectOperatorListParam {
   currentPage: number;
   returnCount: number;
+}
+export interface SelectOperatorByUserIdParam {
+  userId: string;
 }
 export interface InsertOperatorParam {
   authorities: string;
@@ -22,10 +25,10 @@ export type DeleteOperatorParam = {
 };
 
 class OperatorService extends OTAService {
-  async selectOperator({
+  async selectOperatorList({
     currentPage = 0,
     returnCount = 10,
-  }: SelectOperatorParam): Promise<User[]> {
+  }: SelectOperatorListParam): Promise<User[]> {
     const result = await this.excuteQuery(
       `
       SELECT
@@ -46,6 +49,28 @@ class OperatorService extends OTAService {
       LIMIT ${returnCount}
       OFFSET ${currentPage * returnCount}
     `,
+    );
+
+    return result;
+  }
+
+  async selectOperatorByUserId({
+    userId,
+  }: SelectOperatorByUserIdParam): Promise<User> {
+    const result = await this.excuteQuery(
+      `
+      SELECT
+        *
+      FROM
+        TB_USER
+      WHERE
+        TYPE = 2
+      AND
+        IS_DELETED = 0
+      AND
+        USER_ID = ?
+    `,
+      [userId],
     );
 
     return result;
