@@ -60,9 +60,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
   },
+  header: {
+    height: '30px',
+  },
+  postCountContainer: {
+    '& strong': {
+      fontWeight: 'bold',
+      fontSize: '1.2em',
+      margin: '0 2px',
+    },
+  },
   paper: {
     width: '100%',
-    height: 'calc(100vh - 240px)',
+    height: 'calc(100vh - 260px)',
     marginBottom: theme.spacing(2),
   },
   tbody: {
@@ -74,15 +84,6 @@ type OperatorListTableProps = {};
 
 function OperatorListTable({}: OperatorListTableProps) {
   const classes = useStyles();
-  // const [page, setPage] = useState(1);
-  // const [pageCount, setPageCount] = useState(0);
-
-  // const userListLoadable = useRecoilValueLoadable<GetOperatorListSelectorType>(
-  //   getOperatorListSelector,
-  // );
-  // const [pagination, setPagination] = useRecoilState(
-  //   operatorListPaginationState,
-  // );
 
   const [page, setPage] = useRecoilState(operatorListPaginationState);
 
@@ -105,12 +106,6 @@ function OperatorListTable({}: OperatorListTableProps) {
       : undefined;
   }, [userListLoadable.state]);
 
-  /**
-   * TODO:
-   *  prefetch 를 사용해 페이지네이션 정보를 받아와야함
-   */
-  useEffect(() => {}, []);
-
   const handleChange = useCallback(
     (event: React.ChangeEvent<unknown>, value: number) => {
       setPage((state) => ({ ...state, pageNumber: value - 1 }));
@@ -120,6 +115,20 @@ function OperatorListTable({}: OperatorListTableProps) {
 
   return (
     <div className={classes.root}>
+      <Grid
+        container
+        justifyContent="flex-end"
+        alignItems="center"
+        component="article"
+        className={classes.header}
+      >
+        <Grid item>
+          <Typography variant="body1" className={classes.postCountContainer}>
+            총 <strong>{pagination?.itemCount || 0}</strong>개 중{' '}
+            <strong>{userListLoadable.getValue().operatorList.length}</strong>개
+          </Typography>
+        </Grid>
+      </Grid>
       <TableContainer component={Paper} className={classes.paper}>
         <Table stickyHeader aria-label="collapsible table">
           <TableHead>
