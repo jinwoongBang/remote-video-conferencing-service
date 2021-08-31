@@ -1,5 +1,6 @@
 import DateUtils from 'src/common/utils/DateUtils';
 import OnTheAirVO from 'src/vo/OnTheAirVO';
+import AuthorityVO from './AuthorityVO';
 
 class OperatorVO extends OnTheAirVO {
   ID!: number;
@@ -30,6 +31,28 @@ class OperatorVO extends OnTheAirVO {
     }
 
     return '-';
+  }
+
+  createAuthorityIdList(
+    authorityList: AuthorityVO[],
+    checkedList: { [key: string]: boolean },
+  ) {
+    const authKeyList = Object.keys(checkedList);
+    const authIdList: number[] = [];
+
+    authKeyList.forEach((authKey) => {
+      const hasAuth = checkedList[authKey];
+
+      if (hasAuth) {
+        const auth = authorityList.find(
+          ({ AUTHORITY_KEY }) => AUTHORITY_KEY === authKey,
+        );
+        const authId = auth?.ID;
+        authId && authIdList.push(authId);
+      }
+    });
+
+    return authIdList.join('-');
   }
 }
 

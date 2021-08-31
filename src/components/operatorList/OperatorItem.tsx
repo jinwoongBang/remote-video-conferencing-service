@@ -69,8 +69,6 @@ import {
  * Store
  */
 import {
-  deleteOperatorSelector,
-  deleteOperatorState,
   forcedReloadOperatorListState,
   getOperatorListSelector,
   operatorListPaginationState,
@@ -83,14 +81,12 @@ import OperatorVO from 'src/vo/OperatorVO';
  */
 import Loading from 'src/components/Loading';
 import Modal from 'src/components/operatorList/Modal';
-import ModifyForm from 'src/components/operatorList/ModifyForm';
+import ModifyModal from 'src/components/operatorList/ModifyModal';
 
 /**
  *
  */
 import HttpClient from 'src/common/framework/HttpClient';
-import OTAResponse from 'src/common/framework/OTAResponse';
-import { OperatorResponseEntity } from 'src/pages/api/operator';
 
 type OperatorItemProps = {
   operator: OperatorVO;
@@ -164,6 +160,22 @@ function OperatorItem({ operator }: OperatorItemProps) {
           console.error(error);
         } finally {
           setDeleteModalOpen(false);
+          set(forcedReloadOperatorListState, (state) => state + 1);
+        }
+      },
+  );
+
+  const handleSubmitModifyOperator = useRecoilCallback(
+    ({ set }) =>
+      async () => {
+        try {
+          await HttpClient.put('/operator', {
+            id: '',
+          });
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setModifyModalOpen(false);
           set(forcedReloadOperatorListState, (state) => state + 1);
         }
       },
@@ -326,32 +338,11 @@ function OperatorItem({ operator }: OperatorItemProps) {
           </Collapse>
         </TableCell>
       </TableRow>
-
-      <Modal
+      <ModifyModal
         open={modifyModalOpen}
         onOpen={handleOpenModifyModal}
-        title="운영자 정보 수정"
-        maxWidth="md"
-      >
-        <ModifyForm operator={operator} />
-        <DialogActions>
-          <Button
-            onClick={handleOpenModifyModal}
-            color="secondary"
-            variant="outlined"
-          >
-            취소
-          </Button>
-          <Button
-            onClick={handleOpenModifyModal}
-            color="primary"
-            variant="outlined"
-            autoFocus
-          >
-            확인
-          </Button>
-        </DialogActions>
-      </Modal>
+        operator={operator}
+      />
 
       <Modal
         open={deleteModalOpen}

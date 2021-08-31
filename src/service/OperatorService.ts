@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import OTAService from 'src/common/framework/OTAService';
 import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
@@ -97,23 +98,27 @@ class OperatorService extends OTAService {
   }
 
   async updateOperator(param: UpdateOperatorParam): Promise<number> {
-    let setParam = '';
+    const paramList: string[] = [];
 
     Object.keys(param).forEach((operatorKey, index) => {
-      const value = param[operatorKey];
-      const separator = ',';
-      if (value) {
-        setParam += `${
-          setParam.length !== 0 && separator
-        }${operatorKey} = ${value}`;
+      let value = param[operatorKey];
+
+      if (operatorKey === 'ID' || value === undefined) {
+        return;
+      } else if (typeof value === 'string') {
+        value = this.addSingleQuotation(value);
       }
+
+      paramList.push(`${operatorKey} = ${value}`);
     });
+
+    const stringParam = paramList.join(',');
 
     const result = await this.excuteQuery(`
       UPDATE
         TB_USER
       SET
-        ${setParam},
+        ${stringParam},
         DATE_OF_MODIFIED = NOW()
       WHERE
         ID = ${param.ID}
@@ -134,6 +139,10 @@ class OperatorService extends OTAService {
     `);
 
     return result.affectedRows;
+  }
+
+  addSingleQuotation(value: string) {
+    return `'${value}'`;
   }
 }
 

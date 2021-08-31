@@ -14,6 +14,7 @@ import OperatorService, {
   DeleteOperatorParam,
   InsertOperatorParam,
   SelectOperatorParam,
+  UpdateOperatorParam,
 } from 'src/service/OperatorService';
 
 /**
@@ -39,6 +40,10 @@ export type OperatorGetParam = {
 
 export type OperatorPostParam = {
   user: InsertOperatorParam;
+};
+
+export type OperatorPutParam = {
+  user: UpdateOperatorParam;
 };
 
 export type OperatorDeleteParam = {
@@ -127,8 +132,26 @@ class OperatorController extends OTAController {
 
   protected async doPut(
     request: NextApiRequest,
-    response: NextApiResponse<any>,
-  ): Promise<any> {}
+    response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
+  ): Promise<void> {
+    const param: OperatorPutParam = request.body;
+    const otaResponse = new OTAResponse<OperatorResponseEntity>();
+    try {
+      const resultCount = await OperatorService.updateOperator(param.user);
+      const isSuccess = resultCount === 1;
+      const result: OperatorResponseEntity[] = new Array(resultCount).fill({
+        method: 'UPDATE',
+      });
+      otaResponse.result = result;
+      otaResponse.success = isSuccess;
+      response.status(200).json(otaResponse);
+    } catch (error) {
+      console.error(error);
+      otaResponse.success = false;
+      otaResponse.message = error.message;
+      response.status(500).json(otaResponse);
+    }
+  }
 
   protected async doDelete(
     request: NextApiRequest,
