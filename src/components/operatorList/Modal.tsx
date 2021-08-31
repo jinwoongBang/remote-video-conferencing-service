@@ -26,21 +26,6 @@ function Modal({ open, title, children, onOpen, maxWidth }: ModalProps) {
     >
       <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       {children}
-
-      {/* <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Let Google help apps determine location. This means sending anonymous
-          location data to Google, even when no apps are running.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onOpen} color="primary">
-          Disagree
-        </Button>
-        <Button onClick={onSubmit} color="primary" autoFocus>
-          Agree
-        </Button>
-      </DialogActions> */}
     </Dialog>
   );
 }

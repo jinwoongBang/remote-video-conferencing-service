@@ -1,13 +1,20 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 /**
  * Recoil
  */
-import { useRecoilStateLoadable } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilStateLoadable,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+  useRecoilCallback,
+} from 'recoil';
 
 /**
  * Library
  */
 import clsx from 'clsx';
+import { AxiosResponse } from 'axios';
 
 /**
  * Material UI
@@ -61,7 +68,13 @@ import {
 /**
  * Store
  */
-import { getOperatorListSelector } from 'src/store/operator';
+import {
+  deleteOperatorSelector,
+  deleteOperatorState,
+  forcedReloadOperatorListState,
+  getOperatorListSelector,
+  operatorListPaginationState,
+} from 'src/store/operator';
 import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
 
@@ -71,6 +84,13 @@ import OperatorVO from 'src/vo/OperatorVO';
 import Loading from 'src/components/Loading';
 import Modal from 'src/components/operatorList/Modal';
 import ModifyForm from 'src/components/operatorList/ModifyForm';
+
+/**
+ *
+ */
+import HttpClient from 'src/common/framework/HttpClient';
+import OTAResponse from 'src/common/framework/OTAResponse';
+import { OperatorResponseEntity } from 'src/pages/api/operator';
 
 type OperatorItemProps = {
   operator: OperatorVO;
@@ -117,8 +137,6 @@ function UserStatus({ status }: UserStatusProps) {
 function OperatorItem({ operator }: OperatorItemProps) {
   const classes = useStyles();
 
-  // const deleteOperator = useRecoil;
-
   const [detailOpen, setDetailOpen] = useState(false);
   const [modifyModalOpen, setModifyModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -135,7 +153,21 @@ function OperatorItem({ operator }: OperatorItemProps) {
     setDeleteModalOpen((state) => !state);
   }, []);
 
-  const handleSubmitDeleteOperator = useCallback(() => {}, []);
+  const handleSubmitDeleteOperator = useRecoilCallback(
+    ({ set }) =>
+      async () => {
+        try {
+          await HttpClient.delete('/operator', {
+            params: { id: operator.ID },
+          });
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setDeleteModalOpen(false);
+          set(forcedReloadOperatorListState, (state) => state + 1);
+        }
+      },
+  );
 
   return (
     <>
@@ -341,7 +373,7 @@ function OperatorItem({ operator }: OperatorItemProps) {
             취소
           </Button>
           <Button
-            onClick={handleOpenDeleteModal}
+            onClick={handleSubmitDeleteOperator}
             color="primary"
             variant="outlined"
             autoFocus

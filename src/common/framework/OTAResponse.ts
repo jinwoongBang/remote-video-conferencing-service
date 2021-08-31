@@ -1,4 +1,5 @@
 import OnTheAirVO from 'src/vo/OnTheAirVO';
+import { PaginationType } from 'src/common/enum/pagination';
 
 export interface OTAResponseProps<T extends OnTheAirVO> {
   result?: T[];
@@ -7,13 +8,6 @@ export interface OTAResponseProps<T extends OnTheAirVO> {
   code?: number;
   message?: string;
 }
-
-export type PaginationType = {
-  pageNumber: number;
-  pageCount: number;
-  itemCount: number;
-  returnCount?: number;
-};
 
 // 타입을 추가해서 사용하면 됨.
 export type ReferenceType = PaginationType; // | ETCType1 | ETCTYPE2 ...

@@ -2,7 +2,7 @@ import DateUtils from 'src/common/utils/DateUtils';
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 
 class OperatorVO extends OnTheAirVO {
-  ID?: number;
+  ID!: number;
   STATUS?: number;
   USER_ID?: string;
   PASSWORD?: string;

@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PaginationType } from './OTAResponse';
 
 abstract class OTAController {
   private request: NextApiRequest;

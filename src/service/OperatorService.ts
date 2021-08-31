@@ -37,10 +37,12 @@ class OperatorService extends OTAService {
         user.ID = log.USER_ID
       WHERE
         user.TYPE = 2
+      AND
+        user.IS_DELETED = 0
       GROUP BY user.ID
       ORDER BY user.ID ASC
       LIMIT ${returnCount}
-      OFFSET ${currentPage * returnCount};
+      OFFSET ${currentPage * returnCount}
     `,
     );
 
@@ -56,6 +58,8 @@ class OperatorService extends OTAService {
           TB_USER
         WHERE
           TYPE = 2
+        AND
+          IS_DELETED = 0
     `,
     );
 
@@ -123,8 +127,7 @@ class OperatorService extends OTAService {
       UPDATE
         TB_USER
       SET
-        IS_DELETD = 1
-      AND
+        IS_DELETED = 1,
         DATE_OF_DELETED = NOW()
       WHERE
         ID = ${param.id}

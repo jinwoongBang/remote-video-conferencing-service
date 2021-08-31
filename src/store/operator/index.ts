@@ -6,10 +6,8 @@ import * as _ from 'lodash';
  * Common
  */
 import HttpClient from 'src/common/framework/HttpClient';
-import OTAResponse, {
-  PaginationType,
-  ReferenceType,
-} from 'src/common/framework/OTAResponse';
+import OTAResponse from 'src/common/framework/OTAResponse';
+import { PaginationType, RETURN_COUNT } from 'src/common/enum/pagination';
 
 /**
  * Service
@@ -59,24 +57,32 @@ export const insertOperatorSelector = selector({
 /**
  * Get Operator
  */
-export const OperatorListPaginationState = atom<number>({
-  key: 'OperatorListPaginationState',
-  default: 0,
-});
-
-export const forcedReloadOperatorListState = atom<Date>({
-  key: 'forcedReloadOperatorListState',
-  default: new Date(),
-});
 export interface GetOperatorListSelectorType {
   operatorList: OperatorVO[];
   pagination?: PaginationType;
 }
+
+export const forcedReloadOperatorListState = atom<number>({
+  key: 'forcedReloadOperatorListState',
+  default: 0,
+});
+
+export const operatorListPaginationState = atom({
+  key: 'operatorListPaginationState',
+  default: {
+    pageNumber: 0,
+    returnCount: RETURN_COUNT,
+    // pageCount: 0,
+    // itemCount: 0,
+  },
+});
+
 export const getOperatorListSelector = selectorFamily({
   key: 'getOperatorListSelector',
   get:
     ({ page, returnCount }: { page: number; returnCount: number }) =>
     async ({ get }) => {
+      get(forcedReloadOperatorListState);
       const result: GetOperatorListSelectorType = {
         operatorList: [],
       };
@@ -103,12 +109,23 @@ export const getOperatorListSelector = selectorFamily({
 /**
  * Delete Operator
  */
+export const deleteOperatorState = atom({
+  key: 'deleteOperatorState',
+  default: {
+    canRequest: false,
+  },
+});
+
 export const deleteOperatorSelector = selectorFamily({
   key: 'deleteOperatorSelector',
   get:
-    ({ id }: { id: number }) =>
+    (id: number) =>
     async ({ get }) => {
-      let result = 0;
+      let result = false;
+      const { canRequest } = get(deleteOperatorState);
+      if (!canRequest) {
+        return result;
+      }
 
       try {
         const {
@@ -119,11 +136,17 @@ export const deleteOperatorSelector = selectorFamily({
             params: { id },
           });
         const responseData = new OTAResponse<OperatorResponseEntity>(data);
-        result = responseData.result.length;
+        result = responseData.result.length === 1;
       } catch (error) {
         console.error(error);
       }
 
       return result;
+    },
+  set:
+    (id: number) =>
+    ({ set }, newValue) => {
+      const canRequest = newValue as { canRequest: boolean };
+      set(deleteOperatorState, canRequest);
     },
 });

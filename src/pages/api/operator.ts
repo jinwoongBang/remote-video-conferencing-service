@@ -42,7 +42,7 @@ export type OperatorPostParam = {
 };
 
 export type OperatorDeleteParam = {
-  id: number;
+  id: string;
 };
 
 type OmitOperatorVO = Omit<OperatorVO, 'dateOfCreated'>;
@@ -134,7 +134,11 @@ class OperatorController extends OTAController {
     request: NextApiRequest,
     response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
   ): Promise<void> {
-    const param: OperatorDeleteParam = request.body;
+    // const param: OperatorDeleteParam = request.body;
+    const queryParam = request.query as OperatorDeleteParam;
+    const param = {
+      id: Number(queryParam.id),
+    };
     const otaResponse = new OTAResponse<OperatorResponseEntity>();
     try {
       const resultCount = await OperatorService.deleteOperator(param);

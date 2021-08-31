@@ -44,6 +44,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 import {
   getOperatorListSelector,
   GetOperatorListSelectorType,
+  operatorListPaginationState,
 } from 'src/store/operator';
 import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
@@ -69,13 +70,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function OperatorListTable() {
+type OperatorListTableProps = {};
+
+function OperatorListTable({}: OperatorListTableProps) {
   const classes = useStyles();
-  const [page, setPage] = useState(1);
-  const [pageCount, setPageCount] = useState(0);
+  // const [page, setPage] = useState(1);
+  // const [pageCount, setPageCount] = useState(0);
+
+  // const userListLoadable = useRecoilValueLoadable<GetOperatorListSelectorType>(
+  //   getOperatorListSelector,
+  // );
+  // const [pagination, setPagination] = useRecoilState(
+  //   operatorListPaginationState,
+  // );
+
+  const [page, setPage] = useRecoilState(operatorListPaginationState);
 
   const userListLoadable = useRecoilValueLoadable<GetOperatorListSelectorType>(
-    getOperatorListSelector({ page: page - 1, returnCount: 20 }),
+    getOperatorListSelector({
+      page: page.pageNumber,
+      returnCount: page.returnCount,
+    }),
   );
 
   const isLoading = useMemo(() => {
@@ -98,7 +113,7 @@ function OperatorListTable() {
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<unknown>, value: number) => {
-      setPage(value);
+      setPage((state) => ({ ...state, pageNumber: value - 1 }));
     },
     [],
   );
@@ -149,7 +164,7 @@ function OperatorListTable() {
             disabled={isLoading || !pagination}
             color="primary"
             count={pagination?.pageCount}
-            page={page}
+            page={page.pageNumber + 1}
             onChange={handleChange}
           />
         </Grid>
