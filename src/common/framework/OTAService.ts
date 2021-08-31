@@ -27,6 +27,31 @@ abstract class OTAService {
 
     return result;
   }
+
+  protected createWhereClause(
+    param: { [key: string]: any },
+    separator = ' AND ',
+  ) {
+    const paramList: string[] = [];
+
+    Object.keys(param).forEach((operatorKey, index) => {
+      let value = param[operatorKey];
+
+      if (value === undefined) {
+        return;
+      } else if (typeof value === 'string') {
+        value = this.addSingleQuotation(value);
+      }
+
+      paramList.push(`${operatorKey} = ${value}`);
+    });
+
+    return paramList.join(separator);
+  }
+
+  private addSingleQuotation(value: string) {
+    return `'${value}'`;
+  }
 }
 
 export default OTAService;

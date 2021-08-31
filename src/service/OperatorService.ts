@@ -15,7 +15,8 @@ export interface InsertOperatorParam {
   phoneNumber: string;
   mail: string;
 }
-export type UpdateOperatorParam = OperatorVO;
+export type UpdateOperatorParam = Partial<OperatorVO>;
+
 export type DeleteOperatorParam = {
   id: number;
 };
@@ -98,21 +99,10 @@ class OperatorService extends OTAService {
   }
 
   async updateOperator(param: UpdateOperatorParam): Promise<number> {
-    const paramList: string[] = [];
+    const id = _.cloneDeep(param).ID;
+    delete param.ID;
 
-    Object.keys(param).forEach((operatorKey, index) => {
-      let value = param[operatorKey];
-
-      if (operatorKey === 'ID' || value === undefined) {
-        return;
-      } else if (typeof value === 'string') {
-        value = this.addSingleQuotation(value);
-      }
-
-      paramList.push(`${operatorKey} = ${value}`);
-    });
-
-    const stringParam = paramList.join(',');
+    const stringParam = this.createWhereClause(param, ', ');
 
     const result = await this.excuteQuery(`
       UPDATE
@@ -121,7 +111,7 @@ class OperatorService extends OTAService {
         ${stringParam},
         DATE_OF_MODIFIED = NOW()
       WHERE
-        ID = ${param.ID}
+        ID = ${id}
     `);
 
     return result.affectedRows;
@@ -139,10 +129,6 @@ class OperatorService extends OTAService {
     `);
 
     return result.affectedRows;
-  }
-
-  addSingleQuotation(value: string) {
-    return `'${value}'`;
   }
 }
 
