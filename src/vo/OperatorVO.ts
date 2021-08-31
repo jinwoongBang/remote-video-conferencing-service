@@ -11,6 +11,9 @@ class OperatorVO extends OnTheAirVO {
   PHONE_NUMBER?: string;
   EMAIL?: string;
   AUTHORITIES?: string;
+  TYPE?: number;
+
+  // read-only
   DATE_OF_CREATED?: string;
   LOG_COUNT?: number;
   PREFERENCE_ROLE!: boolean;

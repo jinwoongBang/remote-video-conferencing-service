@@ -10,14 +10,16 @@ export interface SelectOperatorListParam {
 export interface SelectOperatorByUserIdParam {
   userId: string;
 }
-export interface InsertOperatorParam {
-  authorities?: string;
-  userId: string;
-  password: string;
-  name: string;
-  phoneNumber: string;
-  mail: string;
-}
+// export interface InsertOperatorParam {
+//   authorities?: string;
+//   userId: string;
+//   password: string;
+//   name: string;
+//   phoneNumber: string;
+//   mail: string;
+// }
+export type InsertOperatorParam = Partial<OperatorVO>;
+
 export type UpdateOperatorParam = Partial<OperatorVO>;
 
 export type DeleteOperatorParam = {
@@ -94,31 +96,11 @@ class OperatorService extends OTAService {
   }
 
   async insertOperator(param: InsertOperatorParam): Promise<number> {
-    const result = await this.excuteQuery(`
-      INSERT INTO TB_USER(
-          ROOM_ID,
-          EVENT_ID,
-          AUTHORITIES,
-          USER_ID,
-          PASSWORD,
-          NAME,
-          PHONE_NUMBER,
-          EMAIL,
-          TYPE,
-          STATUS
-      ) VALUES (
-          0,
-          0,
-          ${param.authorities ? `'${param.authorities}'` : null},
-          '${param.userId}',
-          '${param.password}',
-          '${param.name}',
-          '${param.phoneNumber}',
-          '${param.mail}',
-          2,
-          1
-      )
-    `);
+    const columns = this.createInsertColumn(param);
+    const values = this.createWhereClause(param, ', ');
+    const query = `INSERT INTO TB_USER (${columns}) VALUES (${values})`;
+
+    const result = await this.excuteQuery(query);
 
     return result.affectedRows;
   }

@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import { PaginationType, RETURN_COUNT } from 'src/common/enum/pagination';
+import { UserType } from 'src/common/enum/user';
 
 /**
  * Service
@@ -35,16 +36,24 @@ export const insertOperatorSelector = selector({
   key: 'insertOperatorSelector',
   get: async ({ get }) => {
     let result: { method: string }[] = [];
-    const param = _.cloneDeep(get(insertOperatorState));
+    const param = get(insertOperatorState);
 
     if (!param.isInit) {
       return result;
     }
 
     try {
-      delete param.isInit;
+      const operator = new OperatorVO();
+      operator.USER_ID = param.userId;
+      operator.NAME = param.name;
+      operator.PASSWORD = param.password;
+      operator.PHONE_NUMBER = param.phoneNumber;
+      operator.EMAIL = param.mail;
+      operator.AUTHORITIES = param.authorities;
+      operator.TYPE = UserType.OPERATOR;
+
       const { data, status }: AxiosResponse<OTAResponse<{ method: string }>> =
-        await HttpClient.post('/operator', { user: param });
+        await HttpClient.post('/operator', { user: operator });
       result = data.result;
     } catch (error) {
       console.error(error);
