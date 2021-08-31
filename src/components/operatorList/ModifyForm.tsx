@@ -49,7 +49,7 @@ import OperatorVO from 'src/vo/OperatorVO';
 /**
  * Components
  */
-import PhoneNumberMask from 'src/components/maskInput/Phonenumber';
+import PhoneNumberMask from 'src/components/maskInput/PhoneNumber';
 
 /**
  * store
