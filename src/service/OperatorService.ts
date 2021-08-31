@@ -11,7 +11,7 @@ export interface SelectOperatorByUserIdParam {
   userId: string;
 }
 export interface InsertOperatorParam {
-  authorities: string;
+  authorities?: string;
   userId: string;
   password: string;
   name: string;
