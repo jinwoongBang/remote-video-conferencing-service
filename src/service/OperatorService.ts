@@ -101,9 +101,10 @@ class OperatorService extends OTAService {
 
     Object.keys(param).forEach((operatorKey, index) => {
       const value = param[operatorKey];
+      const separator = ',';
       if (value) {
         setParam += `${
-          setParam.length !== 0 && 'AND'
+          setParam.length !== 0 && separator
         }${operatorKey} = ${value}`;
       }
     });
@@ -112,8 +113,7 @@ class OperatorService extends OTAService {
       UPDATE
         TB_USER
       SET
-        ${setParam}
-      AND
+        ${setParam},
         DATE_OF_MODIFIED = NOW()
       WHERE
         ID = ${param.ID}

@@ -125,7 +125,10 @@ function OperatorListTable({}: OperatorListTableProps) {
         <Grid item>
           <Typography variant="body1" className={classes.postCountContainer}>
             총 <strong>{pagination?.itemCount || 0}</strong>개 중{' '}
-            <strong>{userListLoadable.getValue().operatorList.length}</strong>개
+            <strong>
+              {!isLoading ? userListLoadable.getValue().operatorList.length : 0}
+            </strong>
+            개
           </Typography>
         </Grid>
       </Grid>
