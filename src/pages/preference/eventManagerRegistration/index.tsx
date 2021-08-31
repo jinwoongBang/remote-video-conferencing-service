@@ -17,7 +17,7 @@ import UserVO from 'src/vo/UserVO';
  * Components
  */
 import AppLayout from 'src/components/AppLayout';
-import Form from 'src/components/operatorRegistration/Form';
+import Form from 'src/components/eventManagerRegistration/Form';
 
 /**
  * Default Function(TSX)
