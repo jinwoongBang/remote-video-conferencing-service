@@ -14,22 +14,22 @@ class UserService {
   async selectUserList(query?: UserSearch) {
     const conn = await connectionPool.getConnection();
     let queryName = '';
-    if (query?.name != null) {
+    if (query?.name != null && query.name != '') {
       queryName = `AND NAME LIKE '%${query?.name ?? ''}%'`;
     }
 
     let queryPhoneNumber = '';
-    if (query?.phoneNumber != null) {
+    if (query?.phoneNumber != null && query.phoneNumber != '') {
       queryName = `AND PHONE_NUMBER LIKE '%${query?.phoneNumber ?? ''}%'`;
     }
 
     let queryEventCode = '';
-    if (query?.eventCode != null) {
+    if (query?.eventCode != null && query.eventCode != '') {
       queryName = `AND NAME EVENT_ID '%${query?.eventCode ?? ''}%'`;
     }
 
     let queryEventName = '';
-    if (query?.eventName != null) {
+    if (query?.eventName != null && query.eventName != '') {
       queryName = `AND NAME EVENT_ID '%${query?.eventName ?? ''}%'`;
     }
 

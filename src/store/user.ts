@@ -17,6 +17,7 @@ export interface UserSearch {
   phoneNumber?: string;
   eventCode?: string;
   eventName?: string;
+  status?: string;
 }
 
 //가입 날짜
