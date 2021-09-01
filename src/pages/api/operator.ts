@@ -119,8 +119,8 @@ class OperatorController extends OTAController {
     const param: OperatorPostParam = req.body;
     const response = new OTAResponse<OperatorResponseEntity>();
     try {
-      const userId = param.user.userId;
-      if (_.isEmpty(userId)) {
+      const userId = param.user.USER_ID;
+      if (!userId) {
         throw new Error('아이디를 입력해주세요.');
       }
 

@@ -15,6 +15,7 @@ abstract class OTAService {
 
     try {
       conn = await this.getConnection();
+      console.log(query);
       result = param ? await conn.query(query, param) : await conn.query(query);
     } catch (e) {
       console.error(e);
@@ -34,8 +35,8 @@ abstract class OTAService {
   ) {
     const paramList: string[] = [];
 
-    Object.keys(param).forEach((operatorKey, index) => {
-      let value = param[operatorKey];
+    Object.keys(param).forEach((key, index) => {
+      let value = param[key];
 
       if (value === undefined) {
         return;
@@ -43,10 +44,17 @@ abstract class OTAService {
         value = this.addSingleQuotation(value);
       }
 
-      paramList.push(`${operatorKey} = ${value}`);
+      paramList.push(`${key} = ${value}`);
     });
 
     return paramList.join(separator);
+  }
+
+  protected createInsertColumn(
+    param: { [key: string]: any },
+    separator = ', ',
+  ) {
+    return Object.keys(param).join(separator);
   }
 
   private addSingleQuotation(value: string) {
