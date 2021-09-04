@@ -97,10 +97,10 @@ class OperatorService extends OTAService {
 
   async insertOperator(param: InsertOperatorParam): Promise<number> {
     const columns = this.createInsertColumn(param);
-    const values = this.createWhereClause(param, ', ');
-    const query = `INSERT INTO TB_USER (${columns}) VALUES (${values})`;
+    const questionMarks = this.createInsertValuesByQuestionMark(param);
+    const query = `INSERT INTO TB_USER (${columns}) VALUES (${questionMarks})`;
 
-    const result = await this.excuteQuery(query);
+    const result = await this.excuteQuery(query, Object.values(param));
 
     return result.affectedRows;
   }

@@ -57,6 +57,13 @@ abstract class OTAService {
     return Object.keys(param).join(separator);
   }
 
+  protected createInsertValuesByQuestionMark(param: { [key: string]: any }) {
+    const length = Object.keys(param).length;
+    const values = new Array(length).fill('?').join(',');
+
+    return values;
+  }
+
   private addSingleQuotation(value: string) {
     return `'${value}'`;
   }
