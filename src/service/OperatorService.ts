@@ -4,20 +4,17 @@ import { User } from 'src/vo';
 import OperatorVO from 'src/vo/OperatorVO';
 
 export interface SelectOperatorListParam {
+  type: number;
   currentPage: number;
   returnCount: number;
+}
+export interface SelectOperatorCountParam {
+  type: number;
 }
 export interface SelectOperatorByUserIdParam {
   userId: string;
 }
-// export interface InsertOperatorParam {
-//   authorities?: string;
-//   userId: string;
-//   password: string;
-//   name: string;
-//   phoneNumber: string;
-//   mail: string;
-// }
+
 export type InsertOperatorParam = Partial<OperatorVO>;
 
 export type UpdateOperatorParam = Partial<OperatorVO>;
@@ -28,13 +25,15 @@ export type DeleteOperatorParam = {
 
 class OperatorService extends OTAService {
   async selectOperatorList({
+    type = 2,
     currentPage = 0,
     returnCount = 10,
-  }: SelectOperatorListParam): Promise<User[]> {
+  }: SelectOperatorListParam): Promise<(User & { EVENT_TITLE: string })[]> {
     const result = await this.excuteQuery(
       `
       SELECT
         user.*,
+        event.TITLE AS EVENT_TITLE,
         COUNT(log.ID) as LOG_COUNT
       FROM
         TB_USER user
@@ -42,15 +41,20 @@ class OperatorService extends OTAService {
         TB_USER_LOG log
       ON
         user.ID = log.USER_ID
+      LEFT OUTER JOIN
+        TB_EVENT event
+      ON
+        user.EVENT_ID = event.ID
       WHERE
-        user.TYPE = 2
+        user.TYPE = ?
       AND
         user.IS_DELETED = 0
       GROUP BY user.ID
       ORDER BY user.ID ASC
-      LIMIT ${returnCount}
-      OFFSET ${currentPage * returnCount}
+      LIMIT ?
+      OFFSET ?
     `,
+      [type, returnCount, currentPage * returnCount],
     );
 
     return result;
@@ -78,7 +82,9 @@ class OperatorService extends OTAService {
     return result;
   }
 
-  async selectOperatorCount(): Promise<number> {
+  async selectOperatorCount({
+    type,
+  }: SelectOperatorCountParam): Promise<number> {
     const result = await this.excuteQuery(
       `
         SELECT
@@ -86,10 +92,11 @@ class OperatorService extends OTAService {
         FROM
           TB_USER
         WHERE
-          TYPE = 2
+          TYPE = ?
         AND
           IS_DELETED = 0
     `,
+      [type],
     );
 
     return result[0].COUNT;

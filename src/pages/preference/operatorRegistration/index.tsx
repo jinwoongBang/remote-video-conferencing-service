@@ -254,6 +254,20 @@ function OperatorRegistration({
     [],
   );
 
+  const handleResetForm = useCallback(() => {
+    setUserId('');
+    setName('');
+    setPassword('');
+    setPhoneNumber('');
+    setMail('');
+    setSelectedAuthorities((state) => {
+      for (const key in state) {
+        state[key] = false;
+      }
+      return state;
+    });
+  }, []);
+
   const handleSubmitOperator = useCallback(async () => {
     const param = {
       isInit: true,
@@ -265,19 +279,8 @@ function OperatorRegistration({
       authorities: createAuthorityParam(selectedAuthorities, authorityList),
     };
     await requestInsertOperator(param);
+    handleResetForm();
     // await reloadUserList((state) => state + 1);
-
-    // setUserId('');
-    // setName('');
-    // setPassword('');
-    // setPhoneNumber('');
-    // setMail('');
-    // setSelectedAuthorities((state) => {
-    //   for (const key in state) {
-    //     state[key] = false;
-    //   }
-    //   return state;
-    // });
   }, [userId, name, password, phoneNumber, mail, selectedAuthorities]);
 
   return (

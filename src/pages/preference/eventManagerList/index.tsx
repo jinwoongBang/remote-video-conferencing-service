@@ -1,24 +1,40 @@
+/**
+ * React
+ */
 import React, { useEffect } from 'react';
+
+/**
+ * Nextjs
+ */
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 import Link from 'next/link';
-import Counter from 'src/components/Counter';
-import { authState, counterState } from 'src/store';
+
+/**
+ * MUI
+ */
+import { Grid } from '@material-ui/core';
+
+/**
+ * VO
+ */
 import UserVO from 'src/vo/UserVO';
+
+/**
+ * Components
+ */
 import AppLayout from 'src/components/AppLayout';
+import EventManagerListTable from 'src/components/eventManagerList/EventManagerList';
 
 function EventManagerList({
   result,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <AppLayout>
-      <div>
-        <div>
-          <h1>EventManagerList</h1>
-        </div>
-        <div>
-          <Counter />
-        </div>
-      </div>
+      <Grid container>
+        <Grid item xs={12}>
+          <EventManagerListTable />
+        </Grid>
+      </Grid>
     </AppLayout>
   );
 }

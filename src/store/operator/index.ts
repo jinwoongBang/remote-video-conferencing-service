@@ -98,7 +98,7 @@ export const getOperatorListSelector = selectorFamily({
       try {
         const { data, status }: AxiosResponse<OTAResponse<OperatorVO>> =
           await HttpClient.get('/operator', {
-            params: { currentPage: page, returnCount },
+            params: { type: 2, currentPage: page, returnCount },
           });
         const responseData = new OTAResponse(data);
         responseData.mappingData(OperatorVO);

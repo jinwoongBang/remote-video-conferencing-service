@@ -2,7 +2,7 @@ import DateUtils from 'src/common/utils/DateUtils';
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 import AuthorityVO from './AuthorityVO';
 
-class OperatorVO extends OnTheAirVO {
+class EventManagerVO extends OnTheAirVO {
   ID!: number;
   EVENT_ID?: number;
   STATUS?: number;
@@ -17,10 +17,6 @@ class OperatorVO extends OnTheAirVO {
   // read-only
   DATE_OF_CREATED?: string;
   LOG_COUNT?: number;
-  PREFERENCE_ROLE!: boolean;
-  USER_ROLE!: boolean;
-  EVENT_ROLE!: boolean;
-  SPECIAL_ROLE!: boolean;
   [key: string]: any;
 
   constructor() {
@@ -60,4 +56,4 @@ class OperatorVO extends OnTheAirVO {
   }
 }
 
-export default OperatorVO;
+export default EventManagerVO;

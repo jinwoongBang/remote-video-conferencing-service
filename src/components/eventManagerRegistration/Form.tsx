@@ -2,10 +2,18 @@
  * React
  */
 import React from 'react';
+
+/**
+ * Recoil
+ */
+import { useRecoilCallback } from 'recoil';
+
 /**
  * Libarary
  */
 import { useForm } from 'react-hook-form';
+import * as _ from 'lodash';
+
 /**
  *  Material UI
  */
@@ -45,7 +53,17 @@ import {
  * Components
  */
 import PhoneNumberMask from 'src/components/maskInput/PhoneNumber';
+
+/**
+ * VO
+ */
 import EventVO from 'src/vo/EventVO';
+import OperatorVO from 'src/vo/OperatorVO';
+
+/**
+ *  Commons
+ */
+import HttpClient from 'src/common/framework/HttpClient';
 
 type FormProps = {
   eventList: EventVO[];
@@ -74,15 +92,56 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+enum FormKey {
+  EVENT_ID = 'EVENT_ID',
+  USER_ID = 'USER_ID',
+  NAME = 'NAME',
+  PASSWORD = 'PASSWORD',
+  PASSWORD_CONFIRM = 'PASSWORD_CONFIRM',
+  PHONE_NUMBER = 'PHONE_NUMBER',
+  EMAIL = 'EMAIL',
+}
+
+const DEFAULT_VALUE = {
+  [FormKey.EVENT_ID]: -1,
+  [FormKey.USER_ID]: '',
+  [FormKey.NAME]: '',
+  [FormKey.PASSWORD]: '',
+  [FormKey.PASSWORD_CONFIRM]: '',
+  [FormKey.PHONE_NUMBER]: '',
+  [FormKey.EMAIL]: '',
+};
+
 function Form({ eventList }: FormProps) {
   const classes = useStyles();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: DEFAULT_VALUE,
+  });
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = useRecoilCallback(
+    ({ set }) =>
+      async (data: Partial<typeof DEFAULT_VALUE>) => {
+        try {
+          console.log({ data });
+          const formData = _.cloneDeep(data);
+          delete formData.PASSWORD_CONFIRM;
+
+          const user = Object.assign(new OperatorVO(), formData);
+          user.TYPE = 1;
+          const response = await HttpClient.post('/operator', { user });
+        } catch (error) {
+          console.error(error);
+        } finally {
+          reset(DEFAULT_VALUE);
+          // set(forcedReloadOperatorListState, (state) => state + 1);
+        }
+      },
+  );
 
   return (
     <Grid
@@ -108,7 +167,7 @@ function Form({ eventList }: FormProps) {
           displayEmpty
           inputProps={{ 'aria-label': 'Without label' }}
           defaultValue={-1}
-          {...register('event')}
+          {...register(FormKey.EVENT_ID)}
         >
           <MenuItem value={-1}>선택 안함</MenuItem>
           {eventList.map((event: EventVO) => (
@@ -135,7 +194,7 @@ function Form({ eventList }: FormProps) {
           fullWidth
           id="standard-required"
           placeholder="아이디를 입력해주세요."
-          {...register('userId')}
+          {...register(FormKey.USER_ID)}
         />
       </Grid>
       <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -154,7 +213,7 @@ function Form({ eventList }: FormProps) {
           fullWidth
           id="standard-required"
           placeholder="이름을 입력해주세요."
-          {...register('name')}
+          {...register(FormKey.NAME)}
         />
       </Grid>
       <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -173,7 +232,7 @@ function Form({ eventList }: FormProps) {
           fullWidth
           id="standard-required"
           placeholder="비밀번호를 입력해주세요."
-          {...register('password')}
+          {...register(FormKey.PASSWORD)}
         />
       </Grid>
       <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -192,7 +251,7 @@ function Form({ eventList }: FormProps) {
           fullWidth
           id="standard-required"
           placeholder="비밀번호를 한 번 더 입력해주세요."
-          {...register('passwordConfirm')}
+          {...register(FormKey.PASSWORD_CONFIRM)}
         />
       </Grid>
       <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -214,7 +273,7 @@ function Form({ eventList }: FormProps) {
           InputProps={{
             inputComponent: PhoneNumberMask as any,
           }}
-          {...register('phoneNumber')}
+          {...register(FormKey.PHONE_NUMBER)}
         />
       </Grid>
       <Grid item xs={3} className={classes.inputLabelContainer}>
@@ -233,7 +292,7 @@ function Form({ eventList }: FormProps) {
           fullWidth
           id="standard-required"
           placeholder="이메일을 입력해주세요."
-          {...register('email')}
+          {...register(FormKey.EMAIL)}
         />
       </Grid>
       <Grid item xs={12} className={classes.divider}>

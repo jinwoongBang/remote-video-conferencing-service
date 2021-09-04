@@ -36,6 +36,7 @@ export interface OperatorResponseEntity {
 }
 
 export type OperatorGetParam = {
+  type: string;
   currentPage: string;
   returnCount: string;
   [key: string]: string | string[];
@@ -67,14 +68,18 @@ class OperatorController extends OTAController {
     const queryParam = req.query as OperatorGetParam;
     const returnCount = Number(queryParam.returnCount);
     const currentPage = Number(queryParam.currentPage);
+    const type = Number(queryParam.type);
     const param = {
+      type,
       returnCount,
       currentPage,
     };
 
     const response = new OTAResponse<OperatorVO>();
     try {
-      const totalUserCount = await OperatorService.selectOperatorCount();
+      const totalUserCount = await OperatorService.selectOperatorCount({
+        type,
+      });
       const userList = await OperatorService.selectOperatorList(param);
       const authorityList = await AuthorityService.selectAuthorityListByParents(
         {
@@ -104,7 +109,8 @@ class OperatorController extends OTAController {
       response.result = operatorList;
       response.success = true;
       res.status(200).json(response);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
       response.success = false;
       response.message = error.message;
@@ -142,7 +148,8 @@ class OperatorController extends OTAController {
       response.result = result;
       response.success = isSuccess;
       res.status(200).json(response);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
       response.success = false;
       response.message = error.message;
@@ -165,7 +172,8 @@ class OperatorController extends OTAController {
       otaResponse.result = result;
       otaResponse.success = isSuccess;
       response.status(200).json(otaResponse);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
       otaResponse.success = false;
       otaResponse.message = error.message;
@@ -192,7 +200,8 @@ class OperatorController extends OTAController {
       otaResponse.result = result;
       otaResponse.success = isSuccess;
       response.status(200).json(otaResponse);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
       otaResponse.success = false;
       otaResponse.message = error.message;
