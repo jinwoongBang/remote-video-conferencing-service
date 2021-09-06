@@ -67,6 +67,56 @@ abstract class OTAService {
   private addSingleQuotation(value: string) {
     return `'${value}'`;
   }
+
+  protected async excuteInsertQuery(
+    tableName: string,
+    param: { [key: string]: any },
+  ) {
+    let insertKeyQuery = `INSERT INTO ` + tableName + ` ( `;
+    let insertValueQuery = `VALUES ( `;
+
+    Object.keys(param).forEach((key, index) => {
+      let value = param[key];
+
+      let insertValue = '';
+      if (typeof value === 'string') {
+        insertValue = this.addSingleQuotation(value);
+      } else {
+        insertValue = value;
+      }
+
+      if (index == 0) {
+        insertKeyQuery += key;
+        insertValueQuery += insertValue;
+      } else {
+        insertKeyQuery += ', ' + key;
+        insertValueQuery += ', ' + insertValue;
+      }
+    });
+
+    insertKeyQuery += ' ) ';
+    insertValueQuery += ' ) ';
+
+    const query = insertKeyQuery + insertValueQuery;
+
+    console.log('query: ', query);
+
+    let error;
+    let conn;
+    let result;
+    try {
+      conn = await this.getConnection();
+      console.log(query);
+      result = await conn.query(query);
+    } catch (e) {
+      console.error(e);
+      error = e;
+    } finally {
+      await conn?.release();
+    }
+    if (error) throw error;
+    return JSON.parse(JSON.stringify(result));
+  }
 }
 
 export default OTAService;

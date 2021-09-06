@@ -1,39 +1,38 @@
 export interface reqUser {
-    userName: string | undefined;
-    userPassword: string | undefined;
-    userId: string | undefined;
-    status: number;
-    event: String | undefined;
-    phone: String | undefined;
-    email: String | undefined;
-    job: String | undefined;
-    belongTo: String | undefined;
-    isUsedRecipt: String | undefined;
-    nationality: null | String;
-    licenseNumber: null | String;
-    specialListNumber: null | String;
-    societyRrequest: null | String;
-    depositAmount: null | String;
-  }
-  
-  export const initReqUser = (): reqUser => ({
-    userName: '',
-    userPassword: '',
-    userId: '',
-    status: 0,
-    event: '',
-    phone: '',    
-    email: '',    
-    job: '',    
-    belongTo: '',    
-    isUsedRecipt: '',    
-    nationality: null,    
-    licenseNumber: null,    
-    specialListNumber: null,    
-    societyRrequest: null,    
-    depositAmount: null,    
-  })
-  
+  userName: string | undefined;
+  userPassword: string | undefined;
+  userId: string | undefined;
+  status: number;
+  event: String | undefined;
+  phone: String | undefined;
+  email: String | undefined;
+  job: String | undefined;
+  belongTo: String | undefined;
+  isUsedRecipt: String | undefined;
+  nationality: null | String;
+  licenseNumber: null | String;
+  specialListNumber: null | String;
+  societyRrequest: null | String;
+  depositAmount: null | String;
+}
+
+export const initReqUser = (): reqUser => ({
+  userName: '',
+  userPassword: '',
+  userId: '',
+  status: 0,
+  event: '',
+  phone: '',
+  email: '',
+  job: '',
+  belongTo: '',
+  isUsedRecipt: '',
+  nationality: null,
+  licenseNumber: null,
+  specialListNumber: null,
+  societyRrequest: null,
+  depositAmount: null,
+});
 
 //   class UserVO {
 //     userName: string;
@@ -51,7 +50,7 @@ export interface reqUser {
 //     specialListNumber: null | String;
 //     societyRrequest: null | String;
 //     depositAmount: null | String;
-  
+
 //     constructor(data: any) {
 //       this.userName = data.userName;
 //       this.userPassword = data.userPassword;
