@@ -46,6 +46,14 @@ import { useForm } from 'react-hook-form';
  */
 import ApoLayout from 'src/components/AppLayout';
 
+/**
+ * Common
+ */
+import HttpClient from 'src/common/framework/HttpClient';
+import OTAResponse from 'src/common/framework/OTAResponse';
+
+import { AxiosResponse } from 'axios';
+
 function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -56,7 +64,7 @@ function UserRegistration({
     return () => {
       console.log('getStaticProps() :: useEffect (unmount)');
     };
-  }, []);
+  }, [userList]);
 
   const [excelName, setExcelName] = useState<string>();
 
@@ -104,6 +112,24 @@ function UserRegistration({
     formState: { errors },
   } = useForm();
 
+  async function uploadFile() {
+    const config = {
+      headers: { 'content-type': 'multipart/form-data' },
+      onUploadProgress: (event: { loaded: number; total: number }) => {
+        console.log(
+          `Current progress:`,
+          Math.round((event.loaded * 100) / event.total),
+        );
+      },
+    };
+
+    const { data, status }: AxiosResponse<OTAResponse<any>> =
+      await HttpClient.post('/excel', register); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
+
+    console.log('uploadFile', data);
+    return data;
+  }
+
   const onSubmit = (data: any) => {
     console.log('user search: ', data);
 
@@ -116,10 +142,11 @@ function UserRegistration({
       wb.SheetNames.forEach(function (sheetName) {
         console.log('excel SheetNames: ', sheetName);
         var rowObj = xlsx.utils.sheet_to_json(wb.Sheets[sheetName]);
-        console.log('excel: ', JSON.stringify(rowObj));
+        // console.log('excel: ', JSON.stringify(rowObj));
       });
     };
     reader.readAsBinaryString(data['excel_file'][0]);
+    uploadFile();
   };
 
   return (
