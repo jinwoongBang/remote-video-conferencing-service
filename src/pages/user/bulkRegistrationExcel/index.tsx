@@ -49,10 +49,10 @@ import ApoLayout from 'src/components/AppLayout';
 /**
  * Common
  */
-import HttpClient from 'src/common/framework/HttpClient';
+import HttpMultipartClient from 'src/common/framework/HttpMultipartClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 
-import { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 function UserRegistration({
   userList,
@@ -112,9 +112,11 @@ function UserRegistration({
     formState: { errors },
   } = useForm();
 
-  async function uploadFile() {
+  async function uploadFile(formData: any) {
     const config = {
-      headers: { 'content-type': 'multipart/form-data' },
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
       onUploadProgress: (event: { loaded: number; total: number }) => {
         console.log(
           `Current progress:`,
@@ -123,11 +125,11 @@ function UserRegistration({
       },
     };
 
-    const { data, status }: AxiosResponse<OTAResponse<any>> =
-      await HttpClient.post('/excel', register); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
+    let reqFormData = new FormData();
+    reqFormData.append('excel_file', formData['excel_file'][0]);
 
-    console.log('uploadFile', data);
-    return data;
+    const { data, status }: AxiosResponse<OTAResponse<any>> =
+      await HttpMultipartClient.post('/excel', reqFormData, config); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
   }
 
   const onSubmit = (data: any) => {
@@ -135,7 +137,7 @@ function UserRegistration({
 
     if (data['excel_file'] === undefined || data['excel_file'] === null) return;
 
-    var reader = new FileReader();
+    var reader = new FileReader(); //todo 0907 이거 이용해서 excel 사용자 넣는거까지 마무리하자
     reader.onload = function () {
       var fileData = reader.result;
       var wb = xlsx.read(fileData, { type: 'binary' });
@@ -146,7 +148,7 @@ function UserRegistration({
       });
     };
     reader.readAsBinaryString(data['excel_file'][0]);
-    uploadFile();
+    uploadFile(data);
   };
 
   return (

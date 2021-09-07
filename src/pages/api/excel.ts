@@ -3,23 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import * as _ from 'lodash';
 
-/**
- * Framework
- */
-import OTAController from 'src/common/framework/OTAController';
-import OTAResponse from 'src/common/framework/OTAResponse';
-
-/**
- * Service
- */
-import AuthorityService from 'src/service/AuthorityService';
-import OperatorService, {
-  DeleteOperatorParam,
-  InsertOperatorParam,
-  SelectOperatorListParam,
-  UpdateOperatorParam,
-} from 'src/service/OperatorService';
-
 import nextConnect from 'next-connect';
 import multer from 'multer';
 
@@ -30,220 +13,37 @@ const upload = multer({
   }),
 });
 
-const OTARouter = nextConnect<NextApiRequest, NextApiResponse>({
+const OTARouter = nextConnect<any, NextApiResponse>({
   onError(error, req, res) {
-    console.log('ㅇㅕ기에 오ㄴ 거?? req: ', error);
-    console.log('ㅇㅕ기에 오ㄴ 거?? reesss ', res);
-    res.status(400).json({ result: false, message: 'Sorry!' });
+    console.log('Sorry something Happened!', error.message);
+    res
+      .status(501)
+      .json({ error: `Sorry something Happened! ${error.message}` });
   },
-
   onNoMatch(req, res) {
-    res.status(404).json({ result: false, message: 'Not Mached Method!' });
+    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
   },
-});
-
-const uploadMiddleware = upload.array('excel_file');
-
-OTARouter.use(uploadMiddleware);
-
-OTARouter.post((req, res) => {
-  // console.log('excel upload come on req', req);
-  // console.log('excel upload come on res', res);
-  res.status(200).json({ result: true, data: res });
-});
-OTARouter.get((req, res) => {});
-OTARouter.put((req, res) => {});
+})
+  .use(upload.single('excel_file'))
+  .get((req, res) => {
+    console.log('get', req);
+  })
+  .post((req, res) => {
+    console.log(req);
+    console.log('post', req.file);
+    res.status(200).json({ ok: 'success' });
+  })
+  .put(async (req, res) => {
+    res.end('async/await is also supported!');
+  })
+  .patch(async (req, res) => {
+    throw new Error('Throws me around! Error can be caught and handled.');
+  });
 
 export default OTARouter;
 export const config = {
   api: {
     bodyParser: false, // Disallow body parsing, consume as stream
+    // sizeLimit: '500kb',
   },
 };
-/**
- * Enum
- */
-// import { AuthorityKey, ParentsAuthorityKey } from 'src/common/enum/authority';
-// import OperatorVO from 'src/vo/OperatorVO';
-// export interface OperatorResponseEntity {
-//   method: string;
-// }
-
-// export type OperatorGetParam = {
-//   type: string;
-//   currentPage: string;
-//   returnCount: string;
-//   [key: string]: string | string[];
-// };
-
-// export type OperatorPostParam = {
-//   user: InsertOperatorParam;
-// };
-
-// export type OperatorPutParam = {
-//   user: UpdateOperatorParam;
-// };
-
-// export type OperatorDeleteParam = {
-//   id: string;
-// };
-
-// type OmitOperatorVO = Omit<OperatorVO, 'dateOfCreated'>;
-
-// class OperatorController extends OTAController {
-//   constructor(request: NextApiRequest, response: NextApiResponse) {
-//     super(request, response);
-//   }
-
-//   protected async doGet(
-//     req: NextApiRequest,
-//     res: NextApiResponse<OTAResponse<OperatorVO>>,
-//   ): Promise<void> {
-//     // const queryParam = req.query as OperatorGetParam;
-//     // const returnCount = Number(queryParam.returnCount);
-//     // const currentPage = Number(queryParam.currentPage);
-//     // const type = Number(queryParam.type);
-//     // const param = {
-//     //   type,
-//     //   returnCount,
-//     //   currentPage,
-//     // };
-//     // const response = new OTAResponse<OperatorVO>();
-//     // try {
-//     //   const totalUserCount = await OperatorService.selectOperatorCount({
-//     //     type,
-//     //   });
-//     //   const userList = await OperatorService.selectOperatorList(param);
-//     //   const authorityList = await AuthorityService.selectAuthorityListByParents(
-//     //     {
-//     //       authorityKeys: [ParentsAuthorityKey.OperatorRole],
-//     //     },
-//     //   );
-//     //   const operatorList = userList.map((user) => {
-//     //     const operator: OperatorVO = Object.assign(new OperatorVO(), user);
-//     //     const { AUTHORITIES } = operator;
-//     //     if (AUTHORITIES) {
-//     //       const authList = AUTHORITIES.split('-');
-//     //       authorityList.forEach((authority) => {
-//     //         const key = authority.AUTHORITY_KEY;
-//     //         const hasAuth =
-//     //           authList.findIndex(
-//     //             (auth) => Number(auth) === Number(authority.ID),
-//     //           ) !== -1;
-//     //         operator[key as keyof OmitOperatorVO] = hasAuth;
-//     //       });
-//     //     }
-//     //     return operator;
-//     //   });
-//     //   response.setPagination(currentPage, totalUserCount, returnCount);
-//     //   response.result = operatorList;
-//     //   response.success = true;
-//     //   res.status(200).json(response);
-//     // } catch (e) {
-//     //   const error = e as Error;
-//     //   console.error(error);
-//     //   response.success = false;
-//     //   response.message = error.message;
-//     //   res.status(500).json(response);
-//     // }
-//   }
-
-//   protected async doPost(
-//     req: NextApiRequest,
-//     res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-//   ): Promise<void> {
-//     const param: OperatorPostParam = req.body;
-//     const response = new OTAResponse<OperatorResponseEntity>();
-//     try {
-//       const userId = param.user.USER_ID;
-//       if (!userId) {
-//         throw new Error('아이디를 입력해주세요.');
-//       }
-
-//       const isDuplication = !_.isEmpty(
-//         await OperatorService.selectOperatorByUserId({
-//           userId,
-//         }),
-//       );
-
-//       if (isDuplication) {
-//         throw new Error('중복된 아이디 입니다.');
-//       }
-
-//       const resultCount = await OperatorService.insertOperator(param.user);
-//       const isSuccess = resultCount === 1;
-//       const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-//         method: 'INSERT',
-//       });
-//       response.result = result;
-//       response.success = isSuccess;
-//       res.status(200).json(response);
-//     } catch (e) {
-//       const error = e as Error;
-//       console.error(error);
-//       response.success = false;
-//       response.message = error.message;
-//       res.status(500).json(response);
-//     }
-//   }
-
-//   protected async doPut(
-//     request: NextApiRequest,
-//     response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-//   ): Promise<void> {
-//     const param: OperatorPutParam = request.body;
-//     const otaResponse = new OTAResponse<OperatorResponseEntity>();
-//     try {
-//       const resultCount = await OperatorService.updateOperator(param.user);
-//       const isSuccess = resultCount === 1;
-//       const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-//         method: 'UPDATE',
-//       });
-//       otaResponse.result = result;
-//       otaResponse.success = isSuccess;
-//       response.status(200).json(otaResponse);
-//     } catch (e) {
-//       const error = e as Error;
-//       console.error(error);
-//       otaResponse.success = false;
-//       otaResponse.message = error.message;
-//       response.status(500).json(otaResponse);
-//     }
-//   }
-
-//   protected async doDelete(
-//     request: NextApiRequest,
-//     response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
-//   ): Promise<void> {
-//     // const param: OperatorDeleteParam = request.body;
-//     const queryParam = request.query as OperatorDeleteParam;
-//     const param = {
-//       id: Number(queryParam.id),
-//     };
-//     const otaResponse = new OTAResponse<OperatorResponseEntity>();
-//     try {
-//       const resultCount = await OperatorService.deleteOperator(param);
-//       const isSuccess = resultCount === 1;
-//       const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-//         method: 'DELETE',
-//       });
-//       otaResponse.result = result;
-//       otaResponse.success = isSuccess;
-//       response.status(200).json(otaResponse);
-//     } catch (e) {
-//       const error = e as Error;
-//       console.error(error);
-//       otaResponse.success = false;
-//       otaResponse.message = error.message;
-//       response.status(500).json(otaResponse);
-//     }
-//   }
-// }
-
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse,
-// ) {
-//   const controller = new OperatorController(req, res);
-//   await controller.service();
-// }
