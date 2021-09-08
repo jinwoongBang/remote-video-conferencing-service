@@ -80,13 +80,14 @@ import OperatorVO from 'src/vo/OperatorVO';
  * Components
  */
 import Loading from 'src/components/Loading';
-import Modal from 'src/components/operatorList/Modal';
+import Modal from 'src/components/modal/Modal';
 import ModifyModal from 'src/components/operatorList/ModifyModal';
 
 /**
- *
+ *  Framework
  */
 import HttpClient from 'src/common/framework/HttpClient';
+import ModifyForm from 'src/components/operatorList/ModifyForm';
 
 type OperatorItemProps = {
   operator: OperatorVO;
@@ -338,11 +339,15 @@ function OperatorItem({ operator }: OperatorItemProps) {
           </Collapse>
         </TableCell>
       </TableRow>
-      <ModifyModal
+
+      <Modal
         open={modifyModalOpen}
         onOpen={handleOpenModifyModal}
-        operator={operator}
-      />
+        title="운영자 정보 수정"
+        maxWidth="md"
+      >
+        <ModifyForm operator={operator} onOpen={handleOpenModifyModal} />
+      </Modal>
 
       <Modal
         open={deleteModalOpen}

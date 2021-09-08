@@ -66,6 +66,11 @@ import {
 } from '@material-ui/data-grid';
 
 /**
+ *  Framework
+ */
+import HttpClient from 'src/common/framework/HttpClient';
+
+/**
  * Store
  */
 import {
@@ -80,13 +85,8 @@ import EventManagerVO from 'src/vo/EventManagerVO';
  * Components
  */
 import Loading from 'src/components/Loading';
-import Modal from 'src/components/operatorList/Modal';
-import ModifyModal from 'src/components/operatorList/ModifyModal';
-
-/**
- *
- */
-import HttpClient from 'src/common/framework/HttpClient';
+import Modal from 'src/components/modal/Modal';
+import ModifyForm from 'src/components/eventManagerList/ModifyForm';
 
 type EventManagerItemProps = {
   eventManager: EventManagerVO;
@@ -149,7 +149,7 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
     setDeleteModalOpen((state) => !state);
   }, []);
 
-  const handleSubmitDeleteOperator = useRecoilCallback(
+  const handleSubmitDeleteEventManager = useRecoilCallback(
     ({ set }) =>
       async () => {
         try {
@@ -165,7 +165,7 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
       },
   );
 
-  const handleSubmitModifyOperator = useRecoilCallback(
+  const handleSubmitModifyEventManager = useRecoilCallback(
     ({ set }) =>
       async () => {
         try {
@@ -317,6 +317,48 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
           </Collapse>
         </TableCell>
       </TableRow>
+
+      <Modal
+        open={modifyModalOpen}
+        onOpen={handleSubmitModifyEventManager}
+        title="이벤트 관리자 정보 수정"
+        maxWidth="xs"
+      >
+        <ModifyForm
+          eventManager={eventManager}
+          onOpen={handleSubmitModifyEventManager}
+        />
+      </Modal>
+
+      <Modal
+        open={deleteModalOpen}
+        onOpen={handleOpenDeleteModal}
+        title="이벤트 관리자 정보 삭제"
+        maxWidth="xs"
+      >
+        <DialogContent dividers>
+          <DialogContentText id="alert-dialog-description">
+            정말로 삭제하시겠습니까?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleOpenDeleteModal}
+            color="secondary"
+            variant="outlined"
+          >
+            취소
+          </Button>
+          <Button
+            onClick={handleSubmitDeleteEventManager}
+            color="primary"
+            variant="outlined"
+            autoFocus
+          >
+            확인
+          </Button>
+        </DialogActions>
+      </Modal>
     </>
   );
 }
