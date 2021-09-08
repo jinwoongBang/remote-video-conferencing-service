@@ -17,7 +17,8 @@ class EventController extends OTAController {
       otaResponse.mappingData(EventVO);
       otaResponse.success = true;
       response.status(200).json(otaResponse);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
       otaResponse.success = false;
       otaResponse.message = error.message;

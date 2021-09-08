@@ -42,12 +42,10 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
  * Store
  */
 import {
-  getOperatorListSelector,
-  GetOperatorListSelectorType,
-  operatorListPaginationState,
-} from 'src/store/operator';
-import { User } from 'src/vo';
-import OperatorVO from 'src/vo/OperatorVO';
+  eventManagerListPaginationState,
+  getEventManagerListSelector,
+  GetEventManagerListSelectorType,
+} from 'src/store/eventManager';
 
 /**
  * Components
@@ -84,14 +82,15 @@ type EventManagerListTableProps = {};
 function EventManagerListTable({}: EventManagerListTableProps) {
   const classes = useStyles();
 
-  const [page, setPage] = useRecoilState(operatorListPaginationState);
+  const [page, setPage] = useRecoilState(eventManagerListPaginationState);
 
-  const userListLoadable = useRecoilValueLoadable<GetOperatorListSelectorType>(
-    getOperatorListSelector({
-      page: page.pageNumber,
-      returnCount: page.returnCount,
-    }),
-  );
+  const userListLoadable =
+    useRecoilValueLoadable<GetEventManagerListSelectorType>(
+      getEventManagerListSelector({
+        page: page.pageNumber,
+        returnCount: page.returnCount,
+      }),
+    );
 
   const isLoading = useMemo(() => {
     const { state } = userListLoadable;
@@ -125,7 +124,9 @@ function EventManagerListTable({}: EventManagerListTableProps) {
           <Typography variant="body1" className={classes.postCountContainer}>
             총 <strong>{pagination?.itemCount || 0}</strong>개 중{' '}
             <strong>
-              {!isLoading ? userListLoadable.getValue().operatorList.length : 0}
+              {!isLoading
+                ? userListLoadable.getValue().eventManagerList.length
+                : 0}
             </strong>
             개
           </Typography>
@@ -135,13 +136,11 @@ function EventManagerListTable({}: EventManagerListTableProps) {
         <Table stickyHeader aria-label="collapsible table">
           <TableHead>
             <TableRow>
-              <TableCell />
+              <TableCell width={50} />
               <TableCell width={50} align="center">
                 번호
               </TableCell>
-              <TableCell width={60} align="center">
-                이벤트
-              </TableCell>
+              <TableCell align="center">이벤트</TableCell>
               <TableCell align="center">아이디</TableCell>
               <TableCell align="center">이름</TableCell>
               <TableCell align="center">상태</TableCell>
@@ -153,12 +152,12 @@ function EventManagerListTable({}: EventManagerListTableProps) {
             {!isLoading ? (
               userListLoadable
                 .getValue()
-                .operatorList.map((user) => (
+                .eventManagerList.map((user) => (
                   <EventManagerItem key={user.ID} eventManager={user} />
                 ))
             ) : (
               <TableRow>
-                <TableCell colSpan={11}>
+                <TableCell colSpan={8}>
                   <Loading />
                 </TableCell>
               </TableRow>

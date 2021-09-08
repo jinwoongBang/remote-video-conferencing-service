@@ -196,11 +196,15 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
         <TableCell component="th" scope="row">
           {eventManager.ID}
         </TableCell>
-        <TableCell align="center">
-          <UserStatus status={eventManager?.EVENT_ID} />
+        <TableCell component="th" scope="row">
+          {eventManager.EVENT_TITLE}
         </TableCell>
         <TableCell align="center">{eventManager.USER_ID || '-'}</TableCell>
         <TableCell align="center">{eventManager.NAME || '-'}</TableCell>
+
+        <TableCell align="center">
+          <UserStatus status={eventManager?.STATUS} />
+        </TableCell>
 
         <TableCell align="center">{eventManager.LOG_COUNT}</TableCell>
         <TableCell align="center">{eventManager.dateOfCreated}</TableCell>
@@ -208,7 +212,7 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
       <TableRow className={classes.box}>
         <TableCell
           style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={11}
+          colSpan={8}
           className={classes.collapseContainer}
         >
           <Collapse in={detailOpen} timeout="auto" unmountOnExit>

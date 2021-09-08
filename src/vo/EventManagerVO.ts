@@ -5,6 +5,7 @@ import AuthorityVO from './AuthorityVO';
 class EventManagerVO extends OnTheAirVO {
   ID!: number;
   EVENT_ID?: number;
+  EVENT_TITLE?: string;
   STATUS?: number;
   USER_ID?: string;
   PASSWORD?: string;
