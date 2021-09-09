@@ -87,6 +87,7 @@ import EventManagerVO from 'src/vo/EventManagerVO';
 import Loading from 'src/components/Loading';
 import Modal from 'src/components/modal/Modal';
 import ModifyForm from 'src/components/eventManagerList/ModifyForm';
+import { forcedReloadEventManagerListState } from 'src/store/eventManager';
 
 type EventManagerItemProps = {
   eventManager: EventManagerVO;
@@ -160,7 +161,7 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
           console.error(error);
         } finally {
           setDeleteModalOpen(false);
-          set(forcedReloadOperatorListState, (state) => state + 1);
+          set(forcedReloadEventManagerListState, (state) => state + 1);
         }
       },
   );
