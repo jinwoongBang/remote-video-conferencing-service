@@ -117,6 +117,59 @@ abstract class OTAService {
     if (error) throw error;
     return JSON.parse(JSON.stringify(result));
   }
+
+  protected async excuteMultiInsertQuery(
+    tableName: string,
+    param: { [key: string]: any }[],
+  ) {
+    let insertKeyQuery = `INSERT INTO ` + tableName + ` ( `;
+    let insertValueQuery = `VALUES ( `;
+
+    param.forEach((object, paramIndex) => {
+      Object.keys(object).forEach((key, index) => {
+        let value = object[key];
+
+        let insertValue = '';
+        if (typeof value === 'string') {
+          insertValue = this.addSingleQuotation(value);
+        } else {
+          insertValue = value;
+        }
+
+        if (index == 0) {
+          insertKeyQuery += key;
+          insertValueQuery += insertValue;
+        } else {
+          insertKeyQuery += ', ' + key;
+          insertValueQuery += ', ' + insertValue;
+        }
+      });
+      insertValueQuery += paramIndex == param.length - 1 ? '' : ' ) , (';
+    });
+
+    insertKeyQuery += ' ) ';
+    insertValueQuery += ' ) ';
+
+    const query = insertKeyQuery + insertValueQuery;
+
+    console.log('query: ', query);
+
+    let error;
+    let conn;
+    let result;
+    try {
+      conn = await this.getConnection();
+      console.log(query);
+      result = await conn.query(query);
+    } catch (e) {
+      console.error(e);
+      error = e;
+    } finally {
+      await conn?.release();
+    }
+    if (error) throw error;
+    return JSON.parse(JSON.stringify(result));
+  }
 }
 
 export default OTAService;

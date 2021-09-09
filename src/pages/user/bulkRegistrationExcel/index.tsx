@@ -151,6 +151,16 @@ function UserRegistration({
     uploadFile(data);
   };
 
+  async function test() {
+    const { data, status }: AxiosResponse<OTAResponse<any>> =
+      await HttpMultipartClient.put('/user'); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
+  }
+
+  const onClickCancel = useCallback(() => {
+    console.log('onClickCancel');
+    test();
+  }, []);
+
   return (
     <ApoLayout>
       <div>
@@ -168,7 +178,12 @@ function UserRegistration({
           </Grid>
 
           <Grid item xs={12}>
-            <Button variant="outlined" color="secondary" size="large">
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              onClick={onClickCancel}
+            >
               취소
             </Button>
             <Button

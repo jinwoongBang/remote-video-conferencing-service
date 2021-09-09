@@ -1,6 +1,7 @@
 /**
  * db
  */
+import OTAService from 'src/common/framework/OTAService';
 import connectionPool from 'src/db';
 import { UserSearch } from 'src/store/user';
 import { reqUser } from 'src/vo';
@@ -10,7 +11,7 @@ type SelectUserProps = {
   id: string;
   password: string;
 };
-class UserService {
+class UserService extends OTAService {
   async selectUserList(query?: UserSearch) {
     const conn = await connectionPool.getConnection();
     let queryName = '';
@@ -111,6 +112,10 @@ class UserService {
     await conn.release();
 
     return null;
+  }
+
+  async inserExcelUser(params: { [key: string]: any }[]) {
+    this.excuteMultiInsertQuery('TB_USER', params);
   }
 }
 
