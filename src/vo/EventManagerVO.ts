@@ -6,6 +6,7 @@ class EventManagerVO extends OnTheAirVO {
   ID!: number;
   EVENT_ID?: number;
   EVENT_TITLE?: string;
+  EVENT_CODE?: string;
   STATUS?: number;
   USER_ID?: string;
   PASSWORD?: string;
@@ -32,28 +33,6 @@ class EventManagerVO extends OnTheAirVO {
     }
 
     return '-';
-  }
-
-  createAuthorityIdList(
-    authorityList: AuthorityVO[],
-    checkedList: { [key: string]: boolean },
-  ) {
-    const authKeyList = Object.keys(checkedList);
-    const authIdList: number[] = [];
-
-    authKeyList.forEach((authKey) => {
-      const hasAuth = checkedList[authKey];
-
-      if (hasAuth) {
-        const auth = authorityList.find(
-          ({ AUTHORITY_KEY }) => AUTHORITY_KEY === authKey,
-        );
-        const authId = auth?.ID;
-        authId && authIdList.push(authId);
-      }
-    });
-
-    return authIdList.join('-');
   }
 }
 

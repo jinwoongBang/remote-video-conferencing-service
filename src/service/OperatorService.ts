@@ -28,12 +28,15 @@ class OperatorService extends OTAService {
     type = 2,
     currentPage = 0,
     returnCount = 10,
-  }: SelectOperatorListParam): Promise<(User & { EVENT_TITLE: string })[]> {
+  }: SelectOperatorListParam): Promise<
+    (User & { EVENT_TITLE?: string; EVENT_CODE?: string })[]
+  > {
     const result = await this.excuteQuery(
       `
       SELECT
         user.*,
         event.TITLE AS EVENT_TITLE,
+        event.CODE AS EVENT_CODE,
         COUNT(log.ID) as LOG_COUNT
       FROM
         TB_USER user
@@ -116,7 +119,10 @@ class OperatorService extends OTAService {
     const id = _.cloneDeep(param).ID;
     delete param.ID;
 
+    console.log(`updateOperator :: ${JSON.stringify(param)}`);
+
     const stringParam = this.createWhereClause(param, ', ');
+    console.log(`updateOperator :: ${stringParam}`);
 
     const result = await this.excuteQuery(`
       UPDATE

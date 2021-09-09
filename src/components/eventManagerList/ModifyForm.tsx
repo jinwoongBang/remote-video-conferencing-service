@@ -43,6 +43,11 @@ import {
 } from '@material-ui/icons';
 
 /**
+ * Libarary
+ */
+import { useForm, Controller } from 'react-hook-form';
+
+/**
  * VO
  */
 import OperatorVO from 'src/vo/OperatorVO';
@@ -121,94 +126,51 @@ type ModifyFormProps = {
   onOpen: () => void;
 };
 
+enum FormKey {
+  STATUS = 'STATUS',
+  EVENT_ID = 'EVENT_ID',
+  USER_ID = 'USER_ID',
+  NAME = 'NAME',
+  PASSWORD = 'PASSWORD',
+  PASSWORD_CONFIRM = 'PASSWORD_CONFIRM',
+  PHONE_NUMBER = 'PHONE_NUMBER',
+  EMAIL = 'EMAIL',
+}
+
 function ModifyForm({ eventManager, onOpen }: ModifyFormProps) {
   const classes = useStyles();
 
-  const authorityList = useRecoilValue(authorityState);
-
-  const [name, setName] = useState(eventManager.NAME || '');
-  const [status, setStatus] = useState(eventManager.STATUS || 0);
-  const [password, setPassword] = useState(eventManager.PASSWORD || '');
-  const [passwordConfirm, setPasswordConfirm] = useState(
-    eventManager.PASSWORD || '',
-  );
-  const [phoneNumber, setPhoneNumber] = useState(
-    eventManager.PHONE_NUMBER || '',
-  );
-  const [email, setEmail] = useState(eventManager.EMAIL || '');
-  const [selectedAuthorities, setSelectedAuthorities] = useState(() => {
-    const auth: {
-      [key: string]: boolean;
-    } = {};
-    authorityList.forEach((item) => {
-      auth[item.AUTHORITY_KEY as string] = eventManager[item.AUTHORITY_KEY];
-    });
-    return auth;
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      [FormKey.STATUS]: eventManager.STATUS === 1,
+      [FormKey.EVENT_ID]: eventManager.EVENT_ID,
+      [FormKey.USER_ID]: eventManager.USER_ID,
+      [FormKey.NAME]: eventManager.NAME,
+      [FormKey.PASSWORD]: eventManager.PASSWORD,
+      [FormKey.PASSWORD_CONFIRM]: eventManager.PASSWORD,
+      [FormKey.PHONE_NUMBER]: eventManager.PHONE_NUMBER,
+      [FormKey.EMAIL]: eventManager.EMAIL,
+    },
   });
 
-  const handleChangeName = useCallback(
-    (event: React.ChangeEvent<{ value: string }>) => {
-      setName(event.target.value);
-    },
-    [],
-  );
-
-  const handleChangeStatus = useCallback(
-    (event: React.ChangeEvent<{ checked: boolean; name: string }>) => {
-      setStatus(Boolean(event.target.checked) ? 1 : 0);
-    },
-    [],
-  );
-
-  const handleChangePassword = useCallback(
-    (event: React.ChangeEvent<{ value: string }>) => {
-      setPassword(event.target.value);
-    },
-    [],
-  );
-  const handleChangePasswordConfirm = useCallback(
-    (event: React.ChangeEvent<{ value: string }>) => {
-      setPasswordConfirm(event.target.value);
-    },
-    [],
-  );
-  const handleChangePhoneNumber = useCallback(
-    (event: React.ChangeEvent<{ value: string }>) => {
-      setPhoneNumber(event.target.value);
-    },
-    [],
-  );
-
-  const handleChangeEmail = useCallback(
-    (event: React.ChangeEvent<{ value: string }>) => {
-      setEmail(event.target.value);
-    },
-    [],
-  );
-
-  const handleChangeAuthority = useCallback(
-    (event: React.ChangeEvent<{ name: string; checked: boolean }>) => {
-      const { checked, name } = event.target;
-      setSelectedAuthorities((state) => ({ ...state, [name]: checked }));
-    },
-    [],
-  );
-
-  const handleSubmitModifyOperator = useRecoilCallback(
+  const onSubmit = useRecoilCallback(
     ({ set }) =>
-      async () => {
+      async (data: Partial<EventManagerVO>) => {
         try {
           const user = new EventManagerVO();
           user.ID = eventManager.ID;
-          user.NAME = name;
-          user.STATUS = status;
-          user.PASSWORD = password;
-          user.PHONE_NUMBER = phoneNumber;
-          user.EMAIL = email;
-          user.AUTHORITIES = user.createAuthorityIdList(
-            authorityList,
-            selectedAuthorities,
-          );
+          user.STATUS = data.STATUS ? 1 : 0;
+          user.NAME = data.NAME;
+          user.PASSWORD = data.PASSWORD;
+          user.PHONE_NUMBER = data.PHONE_NUMBER;
+          user.EMAIL = data.EMAIL;
 
           await HttpClient.put('/operator', {
             user,
@@ -223,220 +185,189 @@ function ModifyForm({ eventManager, onOpen }: ModifyFormProps) {
   );
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <DialogContent dividers>
-        <DialogContentText id="alert-dialog-description">
-          <Grid container alignItems="center">
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<HowToReg />}
-                disableRipple
-              >
-                상태
-              </Button>
-            </Grid>
-            <Grid item xs={10} className={classes.inputContainer}>
-              <Typography component="div">
-                <Grid
-                  component="label"
-                  container
-                  alignItems="center"
-                  spacing={1}
-                >
-                  <Grid item>비활성</Grid>
-                  <Grid item>
-                    <AntSwitch
-                      checked={status === 1}
-                      onChange={handleChangeStatus}
-                      name="status"
-                    />
-                  </Grid>
-                  <Grid item>활성</Grid>
-                </Grid>
-              </Typography>
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<PermIdentity />}
-                disableRipple
-              >
-                아이디
-              </Button>
-            </Grid>
-            <Grid item xs={4} className={classes.inputContainer}>
-              <Typography variant="body1">{eventManager.USER_ID}</Typography>
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<Person />}
-                disableRipple
-              >
-                이름
-              </Button>
-            </Grid>
-            <Grid item xs={4} className={classes.inputContainer}>
-              <TextField
-                fullWidth
-                id="standard-required"
-                placeholder="운영자 이름 입력해주세요."
-                value={name}
-                onChange={handleChangeName}
-              />
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<Lock />}
-                disableRipple
-              >
-                비밀번호
-              </Button>
-            </Grid>
-            <Grid item xs={4} className={classes.inputContainer}>
-              <TextField
-                fullWidth
-                id="standard-required"
-                placeholder="비밀번호를 입력해주세요."
-                value={password}
-                onChange={handleChangePassword}
-              />
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<EnhancedEncryption />}
-                disableRipple
-              >
-                비밀번호 확인
-              </Button>
-            </Grid>
-            <Grid item xs={4} className={classes.inputContainer}>
-              <TextField
-                fullWidth
-                id="standard-required"
-                placeholder="비밀번호를 입력해주세요."
-                value={passwordConfirm}
-                onChange={handleChangePasswordConfirm}
-              />
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<Phone />}
-                disableRipple
-              >
-                핸드폰
-              </Button>
-            </Grid>
-            <Grid item xs={10} className={classes.inputContainer}>
-              <TextField
-                fullWidth
-                placeholder="휴대전화 번호를 입력해주세요."
-                InputProps={{
-                  inputComponent: PhoneNumberMask as any,
-                }}
-                value={phoneNumber}
-                onChange={handleChangePhoneNumber}
-              />
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<Mail />}
-                disableRipple
-              >
-                이메일
-              </Button>
-            </Grid>
-            <Grid item xs={10} className={classes.inputContainer}>
-              <TextField
-                fullWidth
-                id="standard-required"
-                placeholder="이메일을 입력해주세요."
-                value={email}
-                onChange={handleChangeEmail}
-              />
-            </Grid>
-            {/*  */}
-            <Grid item xs={2} className={classes.inputLabelContainer}>
-              <Button
-                fullWidth
-                color="primary"
-                variant="outlined"
-                size="large"
-                startIcon={<VerifiedUser />}
-                disableRipple
-              >
-                관리등급
-              </Button>
-            </Grid>
-            <Grid item xs={10} className={classes.inputContainer}>
-              <FormGroup row>
-                {authorityList.map((item: AuthorityVO) => {
-                  return (
-                    <FormControlLabel
-                      key={item.ID}
-                      control={
-                        <Checkbox
-                          checked={selectedAuthorities[item.AUTHORITY_KEY]}
-                          onChange={handleChangeAuthority}
-                          name={item.AUTHORITY_KEY}
-                          color="primary"
-                        />
-                      }
-                      label={item.NAME}
-                    />
-                  );
-                })}
-              </FormGroup>
-            </Grid>
+        <Grid container alignItems="center">
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<HowToReg />}
+              disableRipple
+            >
+              상태
+            </Button>
           </Grid>
-        </DialogContentText>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <Typography component="div">
+              <Grid component="label" container alignItems="center" spacing={1}>
+                <Grid item>비활성</Grid>
+                <Grid item>
+                  <Controller
+                    name={FormKey.STATUS}
+                    control={control}
+                    defaultValue={false}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <AntSwitch
+                        checked={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item>활성</Grid>
+              </Grid>
+            </Typography>
+          </Grid>
+          {/*  */}
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<HowToReg />}
+              disableRipple
+            >
+              이벤트 (이벤트 코드)
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <Typography variant="body1">
+              {`${eventManager.EVENT_TITLE} (${eventManager.EVENT_CODE})`}
+            </Typography>
+          </Grid>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<PermIdentity />}
+              disableRipple
+            >
+              아이디
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <Typography variant="body1">{eventManager.USER_ID}</Typography>
+          </Grid>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Person />}
+              disableRipple
+            >
+              이름
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="운영자 이름 입력해주세요."
+              {...register(FormKey.NAME)}
+            />
+          </Grid>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Lock />}
+              disableRipple
+            >
+              비밀번호
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="비밀번호를 입력해주세요."
+              {...register(FormKey.PASSWORD)}
+            />
+          </Grid>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<EnhancedEncryption />}
+              disableRipple
+            >
+              비밀번호 확인
+            </Button>
+          </Grid>
+          <Grid item xs={4} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="비밀번호를 입력해주세요."
+              {...register(FormKey.PASSWORD_CONFIRM)}
+            />
+          </Grid>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Phone />}
+              disableRipple
+            >
+              핸드폰
+            </Button>
+          </Grid>
+          <Grid item xs={10} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              placeholder="휴대전화 번호를 입력해주세요."
+              InputProps={{
+                inputComponent: PhoneNumberMask as any,
+              }}
+              {...register(FormKey.PHONE_NUMBER)}
+            />
+          </Grid>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<Mail />}
+              disableRipple
+            >
+              이메일
+            </Button>
+          </Grid>
+          <Grid item xs={10} className={classes.inputContainer}>
+            <TextField
+              fullWidth
+              id="standard-required"
+              placeholder="이메일을 입력해주세요."
+              {...register(FormKey.EMAIL)}
+            />
+          </Grid>
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onOpen} color="secondary" variant="outlined">
           취소
         </Button>
-        <Button
-          onClick={handleSubmitModifyOperator}
-          color="primary"
-          variant="outlined"
-          autoFocus
-        >
+        <Button type="submit" color="primary" variant="outlined" autoFocus>
           확인
         </Button>
       </DialogActions>
-    </>
+    </form>
   );
 }
 export default ModifyForm;

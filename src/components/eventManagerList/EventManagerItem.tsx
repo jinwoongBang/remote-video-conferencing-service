@@ -165,22 +165,6 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
       },
   );
 
-  const handleSubmitModifyEventManager = useRecoilCallback(
-    ({ set }) =>
-      async () => {
-        try {
-          await HttpClient.put('/operator', {
-            id: '',
-          });
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setModifyModalOpen(false);
-          set(forcedReloadOperatorListState, (state) => state + 1);
-        }
-      },
-  );
-
   return (
     <>
       <TableRow className={classes.root} hover>
@@ -320,13 +304,13 @@ function EventManagerItem({ eventManager }: EventManagerItemProps) {
 
       <Modal
         open={modifyModalOpen}
-        onOpen={handleSubmitModifyEventManager}
+        onOpen={handleOpenModifyModal}
         title="이벤트 관리자 정보 수정"
-        maxWidth="xs"
+        maxWidth="lg"
       >
         <ModifyForm
           eventManager={eventManager}
-          onOpen={handleSubmitModifyEventManager}
+          onOpen={handleOpenModifyModal}
         />
       </Modal>
 

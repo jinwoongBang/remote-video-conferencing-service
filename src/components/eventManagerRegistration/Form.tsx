@@ -64,6 +64,8 @@ import OperatorVO from 'src/vo/OperatorVO';
  *  Commons
  */
 import HttpClient from 'src/common/framework/HttpClient';
+import { forcedReloadEventManagerListState } from 'src/store/eventManager';
+import EventManagerVO from 'src/vo/EventManagerVO';
 
 type FormProps = {
   eventList: EventVO[];
@@ -127,18 +129,17 @@ function Form({ eventList }: FormProps) {
     ({ set }) =>
       async (data: Partial<typeof DEFAULT_VALUE>) => {
         try {
-          console.log({ data });
           const formData = _.cloneDeep(data);
           delete formData.PASSWORD_CONFIRM;
 
-          const user = Object.assign(new OperatorVO(), formData);
+          const user = Object.assign(new EventManagerVO(), formData);
           user.TYPE = 1;
           const response = await HttpClient.post('/operator', { user });
         } catch (error) {
           console.error(error);
         } finally {
           reset(DEFAULT_VALUE);
-          // set(forcedReloadOperatorListState, (state) => state + 1);
+          set(forcedReloadEventManagerListState, (state) => state + 1);
         }
       },
   );

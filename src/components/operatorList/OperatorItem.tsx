@@ -166,22 +166,6 @@ function OperatorItem({ operator }: OperatorItemProps) {
       },
   );
 
-  const handleSubmitModifyOperator = useRecoilCallback(
-    ({ set }) =>
-      async () => {
-        try {
-          await HttpClient.put('/operator', {
-            id: '',
-          });
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setModifyModalOpen(false);
-          set(forcedReloadOperatorListState, (state) => state + 1);
-        }
-      },
-  );
-
   return (
     <>
       <TableRow className={classes.root} hover>
