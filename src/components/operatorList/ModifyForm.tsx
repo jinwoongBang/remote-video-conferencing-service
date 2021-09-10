@@ -226,13 +226,13 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<HowToReg />}
               disableRipple
             >
-              상태
+              {t('user.status')}
             </Button>
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
             <Typography component="div">
               <Grid component="label" container alignItems="center" spacing={1}>
-                <Grid item>비활성</Grid>
+                <Grid item>{t('user.statusInactive')}</Grid>
                 <Grid item>
                   <Controller
                     name={FormKey.STATUS}
@@ -247,7 +247,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
                     )}
                   />
                 </Grid>
-                <Grid item>활성</Grid>
+                <Grid item>{t('user.statusActive')}</Grid>
               </Grid>
             </Typography>
           </Grid>
@@ -277,18 +277,21 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Person />}
               disableRipple
             >
-              이름
+              {t('user.name')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
             <TextField
               fullWidth
               id="standard-required"
-              placeholder="운영자 이름 입력해주세요."
+              placeholder={t('message.operator.placeholderOfName')}
               helperText={errors.NAME?.message}
               error={Boolean(errors.NAME)}
               {...register(FormKey.NAME, {
-                required: '아이디를 입력해주세요.',
+                required: {
+                  value: true,
+                  message: t('message.operator.requiredName'),
+                },
               })}
             />
           </Grid>
@@ -302,7 +305,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Lock />}
               disableRipple
             >
-              비밀번호
+              {t('user.password')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
@@ -310,20 +313,25 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               fullWidth
               type="password"
               id="standard-required"
-              placeholder="비밀번호를 입력해주세요."
+              placeholder={t('message.operator.placeholderOfPassword')}
               helperText={
-                errors.PASSWORD ? errors.PASSWORD?.message : '4자 ~ 16자'
+                errors.PASSWORD
+                  ? errors.PASSWORD?.message
+                  : t('message.operator.helperTextOfPassword')
               }
               error={Boolean(errors.PASSWORD)}
               {...register(FormKey.PASSWORD, {
-                required: '비밀번호를 입력해주세요.',
+                required: {
+                  value: true,
+                  message: t('message.operator.requiredPassword'),
+                },
                 minLength: {
                   value: 4,
-                  message: '4 ~ 16자로 입력해주세요.',
+                  message: t('message.operator.passwordMinLength'),
                 },
                 maxLength: {
                   value: 16,
-                  message: '4 ~ 16자로 입력해주세요.',
+                  message: t('message.operator.passwordMaxLength'),
                 },
               })}
             />
@@ -338,35 +346,26 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<EnhancedEncryption />}
               disableRipple
             >
-              비밀번호 확인
+              {t('user.passwordConfirm')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
             <TextField
               fullWidth
               id="standard-required"
-              placeholder="비밀번호를 입력해주세요."
+              placeholder={t('message.operator.placeholderOfPassword')}
               type="password"
               error={Boolean(errors.PASSWORD_CONFIRM)}
-              helperText={
-                errors.PASSWORD
-                  ? errors.PASSWORD_CONFIRM?.message
-                  : '4자 ~ 16자'
-              }
+              helperText={errors.PASSWORD_CONFIRM?.message}
               {...register(FormKey.PASSWORD_CONFIRM, {
-                required: '비밀번호 확인을 위해 입력해주세요.',
+                required: {
+                  value: true,
+                  message: t('message.operator.requiredPasswordConfirm'),
+                },
                 validate: {
                   positive: (value) =>
                     value === getValues('PASSWORD') ||
-                    '비밀번호가 일치하지 않습니다.',
-                },
-                minLength: {
-                  value: 4,
-                  message: '4 ~ 16자로 입력해주세요.',
-                },
-                maxLength: {
-                  value: 16,
-                  message: '4 ~ 16자로 입력해주세요.',
+                    (t('message.operator.mismatchedPassword') as string),
                 },
               })}
             />
@@ -381,20 +380,22 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Phone />}
               disableRipple
             >
-              핸드폰
+              {t('user.phoneNumber')}
             </Button>
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
             <TextField
               fullWidth
-              placeholder="휴대전화 번호를 입력해주세요."
+              placeholder={t('message.operator.placeholderOfPhoneNumber')}
               InputProps={{
                 inputComponent: PhoneNumberMask as any,
               }}
+              error={Boolean(errors.PHONE_NUMBER)}
+              helperText={errors.PHONE_NUMBER?.message}
               {...register(FormKey.PHONE_NUMBER, {
-                maxLength: {
-                  value: 13,
-                  message: '정확한 핸드폰 번호를 입력해주세요.',
+                pattern: {
+                  value: /^\d{3}-\d{3,4}-\d{4}$/,
+                  message: t('message.operator.incorrectPhoneNumber'),
                 },
               })}
             />
