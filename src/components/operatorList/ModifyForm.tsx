@@ -12,6 +12,7 @@ import { useRecoilCallback, useRecoilValue } from 'recoil';
  * Libarary
  */
 import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 /**
  * MUI
@@ -151,6 +152,7 @@ type DefaultFormType = {
 function ModifyForm({ operator, onOpen }: ModifyFormProps) {
   const classes = useStyles();
   const authorityList = useRecoilValue(authorityState);
+  const { t } = useTranslation();
 
   const {
     register,
@@ -259,7 +261,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<PermIdentity />}
               disableRipple
             >
-              아이디
+              {t('user.id')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>

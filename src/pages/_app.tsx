@@ -18,6 +18,11 @@ import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { GlobalTheme } from 'styles/GlobalTheme';
 
+/**
+ * Library
+ */
+import 'src/locales';
+
 import 'styles/globals.css';
 
 import RecoilDebugObserver from 'src/components/RecoilDebugObserver';
