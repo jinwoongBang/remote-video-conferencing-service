@@ -3,7 +3,10 @@
     "home": "홈"
   },
   "word": {
-    "common": {},
+    "common": {
+      "confirm": "확인",
+      "cancel": "취소"
+    },
     "user": {
       "id": "아이디",
       "status": "상태",

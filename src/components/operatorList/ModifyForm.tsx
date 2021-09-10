@@ -487,10 +487,10 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onOpen} color="secondary" variant="outlined">
-          취소
+          {t('word.common.cancel')}
         </Button>
         <Button type="submit" color="primary" variant="outlined" autoFocus>
-          확인
+          {t('word.common.confirm')}
         </Button>
       </DialogActions>
     </form>
