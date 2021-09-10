@@ -81,7 +81,6 @@ import OperatorVO from 'src/vo/OperatorVO';
  */
 import Loading from 'src/components/Loading';
 import Modal from 'src/components/modal/Modal';
-import ModifyModal from 'src/components/operatorList/ModifyModal';
 
 /**
  *  Framework

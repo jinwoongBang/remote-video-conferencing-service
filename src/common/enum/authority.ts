@@ -1,3 +1,5 @@
+export type AuthorityKeyType = `${string}_ROLE`;
+
 export enum AuthorityKey {
   PreferenceRole = 'PREFERENCE_ROLE',
   UserRole = 'USER_ROLE',

@@ -17,3 +17,8 @@ export enum UserPath {
   histroyList = '/user/histroyList',
   historyElapsedTime = '/user/historyElapsedTime',
 }
+
+export enum EventPath {
+  root = '/event',
+  eventRegistration = '/event/eventRegistration',
+}

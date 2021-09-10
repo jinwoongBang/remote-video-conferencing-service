@@ -22,6 +22,16 @@ import {
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Inbox, Mail } from '@material-ui/icons';
 
+/**
+ * Components
+ */
+import StyledListItem from 'src/components/sidebar/StyledListItem';
+
+/**
+ * Path
+ */
+import { EventPath } from 'src/common/path';
+
 export default function EventSidebar() {
   return (
     <>
@@ -32,18 +42,18 @@ export default function EventSidebar() {
           </ListSubheader>
         }
       >
-        <ListItem button>
+        <StyledListItem pathname={EventPath.root}>
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="이벤트 목록" />
-        </ListItem>
-        <ListItem button>
+        </StyledListItem>
+        <StyledListItem pathname={EventPath.eventRegistration}>
           <ListItemIcon>
             <Inbox />
           </ListItemIcon>
           <ListItemText primary="이벤트 등록" />
-        </ListItem>
+        </StyledListItem>
       </List>
       <List
         subheader={
