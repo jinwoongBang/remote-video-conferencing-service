@@ -2,16 +2,20 @@
   "menu": {
     "home": "홈"
   },
-  "user": {
-    "id": "아이디",
-    "status": "상태",
-    "statusActive": "활성",
-    "statusInactive": "비활성",
-    "name": "이름",
-    "password": "비밀번호",
-    "passwordConfirm": "비밀번호 확인",
-    "phoneNumber": "핸드폰",
-    "email": "이메일"
+  "word": {
+    "common": {},
+    "user": {
+      "id": "아이디",
+      "status": "상태",
+      "statusActive": "활성",
+      "statusInactive": "비활성",
+      "name": "이름",
+      "password": "비밀번호",
+      "passwordConfirm": "비밀번호 확인",
+      "phoneNumber": "핸드폰",
+      "email": "이메일",
+      "authority": "관리 등급"
+    }
   },
   "message": {
     "common": {},
@@ -26,7 +30,8 @@
       "passwordMinLength": "4 ~ 16자로 입력해주세요.",
       "passwordMaxLength": "4 ~ 16자로 입력해주세요.",
       "mismatchedPassword": "비밀번호가 일치하지 않습니다.",
-      "incorrectPhoneNumber": "정확한 핸드폰 번호를 입력해주세요."
+      "incorrectPhoneNumber": "정확한 핸드폰 번호를 입력해주세요.",
+      "incorrectEmail": "정확한 이메일 주소를 입력해주세요."
     }
   }
 }

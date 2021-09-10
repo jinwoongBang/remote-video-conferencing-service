@@ -226,13 +226,13 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<HowToReg />}
               disableRipple
             >
-              {t('user.status')}
+              {t('word.user.status')}
             </Button>
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
             <Typography component="div">
               <Grid component="label" container alignItems="center" spacing={1}>
-                <Grid item>{t('user.statusInactive')}</Grid>
+                <Grid item>{t('word.user.statusInactive')}</Grid>
                 <Grid item>
                   <Controller
                     name={FormKey.STATUS}
@@ -247,7 +247,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
                     )}
                   />
                 </Grid>
-                <Grid item>{t('user.statusActive')}</Grid>
+                <Grid item>{t('word.user.statusActive')}</Grid>
               </Grid>
             </Typography>
           </Grid>
@@ -261,7 +261,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<PermIdentity />}
               disableRipple
             >
-              {t('user.id')}
+              {t('word.user.id')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
@@ -277,7 +277,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Person />}
               disableRipple
             >
-              {t('user.name')}
+              {t('word.user.name')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
@@ -305,7 +305,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Lock />}
               disableRipple
             >
-              {t('user.password')}
+              {t('word.user.password')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
@@ -346,7 +346,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<EnhancedEncryption />}
               disableRipple
             >
-              {t('user.passwordConfirm')}
+              {t('word.user.passwordConfirm')}
             </Button>
           </Grid>
           <Grid item xs={4} className={classes.inputContainer}>
@@ -380,7 +380,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Phone />}
               disableRipple
             >
-              {t('user.phoneNumber')}
+              {t('word.user.phoneNumber')}
             </Button>
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
@@ -410,7 +410,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<Mail />}
               disableRipple
             >
-              이메일
+              {t('word.user.email')}
             </Button>
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
@@ -424,7 +424,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
                 pattern: {
                   value:
                     /[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/i,
-                  message: '정확한 이메일 주소를 입력해주세요.',
+                  message: t('message.operator.incorrectEmail'),
                 },
               })}
             />
@@ -439,7 +439,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               startIcon={<VerifiedUser />}
               disableRipple
             >
-              관리등급
+              {t('word.user.authority')}
             </Button>
           </Grid>
           <Grid item xs={10} className={classes.inputContainer}>
