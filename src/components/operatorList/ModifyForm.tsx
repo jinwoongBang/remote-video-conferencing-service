@@ -155,6 +155,7 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
   const {
     register,
     handleSubmit,
+    getValues,
     setValue,
     reset,
     control,
@@ -286,10 +287,6 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               error={Boolean(errors.NAME)}
               {...register(FormKey.NAME, {
                 required: '아이디를 입력해주세요.',
-                maxLength: {
-                  value: 3,
-                  message: '4자 이하로 입력해주세요.',
-                },
               })}
             />
           </Grid>
@@ -312,10 +309,12 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               type="password"
               id="standard-required"
               placeholder="비밀번호를 입력해주세요."
-              helperText={errors.PASSWORD?.message}
+              helperText={
+                errors.PASSWORD ? errors.PASSWORD?.message : '4자 ~ 16자'
+              }
               error={Boolean(errors.PASSWORD)}
               {...register(FormKey.PASSWORD, {
-                required: '아이디를 입력해주세요.',
+                required: '비밀번호를 입력해주세요.',
                 minLength: {
                   value: 4,
                   message: '4 ~ 16자로 입력해주세요.',
@@ -336,7 +335,6 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               size="large"
               startIcon={<EnhancedEncryption />}
               disableRipple
-              type="password"
             >
               비밀번호 확인
             </Button>
@@ -346,9 +344,28 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               fullWidth
               id="standard-required"
               placeholder="비밀번호를 입력해주세요."
+              type="password"
+              error={Boolean(errors.PASSWORD_CONFIRM)}
+              helperText={
+                errors.PASSWORD
+                  ? errors.PASSWORD_CONFIRM?.message
+                  : '4자 ~ 16자'
+              }
               {...register(FormKey.PASSWORD_CONFIRM, {
-                required: true,
-                maxLength: 10,
+                required: '비밀번호 확인을 위해 입력해주세요.',
+                validate: {
+                  positive: (value) =>
+                    value === getValues('PASSWORD') ||
+                    '비밀번호가 일치하지 않습니다.',
+                },
+                minLength: {
+                  value: 4,
+                  message: '4 ~ 16자로 입력해주세요.',
+                },
+                maxLength: {
+                  value: 16,
+                  message: '4 ~ 16자로 입력해주세요.',
+                },
               })}
             />
           </Grid>
@@ -372,7 +389,12 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               InputProps={{
                 inputComponent: PhoneNumberMask as any,
               }}
-              {...register(FormKey.PHONE_NUMBER)}
+              {...register(FormKey.PHONE_NUMBER, {
+                maxLength: {
+                  value: 13,
+                  message: '정확한 핸드폰 번호를 입력해주세요.',
+                },
+              })}
             />
           </Grid>
           {/*  */}
@@ -393,7 +415,15 @@ function ModifyForm({ operator, onOpen }: ModifyFormProps) {
               fullWidth
               id="standard-required"
               placeholder="이메일을 입력해주세요."
-              {...register(FormKey.EMAIL)}
+              error={Boolean(errors.EMAIL)}
+              helperText={errors.EMAIL?.message}
+              {...register(FormKey.EMAIL, {
+                pattern: {
+                  value:
+                    /[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/i,
+                  message: '정확한 이메일 주소를 입력해주세요.',
+                },
+              })}
             />
           </Grid>
           {/*  */}
