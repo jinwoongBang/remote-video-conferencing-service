@@ -1,40 +1,137 @@
 import React, { useEffect } from 'react';
 import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
-import Link from 'next/link';
+
+/**
+ * Libarary
+ */
+import { useForm } from 'react-hook-form';
+import * as _ from 'lodash';
+
+/**
+ *  Material UI
+ */
+import {
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import {
+  Cancel,
+  Copyright,
+  Create,
+  HowToReg,
+  Mail,
+  Person,
+  PhoneAndroid,
+  SecurityRounded,
+  SecuritySharp,
+  VpnKey,
+  VerifiedUser,
+} from '@material-ui/icons';
+
+/**
+ * Components
+ */
 import AppLayout from 'src/components/AppLayout';
-import ServerVO from 'src/vo/ServerVO';
+
+/**
+ * Service
+ */
 import ServerService from 'src/service/ServerService';
 import PreferenceService from 'src/service/PreferenceService';
+
+/**
+ * VO
+ */
+import ServerVO from 'src/vo/ServerVO';
 import { PreferenceVO } from 'src/vo';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  inputLabelContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '15px',
+  },
+  inputContainer: {
+    padding: '15px',
+  },
+  buttonContaier: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '15px',
+    gap: '10px',
+  },
+  modifyButton: {
+    width: '200px',
+  },
+  divider: {
+    padding: '15px',
+  },
+}));
+
+enum FormKey {
+  SERVER_ID = 'SERVER_ID',
+  NUMBER_OF_PEOPLE = 'NUMBER_OF_PEOPLE',
+}
+
+const DEFAULT_VALUE = {
+  [FormKey.SERVER_ID]: -1,
+};
 
 function EventRegistration({
   serverList,
   eventOptionList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const classes = useStyles();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: DEFAULT_VALUE,
+  });
+
   return (
     <AppLayout>
-      <div>
-        <div>
-          <h1>Event Registration</h1>
-        </div>
-        <div>
-          <h1>내용</h1>
-          {serverList.map((serverItem) => (
-            <div key={serverItem.ID}>
-              <div>
-                {serverItem.IP}:{serverItem.PORT}
-              </div>
-              <div>{serverItem.NAME}</div>
-            </div>
-          ))}
-          <h1>이벤트 옵션 리스트</h1>
-          {eventOptionList.map((eventOption) => (
-            <div key={eventOption.ID}>
-              <div>{eventOption.NAME}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Grid container>
+        <Grid item xs={3} className={classes.inputLabelContainer}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            서버 위치
+          </Button>
+        </Grid>
+        <Grid item xs={9} className={classes.inputContainer}>
+          <Select
+            fullWidth
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+            defaultValue={-1}
+            {...register(FormKey.SERVER_ID)}
+          >
+            <MenuItem value={-1}>선택 안함</MenuItem>
+            {serverList.map((server: ServerVO) => (
+              <MenuItem key={server.ID} value={server.ID}>
+                {server.NAME}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+      </Grid>
     </AppLayout>
   );
 }
