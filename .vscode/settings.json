@@ -4,5 +4,8 @@
         "titleBar.activeBackground": "#0A4469",
         "titleBar.activeForeground": "#F7FBFE"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "i18n-ally.localesPaths": [
+        "src/locales"
+    ]
 }
