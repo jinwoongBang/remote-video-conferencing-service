@@ -5,13 +5,29 @@ import * as _ from 'lodash';
 
 import nextConnect from 'next-connect';
 import multer from 'multer';
+import multerS3 from 'multer-s3';
+import aws from 'aws-sdk';
 
+aws.config.loadFromPath('/Users/ramsang/Desktop/on-the-air/config/s3.json');
+const s3 = new aws.S3();
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: './public/uploads',
-    filename: (req, file, cb) => cb(null, file.originalname),
+  storage: multerS3({
+    s3: s3,
+    bucket: 'bangduk02', //todo 0926 일단 성공은 했는데 너무 public이라서 뭔가 꺼림직하여 더 알아보고 적용하기
+    acl: 'public-read',
+    key: function (req, file, cb) {
+      cb(null, Date.now() + '.' + file.originalname.split('.').pop()); // 이름 설정
+    },
   }),
 });
+
+// FIXME Local
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: './public/uploads',
+//     filename: (req, file, cb) => cb(null, file.originalname),
+//   }),
+// });
 
 const OTARouter = nextConnect<any, NextApiResponse>({
   onError(error, req, res) {
@@ -31,6 +47,7 @@ const OTARouter = nextConnect<any, NextApiResponse>({
   .post((req, res) => {
     console.log(req);
     console.log('post', req.file);
+    console.log(__dirname + 'config/s3.json');
     res.status(200).json({ ok: 'success' });
   })
   .put(async (req, res) => {
