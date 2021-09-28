@@ -33,7 +33,9 @@ import {
   Grid,
   InputAdornment,
   MenuItem,
+  Paper,
   Select,
+  Switch,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -113,6 +115,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     padding: '15px',
+  },
+  eventOptionSwitch: {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '10px 0',
   },
 }));
 
@@ -320,6 +327,39 @@ function EventRegistration({
               />
             </Grid>
           </MuiPickersUtilsProvider>
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            이벤트 옵션
+          </Button>
+        </Grid>
+        <Grid item xs={10} className={clsx(classes.inputContainer)}>
+          <Grid container>
+            {eventOptionList.map((eventOption) => {
+              return (
+                <Grid
+                  item
+                  xs={2}
+                  key={eventOption.ID}
+                  className={classes.eventOptionSwitch}
+                >
+                  <FormControlLabel
+                    value="top"
+                    control={<Switch color="primary" />}
+                    label={eventOption.NAME}
+                    labelPlacement="top"
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
         </Grid>
 
         <Grid item xs={12} className={classes.divider}>
