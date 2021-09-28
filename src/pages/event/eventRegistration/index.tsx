@@ -130,6 +130,15 @@ enum FormKey {
   STATUS = 'STATUS',
   TITLE = 'TITLE',
   DATE_OF_START = 'DATE_OF_START',
+  ID_TEXT = 'ID_TEXT',
+  PASSWORD_TEXT = 'PASSWORD_TEXT',
+  JOB_TEXT = 'JOB_TEXT',
+  BELONG_TO_TEXT = 'BELONG_TO_TEXT',
+  LICENSE_NUMBER_TEXT = 'LICENSE_NUMBER_TEXT',
+  SPECIALIST_NUMBER_TEXT = 'SPECIALIST_NUMBER_TEXT',
+  SOCIETY_REQUEST_TEXT = 'SOCIETY_REQUEST_TEXT',
+  LOGIN_NOTICE = 'LOGIN_NOTICE',
+  PRE_REGISTRATION_TEXT = 'PRE_REGISTRATION_TEXT',
 }
 
 const DEFAULT_VALUE = {
@@ -139,6 +148,15 @@ const DEFAULT_VALUE = {
   [FormKey.STATUS]: EventStatus.WAITING,
   [FormKey.TITLE]: '',
   [FormKey.DATE_OF_START]: null,
+  [FormKey.ID_TEXT]: '',
+  [FormKey.PASSWORD_TEXT]: '',
+  [FormKey.JOB_TEXT]: '',
+  [FormKey.BELONG_TO_TEXT]: '',
+  [FormKey.LICENSE_NUMBER_TEXT]: '',
+  [FormKey.SPECIALIST_NUMBER_TEXT]: '',
+  [FormKey.SOCIETY_REQUEST_TEXT]: '',
+  [FormKey.LOGIN_NOTICE]: '',
+  [FormKey.PRE_REGISTRATION_TEXT]: '',
 };
 
 function EventRegistration({
@@ -360,6 +378,192 @@ function EventRegistration({
               );
             })}
           </Grid>
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            아이디 문구
+          </Button>
+        </Grid>
+        <Grid item xs={4} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="아이디 문구를 입력해주세요."
+            {...register(FormKey.ID_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            비밀번호 문구
+          </Button>
+        </Grid>
+        <Grid item xs={4} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="비밀번호 문구를 입력해주세요."
+            {...register(FormKey.PASSWORD_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            작업 문구
+          </Button>
+        </Grid>
+        <Grid item xs={4} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="작업 문구를 입력해주세요."
+            {...register(FormKey.JOB_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            소속 문구
+          </Button>
+        </Grid>
+        <Grid item xs={4} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="소속 문구를 입력해주세요."
+            {...register(FormKey.BELONG_TO_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            면허번호 문구
+          </Button>
+        </Grid>
+        <Grid item xs={4} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="면허번호 문구를 입력해주세요."
+            {...register(FormKey.LICENSE_NUMBER_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            전문의번호 문구
+          </Button>
+        </Grid>
+        <Grid item xs={4} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="전문의번호 문구를 입력해주세요."
+            {...register(FormKey.SPECIALIST_NUMBER_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            학회요청사항 문구
+          </Button>
+        </Grid>
+        <Grid item xs={10} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="standard-required"
+            placeholder="학회요청사항 문구를 입력해주세요."
+            {...register(FormKey.SOCIETY_REQUEST_TEXT)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            로그인 공지정보
+          </Button>
+        </Grid>
+        <Grid item xs={10} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="outlined-multiline-static"
+            multiline
+            rows={5}
+            placeholder="로그인 공지정보를 입력해주세요."
+            variant="outlined"
+            {...register(FormKey.LOGIN_NOTICE)}
+          />
+        </Grid>
+
+        <Grid item xs={2} className={clsx(classes.inputLabelContainer)}>
+          <Button
+            fullWidth
+            color="primary"
+            variant="outlined"
+            size="large"
+            startIcon={<Person />}
+          >
+            사전등록 완료 표시 문구
+          </Button>
+        </Grid>
+        <Grid item xs={10} className={clsx(classes.inputContainer)}>
+          <TextField
+            fullWidth
+            id="outlined-multiline-static"
+            multiline
+            rows={5}
+            placeholder="사전등록 완료 시 표시 문구를 입력해주세요."
+            variant="outlined"
+            {...register(FormKey.PRE_REGISTRATION_TEXT)}
+          />
         </Grid>
 
         <Grid item xs={12} className={classes.divider}>
