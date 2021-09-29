@@ -30,10 +30,7 @@ import { PreferenceVO, User } from 'src/vo';
  */
 import { AuthorityKey, ParentsAuthorityKey } from 'src/common/enum/authority';
 import OperatorVO from 'src/vo/OperatorVO';
-
-export interface OperatorResponseEntity {
-  method: string;
-}
+import ExcuteVO from 'src/vo/ExcuteVO';
 
 export type OperatorGetParam = {
   type: string;
@@ -120,12 +117,13 @@ class OperatorController extends OTAController {
 
   protected async doPost(
     req: NextApiRequest,
-    res: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
+    res: NextApiResponse<OTAResponse<ExcuteVO>>,
   ): Promise<void> {
     const param: OperatorPostParam = req.body;
-    const response = new OTAResponse<OperatorResponseEntity>();
+    const response = new OTAResponse<ExcuteVO>();
     try {
       const userId = param.user.USER_ID;
+
       if (!userId) {
         throw new Error('아이디를 입력해주세요.');
       }
@@ -142,9 +140,9 @@ class OperatorController extends OTAController {
 
       const resultCount = await OperatorService.insertOperator(param.user);
       const isSuccess = resultCount === 1;
-      const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-        method: 'INSERT',
-      });
+      const result: ExcuteVO[] = new Array(resultCount).fill(
+        new ExcuteVO('CREATED'),
+      );
       response.result = result;
       response.success = isSuccess;
       res.status(200).json(response);
@@ -159,16 +157,16 @@ class OperatorController extends OTAController {
 
   protected async doPut(
     request: NextApiRequest,
-    response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
+    response: NextApiResponse<OTAResponse<ExcuteVO>>,
   ): Promise<void> {
     const param: OperatorPutParam = request.body;
-    const otaResponse = new OTAResponse<OperatorResponseEntity>();
+    const otaResponse = new OTAResponse<ExcuteVO>();
     try {
       const resultCount = await OperatorService.updateOperator(param.user);
       const isSuccess = resultCount === 1;
-      const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-        method: 'UPDATE',
-      });
+      const result: ExcuteVO[] = new Array(resultCount).fill(
+        new ExcuteVO('UPDATED'),
+      );
       otaResponse.result = result;
       otaResponse.success = isSuccess;
       response.status(200).json(otaResponse);
@@ -183,20 +181,20 @@ class OperatorController extends OTAController {
 
   protected async doDelete(
     request: NextApiRequest,
-    response: NextApiResponse<OTAResponse<OperatorResponseEntity>>,
+    response: NextApiResponse<OTAResponse<ExcuteVO>>,
   ): Promise<void> {
     // const param: OperatorDeleteParam = request.body;
     const queryParam = request.query as OperatorDeleteParam;
     const param = {
       id: Number(queryParam.id),
     };
-    const otaResponse = new OTAResponse<OperatorResponseEntity>();
+    const otaResponse = new OTAResponse<ExcuteVO>();
     try {
       const resultCount = await OperatorService.deleteOperator(param);
       const isSuccess = resultCount === 1;
-      const result: OperatorResponseEntity[] = new Array(resultCount).fill({
-        method: 'DELETE',
-      });
+      const result: ExcuteVO[] = new Array(resultCount).fill(
+        new ExcuteVO('DELETED'),
+      );
       otaResponse.result = result;
       otaResponse.success = isSuccess;
       response.status(200).json(otaResponse);

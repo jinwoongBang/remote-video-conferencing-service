@@ -1,6 +1,6 @@
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 
-export interface EventVO {
+export interface Event {
   ID: number;
   SERVER_ID?: number;
   CODE?: string;
@@ -26,7 +26,7 @@ export interface EventVO {
   [key: string]: any;
 }
 
-class EventVOImpl extends OnTheAirVO implements EventVO {
+class EventVO extends OnTheAirVO implements Event {
   [key: string]: any;
   ID!: number;
   SERVER_ID?: number;
@@ -55,4 +55,4 @@ class EventVOImpl extends OnTheAirVO implements EventVO {
   }
 }
 
-export default EventVOImpl;
+export default EventVO;

@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import OTAController from 'src/common/framework/OTAController';
 import OTAResponse from 'src/common/framework/OTAResponse';
-import EventService from 'src/service/EventService';
+import EventService from 'src/service/event';
 import EventVO from 'src/vo/EventVO';
+import ExcuteVO from 'src/vo/ExcuteVO';
+import { EventPostParam } from 'src/pages/api/event/type';
 
 class EventController extends OTAController {
   protected async doGet(
@@ -25,18 +27,39 @@ class EventController extends OTAController {
       response.status(500).json(otaResponse);
     }
   }
-  protected doPost(
+
+  protected async doPost(
     request: NextApiRequest,
-    response: NextApiResponse<any>,
-  ): Promise<any> {
-    throw new Error('Method not implemented.');
+    response: NextApiResponse<OTAResponse<ExcuteVO>>,
+  ): Promise<void> {
+    const otaResponse = new OTAResponse<ExcuteVO>();
+
+    try {
+      const requestBody: EventPostParam = request.body;
+      const resultCount = await EventService.insertEvent(requestBody.event);
+      const isSuccess = resultCount === 1;
+      const result: ExcuteVO[] = new Array(resultCount).fill(
+        new ExcuteVO('CREATED'),
+      );
+      otaResponse.result = result;
+      otaResponse.success = isSuccess;
+      response.status(200).json(otaResponse);
+    } catch (e) {
+      const error = e as Error;
+      console.error(error);
+      otaResponse.success = false;
+      otaResponse.message = error.message;
+      response.status(500).json(otaResponse);
+    }
   }
+
   protected doPut(
     request: NextApiRequest,
     response: NextApiResponse<any>,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
+
   protected doDelete(
     request: NextApiRequest,
     response: NextApiResponse<any>,
