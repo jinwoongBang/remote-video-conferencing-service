@@ -1,7 +1,7 @@
 /**
  * React
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 /**
  * Next
@@ -64,6 +64,7 @@ import {
  * Components
  */
 import AppLayout from 'src/components/AppLayout';
+import EventOptionSwitch from 'src/components/eventRegistration/EventOptionSwitch';
 
 /**
  * Enum
@@ -116,12 +117,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     padding: '15px',
   },
-  eventOptionSwitch: {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '10px 0',
-  },
 }));
+
+type EventOption = {
+  key: string;
+  isUsed: boolean;
+};
 
 enum FormKey {
   SERVER_ID = 'SERVER_ID',
@@ -139,25 +140,27 @@ enum FormKey {
   SOCIETY_REQUEST_TEXT = 'SOCIETY_REQUEST_TEXT',
   LOGIN_NOTICE = 'LOGIN_NOTICE',
   PRE_REGISTRATION_TEXT = 'PRE_REGISTRATION_TEXT',
+  OPTION_LIST = 'OPTION_LIST',
 }
 
-const DEFAULT_VALUE = {
-  [FormKey.SERVER_ID]: -1,
-  [FormKey.NUMBER_OF_PEOPLE]: 0,
-  [FormKey.CODE]: '',
-  [FormKey.STATUS]: EventStatus.WAITING,
-  [FormKey.TITLE]: '',
-  [FormKey.DATE_OF_START]: null,
-  [FormKey.ID_TEXT]: '',
-  [FormKey.PASSWORD_TEXT]: '',
-  [FormKey.JOB_TEXT]: '',
-  [FormKey.BELONG_TO_TEXT]: '',
-  [FormKey.LICENSE_NUMBER_TEXT]: '',
-  [FormKey.SPECIALIST_NUMBER_TEXT]: '',
-  [FormKey.SOCIETY_REQUEST_TEXT]: '',
-  [FormKey.LOGIN_NOTICE]: '',
-  [FormKey.PRE_REGISTRATION_TEXT]: '',
-};
+// const DEFAULT_VALUE = {
+//   [FormKey.SERVER_ID]: -1,
+//   [FormKey.NUMBER_OF_PEOPLE]: 0,
+//   [FormKey.CODE]: '',
+//   [FormKey.STATUS]: EventStatus.WAITING,
+//   [FormKey.TITLE]: '',
+//   [FormKey.DATE_OF_START]: null,
+//   [FormKey.ID_TEXT]: '',
+//   [FormKey.PASSWORD_TEXT]: '',
+//   [FormKey.JOB_TEXT]: '',
+//   [FormKey.BELONG_TO_TEXT]: '',
+//   [FormKey.LICENSE_NUMBER_TEXT]: '',
+//   [FormKey.SPECIALIST_NUMBER_TEXT]: '',
+//   [FormKey.SOCIETY_REQUEST_TEXT]: '',
+//   [FormKey.LOGIN_NOTICE]: '',
+//   [FormKey.PRE_REGISTRATION_TEXT]: '',
+//   [FormKey.OPTION_LIST]: [],
+// }
 
 function EventRegistration({
   serverList,
@@ -165,18 +168,39 @@ function EventRegistration({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
+  const defaultFormValue = useMemo(() => {
+    return {
+      [FormKey.SERVER_ID]: -1,
+      [FormKey.NUMBER_OF_PEOPLE]: 0,
+      [FormKey.CODE]: '',
+      [FormKey.STATUS]: EventStatus.WAITING,
+      [FormKey.TITLE]: '',
+      [FormKey.DATE_OF_START]: null,
+      [FormKey.ID_TEXT]: '',
+      [FormKey.PASSWORD_TEXT]: '',
+      [FormKey.JOB_TEXT]: '',
+      [FormKey.BELONG_TO_TEXT]: '',
+      [FormKey.LICENSE_NUMBER_TEXT]: '',
+      [FormKey.SPECIALIST_NUMBER_TEXT]: '',
+      [FormKey.SOCIETY_REQUEST_TEXT]: '',
+      [FormKey.LOGIN_NOTICE]: '',
+      [FormKey.PRE_REGISTRATION_TEXT]: '',
+      [FormKey.OPTION_LIST]: '',
+    };
+  }, []);
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: DEFAULT_VALUE,
+    defaultValues: defaultFormValue,
   });
 
   const onSubmit = useRecoilCallback(
     ({ set }) =>
-      async (data: Partial<typeof DEFAULT_VALUE>) => {
+      async (data: Partial<typeof defaultFormValue>) => {
         try {
           const formData = _.cloneDeep(data);
           console.log({ formData });
@@ -184,7 +208,7 @@ function EventRegistration({
         } catch (error) {
           console.error(error);
         } finally {
-          reset(DEFAULT_VALUE);
+          reset(defaultFormValue);
           // set(forcedReloadEventManagerListState, (state) => state + 1);
         }
       },
@@ -360,23 +384,12 @@ function EventRegistration({
         </Grid>
         <Grid item xs={10} className={clsx(classes.inputContainer)}>
           <Grid container>
-            {eventOptionList.map((eventOption) => {
-              return (
-                <Grid
-                  item
-                  xs={2}
-                  key={eventOption.ID}
-                  className={classes.eventOptionSwitch}
-                >
-                  <FormControlLabel
-                    value="top"
-                    control={<Switch color="primary" />}
-                    label={eventOption.NAME}
-                    labelPlacement="top"
-                  />
-                </Grid>
-              );
-            })}
+            {eventOptionList.map((eventOption) => (
+              <EventOptionSwitch
+                key={eventOption.ID}
+                eventOption={eventOption}
+              />
+            ))}
           </Grid>
         </Grid>
 
