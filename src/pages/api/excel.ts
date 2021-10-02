@@ -13,7 +13,7 @@ const s3 = new aws.S3();
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'bangduk02', //todo 0926 일단 성공은 했는데 너무 public이라서 뭔가 꺼림직하여 더 알아보고 적용하기
+    bucket: 'bangdukbucket01/test', //todo 0926 일단 성공은 했는데 너무 public이라서 뭔가 꺼림직하여 더 알아보고 적용하기
     acl: 'public-read',
     key: function (req, file, cb) {
       cb(null, Date.now() + '.' + file.originalname.split('.').pop()); // 이름 설정
@@ -45,9 +45,8 @@ const OTARouter = nextConnect<any, NextApiResponse>({
     console.log('get', req);
   })
   .post((req, res) => {
-    console.log(req);
     console.log('post', req.file);
-    console.log(__dirname + 'config/s3.json');
+    console.log('post 성공 seccesss@@@@ ', req.file.key);
     res.status(200).json({ ok: 'success' });
   })
   .put(async (req, res) => {

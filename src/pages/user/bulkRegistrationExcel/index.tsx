@@ -58,8 +58,6 @@ function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   useEffect(() => {
-    const user = userList[0] || null;
-
     console.log('getStaticProps() :: useEffect (mount)');
     return () => {
       console.log('getStaticProps() :: useEffect (unmount)');
@@ -67,24 +65,6 @@ function UserRegistration({
   }, [userList]);
 
   const [excelName, setExcelName] = useState<string>();
-
-  function excelExport(event: { target: any }) {
-    let input = event.target;
-    var reader = new FileReader();
-    console.log('excel SheetNames input: ', input.name);
-    console.log('excel SheetNames input: ', input.value);
-    setExcelName(input.value);
-    reader.onload = function () {
-      var fileData = reader.result;
-      var wb = xlsx.read(fileData, { type: 'binary' });
-      wb.SheetNames.forEach(function (sheetName) {
-        console.log('excel SheetNames: ', sheetName);
-        var rowObj = xlsx.utils.sheet_to_json(wb.Sheets[sheetName]);
-        // console.log('excel: ', JSON.stringify(rowObj));
-      });
-    };
-    reader.readAsBinaryString(input.files[0]);
-  }
 
   function get_header_row(sheet: { [x: string]: any }) {
     var headers = [];
@@ -105,32 +85,27 @@ function UserRegistration({
     }
     return headers;
   }
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
-  async function uploadFile(formData: any) {
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
-      onUploadProgress: (event: { loaded: number; total: number }) => {
-        console.log(
-          `Current progress:`,
-          Math.round((event.loaded * 100) / event.total),
-        );
-      },
-    };
+  // function get_header_row(sheet) {
+  //   var headers = [];
+  //   var range = XLSX.utils.decode_range(sheet['!ref']);
+  //   var C,
+  //     R = range.s.r; /* start in the first row */
+  //   /* walk every column in the range */
+  //   for (C = range.s.c; C <= range.e.c; ++C) {
+  //     var cell =
+  //       sheet[
+  //         XLSX.utils.encode_cell({ c: C, r: R })
+  //       ]; /* find the cell in the first row */
 
-    let reqFormData = new FormData();
-    reqFormData.append('excel_file', formData['excel_file'][0]);
+  //     var hdr = 'UNKNOWN ' + C; // <-- replace with your desired default
+  //     if (cell && cell.t) hdr = XLSX.utils.format_cell(cell);
 
-    const { data, status }: AxiosResponse<OTAResponse<any>> =
-      await HttpMultipartClient.post('/excel', reqFormData, config); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
-  }
+  //     headers.push(hdr);
+  //   }
+  //   return headers;
+  // }
 
   const onSubmit = (data: any) => {
     console.log('user search: ', data);
@@ -144,11 +119,17 @@ function UserRegistration({
       wb.SheetNames.forEach(function (sheetName) {
         console.log('excel SheetNames: ', sheetName);
         var rowObj = xlsx.utils.sheet_to_json(wb.Sheets[sheetName]);
-        // console.log('excel: ', JSON.stringify(rowObj));
+
+        console.log('excel item:22 ', rowObj);
+        // rowObj.forEach((item) => {
+        //   console.log('excel item: ', item['국적']);
+        // });
+        console.log('excel: ', JSON.stringify(rowObj));
+        // console.log('excel: ', JSON.stringify(rowObj)['국적']);
       });
     };
     reader.readAsBinaryString(data['excel_file'][0]);
-    uploadFile(data);
+    // uploadFile(data);
   };
 
   async function test() {
@@ -159,6 +140,52 @@ function UserRegistration({
   const onClickCancel = useCallback(() => {
     console.log('onClickCancel');
     test();
+  }, []);
+
+  const onClickExcelExport = useCallback(() => {
+    console.log('onClickExcelExport');
+
+    let excelHandler = {
+      getExcelFileName: function () {
+        return 'on_the_air_member_upload_sample.xlsx';
+      },
+      getSheetName: function () {
+        return 'member';
+      },
+      getExcelData: function () {
+        return [
+          [
+            '이벤트코드',
+            '상태 [ 1.심사중 2.활동 3.정지 ]',
+            '아이디',
+            '패스워드',
+            '회원명',
+            '휴대전화',
+            '이메일',
+            '영수증사용여부[ 사용시 Y 로 표시 ]',
+            '직업',
+            '소속',
+            '면허번호',
+            '전문의번호',
+            '영수증금액 (숫자만)',
+            '국가',
+          ],
+        ];
+      },
+      getWorksheet: function () {
+        return xlsx.utils.aoa_to_sheet(this.getExcelData());
+      },
+    };
+
+    let wb = xlsx.utils.book_new();
+    // step 2. 시트 만들기
+    var newWorksheet = excelHandler.getWorksheet();
+
+    // step 3. workbook에 새로만든 워크시트에 이름을 주고 붙인다.
+    xlsx.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
+
+    // step 4. 엑셀 파일 만들기
+    xlsx.writeFile(wb, excelHandler.getExcelFileName());
   }, []);
 
   return (
@@ -174,10 +201,23 @@ function UserRegistration({
             <h3>EXCEL FILE: </h3>
           </Grid>
           <Grid item xs={10}>
-            <input id="excel_file" {...register('excel_file')} type="file" />
+            <input
+              id="excel_file"
+              {...register('excel_file')}
+              type="file"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            />
           </Grid>
 
           <Grid item xs={12}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              onClick={onClickExcelExport}
+            >
+              Excel 형식 Down
+            </Button>
             <Button
               variant="outlined"
               color="secondary"
@@ -202,16 +242,15 @@ function UserRegistration({
 }
 
 // This function gets called at build time
-export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> = async ({
-  params,
-}) => {
-  // const userList: UserVO[] = await UserService.selectUser();
+export const getStaticProps: GetStaticProps<{ userList: UserVO[] }> =
+  async () => {
+    // const userList: UserVO[] = await UserService.selectUser();
 
-  return {
-    props: {
-      userList: [],
-    },
+    return {
+      props: {
+        userList: [],
+      },
+    };
   };
-};
 
 export default UserRegistration;
