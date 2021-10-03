@@ -4,3 +4,8 @@ export enum PreferenceKey {
   RepresentativeMail = 'REPRESENTATIVE_MAIL',
   CopyrightSignature = 'COPYRIGHT_SIGNATURE',
 }
+
+export enum PreferenceGroupKey {
+  SiteInformation = 'SITE_INFORMATION',
+  EventOptions = 'EVENT_OPTIONS',
+}

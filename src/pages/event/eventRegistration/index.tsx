@@ -202,7 +202,7 @@ function EventRegistration({
         } catch (error) {
           console.error(error);
         } finally {
-          reset(defaultFormValue);
+          // reset(defaultFormValue);
           // set(forcedReloadEventManagerListState, (state) => state + 1);
         }
       },
