@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import OTAService from 'src/common/framework/OTAService';
-import EventVO from 'src/vo/EventVO';
+import EventVO, { EventOption } from 'src/vo/EventVO';
 import { InsertEventParam } from 'src/service/event/type';
+import PreferenceService from '../PreferenceService';
 
 class EventService extends OTAService {
   async selectAllEventList(): Promise<EventVO[]> {
@@ -16,6 +17,9 @@ class EventService extends OTAService {
   }
 
   async insertEvent(param: InsertEventParam): Promise<any> {
+    const eventOption = _.cloneDeep(param).OPTION_LIST;
+    delete param.OPTION_LIST;
+
     const columns = this.createInsertColumn(param);
     const questionMarks = this.createInsertValuesByQuestionMark(param);
     const tableName = 'TB_EVENT';

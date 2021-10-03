@@ -61,6 +61,11 @@ import {
 } from '@material-ui/pickers';
 
 /**
+ * Common
+ */
+import HttpClient from 'src/common/framework/HttpClient';
+
+/**
  * Components
  */
 import AppLayout from 'src/components/AppLayout';
@@ -118,11 +123,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '15px',
   },
 }));
-
-type EventOption = {
-  key: string;
-  isUsed: boolean;
-};
 
 export enum FormKey {
   SERVER_ID = 'SERVER_ID',
@@ -198,7 +198,7 @@ function EventRegistration({
         try {
           const formData = _.cloneDeep(data);
           console.log({ formData });
-          // const response = await HttpClient.post('/operator', { user });
+          const response = await HttpClient.post('/event', { event: formData });
         } catch (error) {
           console.error(error);
         } finally {

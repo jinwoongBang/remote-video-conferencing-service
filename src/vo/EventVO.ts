@@ -1,5 +1,9 @@
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 
+export type EventOption = {
+  [key: string]: boolean;
+};
+
 export interface Event {
   ID: number;
   SERVER_ID?: number;
@@ -23,6 +27,9 @@ export interface Event {
   DATE_OF_CREATED?: string;
   DATE_OF_MODIFIED?: string;
   CREATOR?: string;
+
+  OPTION_LIST: EventOption;
+
   [key: string]: any;
 }
 
@@ -49,6 +56,8 @@ class EventVO extends OnTheAirVO implements Event {
   DATE_OF_CREATED?: string;
   DATE_OF_MODIFIED?: string;
   CREATOR?: string;
+
+  OPTION_LIST!: EventOption;
 
   constructor() {
     super();

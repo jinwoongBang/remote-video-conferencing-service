@@ -35,8 +35,8 @@ class EventController extends OTAController {
     const otaResponse = new OTAResponse<ExcuteVO>();
 
     try {
-      const requestBody: EventPostParam = request.body;
-      const resultCount = await EventService.insertEvent(requestBody.event);
+      const { event }: EventPostParam = request.body;
+      const resultCount = await EventService.insertEvent(event);
       const isSuccess = resultCount === 1;
       const result: ExcuteVO[] = new Array(resultCount).fill(
         new ExcuteVO('CREATED'),
