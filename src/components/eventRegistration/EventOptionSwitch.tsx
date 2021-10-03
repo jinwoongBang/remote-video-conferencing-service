@@ -24,9 +24,12 @@ import {
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import { PreferenceVO } from 'src/vo';
+import { UseFormRegister } from 'react-hook-form';
+import { FormKey } from 'src/pages/event/eventRegistration';
 
 type EventOptionSwitchProps = {
   eventOption: PreferenceVO;
+  formRegister: UseFormRegister<any>;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,7 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function EventOptionSwitch({ eventOption }: EventOptionSwitchProps) {
+function EventOptionSwitch({
+  eventOption,
+  formRegister,
+}: EventOptionSwitchProps) {
   const classes = useStyles();
 
   return (
@@ -48,7 +54,9 @@ function EventOptionSwitch({ eventOption }: EventOptionSwitchProps) {
       className={classes.eventOptionSwitch}
     >
       <FormControlLabel
-        value="top"
+        {...formRegister(
+          `${FormKey.OPTION_LIST}.${eventOption.PREFERENCE_KEY}`,
+        )}
         control={<Switch color="primary" />}
         label={eventOption.NAME}
         labelPlacement="top"

@@ -124,7 +124,7 @@ type EventOption = {
   isUsed: boolean;
 };
 
-enum FormKey {
+export enum FormKey {
   SERVER_ID = 'SERVER_ID',
   NUMBER_OF_PEOPLE = 'NUMBER_OF_PEOPLE',
   CODE = 'CODE',
@@ -143,24 +143,17 @@ enum FormKey {
   OPTION_LIST = 'OPTION_LIST',
 }
 
-// const DEFAULT_VALUE = {
-//   [FormKey.SERVER_ID]: -1,
-//   [FormKey.NUMBER_OF_PEOPLE]: 0,
-//   [FormKey.CODE]: '',
-//   [FormKey.STATUS]: EventStatus.WAITING,
-//   [FormKey.TITLE]: '',
-//   [FormKey.DATE_OF_START]: null,
-//   [FormKey.ID_TEXT]: '',
-//   [FormKey.PASSWORD_TEXT]: '',
-//   [FormKey.JOB_TEXT]: '',
-//   [FormKey.BELONG_TO_TEXT]: '',
-//   [FormKey.LICENSE_NUMBER_TEXT]: '',
-//   [FormKey.SPECIALIST_NUMBER_TEXT]: '',
-//   [FormKey.SOCIETY_REQUEST_TEXT]: '',
-//   [FormKey.LOGIN_NOTICE]: '',
-//   [FormKey.PRE_REGISTRATION_TEXT]: '',
-//   [FormKey.OPTION_LIST]: [],
-// }
+function createEventOptionDefaultValue(eventOptionList: PreferenceVO[]) {
+  const result: {
+    [key: string]: boolean;
+  } = {};
+
+  eventOptionList.forEach((eventOption) => {
+    result[eventOption.PREFERENCE_KEY] = false;
+  });
+
+  return result;
+}
 
 function EventRegistration({
   serverList,
@@ -185,7 +178,7 @@ function EventRegistration({
       [FormKey.SOCIETY_REQUEST_TEXT]: '',
       [FormKey.LOGIN_NOTICE]: '',
       [FormKey.PRE_REGISTRATION_TEXT]: '',
-      [FormKey.OPTION_LIST]: '',
+      [FormKey.OPTION_LIST]: createEventOptionDefaultValue(eventOptionList),
     };
   }, []);
 
@@ -193,6 +186,7 @@ function EventRegistration({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: defaultFormValue,
@@ -387,6 +381,7 @@ function EventRegistration({
             {eventOptionList.map((eventOption) => (
               <EventOptionSwitch
                 key={eventOption.ID}
+                formRegister={register}
                 eventOption={eventOption}
               />
             ))}
