@@ -107,6 +107,57 @@ function UserRegistration({
   //   return headers;
   // }
 
+  async function uploadFile(formData: any, excelData: any) {
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+      onUploadProgress: (event: { loaded: number; total: number }) => {
+        console.log(
+          `Current progress:`,
+          Math.round((event.loaded * 100) / event.total),
+        );
+      },
+    };
+
+    let reqFormData = new FormData();
+    reqFormData.append('excel_file', formData['excel_file'][0]);
+    reqFormData.append('excel_data', JSON.stringify(excelData));
+
+    let reqBody = JSON.stringify(excelData);
+
+    console.log('body length', reqBody.length);
+    console.log('body length22 ', JSON.parse(reqBody).length);
+    console.log('body length22222 ', JSON.parse(reqBody)[0].length);
+    let parseData: any[][] = JSON.parse(reqBody);
+
+    // let params: { [key: string]: any }[] = [];
+    // parseData.forEach((value: any, index: number) => {
+    //   if (index != 0) {
+    //     params.push({
+    //       EVENT_ID: value[0],
+    //       STATUS: value[1],
+    //       USER_ID: value[2],
+    //       PASSWORD: value[3],
+    //       NAME: value[4],
+    //       PHONE_NUMBER: value[5],
+    //       EMAIL: value[6],
+    //       IS_USED_RECEIPT: value[7],
+    //       JOB: value[8],
+    //       BELONG_TO: value[9],
+    //       LICENSE_NUMBER: value[10],
+    //       SPECIALIST_NUMBER: value[11],
+    //       DEPOSIT_AMOUNT: value[12],
+    //       NATIONALITY: value[13],
+    //     });
+    //   }
+    // });
+    // console.log('params', params);
+
+    const { data, status }: AxiosResponse<OTAResponse<any>> =
+      await HttpMultipartClient.post('/excel', reqFormData, config); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
+  }
+
   const onSubmit = (data: any) => {
     console.log('user search: ', data);
 
@@ -118,18 +169,19 @@ function UserRegistration({
       var wb = xlsx.read(fileData, { type: 'binary' });
       wb.SheetNames.forEach(function (sheetName) {
         console.log('excel SheetNames: ', sheetName);
-        var rowObj = xlsx.utils.sheet_to_json(wb.Sheets[sheetName]);
+        var rowObj = xlsx.utils.sheet_to_json(wb.Sheets[sheetName], {
+          header: 1,
+        });
 
         console.log('excel item:22 ', rowObj);
-        // rowObj.forEach((item) => {
-        //   console.log('excel item: ', item['국적']);
-        // });
-        console.log('excel: ', JSON.stringify(rowObj));
-        // console.log('excel: ', JSON.stringify(rowObj)['국적']);
+        console.log('excel item:22 length ', rowObj.length - 1);
+
+        // console.log('excel: ', JSON.stringify(rowObj));
+
+        uploadFile(data, rowObj);
       });
     };
     reader.readAsBinaryString(data['excel_file'][0]);
-    // uploadFile(data);
   };
 
   async function test() {

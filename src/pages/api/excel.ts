@@ -47,6 +47,36 @@ const OTARouter = nextConnect<any, NextApiResponse>({
   .post((req, res) => {
     console.log('post', req.file);
     console.log('post 성공 seccesss@@@@ ', req.file.key);
+    console.log('post req', req.body);
+
+    let parseData: any[][] = JSON.parse(req.body.excel_data);
+
+    let params: { [key: string]: any }[] = [];
+    parseData.forEach((value: any, index: number) => {
+      // console.log(`value ${index}`, value);
+      if (index != 0) {
+        params.push({
+          EVENT_ID: value[0],
+          STATUS: value[1],
+          USER_ID: value[2],
+          PASSWORD: value[3],
+          NAME: value[4],
+          PHONE_NUMBER: value[5],
+          EMAIL: value[6],
+          IS_USED_RECEIPT: value[7],
+          JOB: value[8],
+          BELONG_TO: value[9],
+          LICENSE_NUMBER: value[10],
+          SPECIALIST_NUMBER: value[11],
+          DEPOSIT_AMOUNT: value[12],
+          NATIONALITY: value[13],
+        });
+      }
+    });
+
+    console.log('params', params);
+
+    // console.log('post req33', req.body[0]);
     res.status(200).json({ ok: 'success' });
   })
   .put(async (req, res) => {
