@@ -127,7 +127,7 @@ abstract class OTAService {
 
     param.forEach((object, paramIndex) => {
       Object.keys(object).forEach((key, index) => {
-        let value = object[key];
+        let value = object[key] ?? null;
 
         let insertValue = '';
         if (typeof value === 'string') {
@@ -135,14 +135,8 @@ abstract class OTAService {
         } else {
           insertValue = value;
         }
-
-        if (index == 0) {
-          insertKeyQuery += key;
-          insertValueQuery += insertValue;
-        } else {
-          insertKeyQuery += ', ' + key;
-          insertValueQuery += ', ' + insertValue;
-        }
+        if (paramIndex == 0) insertKeyQuery += index == 0 ? key : `, ${key}`;
+        insertValueQuery += index == 0 ? insertValue : `, ${insertValue}`;
       });
       insertValueQuery += paramIndex == param.length - 1 ? '' : ' ) , (';
     });

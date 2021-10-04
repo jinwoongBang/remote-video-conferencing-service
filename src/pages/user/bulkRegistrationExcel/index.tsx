@@ -107,6 +107,10 @@ function UserRegistration({
   //   return headers;
   // }
 
+  // function undefinedToNull(value: any){
+  //   return value ?? undefined = null :
+  // }
+
   async function uploadFile(formData: any, excelData: any) {
     const config = {
       headers: {
@@ -135,24 +139,51 @@ function UserRegistration({
     // parseData.forEach((value: any, index: number) => {
     //   if (index != 0) {
     //     params.push({
-    //       EVENT_ID: value[0],
-    //       STATUS: value[1],
-    //       USER_ID: value[2],
-    //       PASSWORD: value[3],
-    //       NAME: value[4],
-    //       PHONE_NUMBER: value[5],
-    //       EMAIL: value[6],
-    //       IS_USED_RECEIPT: value[7],
-    //       JOB: value[8],
-    //       BELONG_TO: value[9],
-    //       LICENSE_NUMBER: value[10],
-    //       SPECIALIST_NUMBER: value[11],
-    //       DEPOSIT_AMOUNT: value[12],
-    //       NATIONALITY: value[13],
+    //       EVENT_ID: value[0] ?? null,
+    //       STATUS: value[1] ?? null,
+    //       USER_ID: value[2] ?? null,
+    //       PASSWORD: value[3] ?? null,
+    //       NAME: value[4] ?? null,
+    //       PHONE_NUMBER: value[5] ?? null,
+    //       EMAIL: value[6] ?? null,
+    //       IS_USED_RECEIPT: value[7] ?? null,
+    //       JOB: value[8] ?? null,
+    //       BELONG_TO: value[9] ?? null,
+    //       LICENSE_NUMBER: value[10] ?? null,
+    //       SPECIALIST_NUMBER: value[11] ?? null,
+    //       DEPOSIT_AMOUNT: value[12] ?? null,
+    //       NATIONALITY: value[13] ?? null,
     //     });
     //   }
     // });
     // console.log('params', params);
+
+    // let insertKeyQuery = `INSERT INTO ` + 'TB_USER' + ` ( `;
+    // let insertValueQuery = `VALUES ( `;
+
+    // params.forEach((object, paramIndex) => {
+    //   Object.keys(object).forEach((key, index) => {
+    //     let value = object[key] ?? null;
+
+    //     let insertValue = '';
+    //     if (typeof value === 'string') {
+    //       insertValue = `'${value}'`;
+    //     } else {
+    //       insertValue = value;
+    //     }
+
+    //     if (paramIndex == 0) insertKeyQuery += index == 0 ? key : `, ${key}`;
+    //     insertValueQuery += index == 0 ? insertValue : `, ${insertValue}`;
+    //   });
+    //   insertValueQuery += paramIndex == params.length - 1 ? '' : ' ) , (';
+    // });
+
+    // insertKeyQuery += ' ) ';
+    // insertValueQuery += ' ) ';
+
+    // const query = insertKeyQuery + insertValueQuery;
+
+    // console.log('query: ', query);
 
     const { data, status }: AxiosResponse<OTAResponse<any>> =
       await HttpMultipartClient.post('/excel', reqFormData, config); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자

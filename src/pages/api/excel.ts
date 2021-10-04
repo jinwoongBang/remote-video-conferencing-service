@@ -3,10 +3,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import * as _ from 'lodash';
 
+import UserService from 'src/service/UserService';
+import ExcelService from 'src/service/ExcelService';
+
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import aws from 'aws-sdk';
+import OTAResponse from 'src/common/framework/OTAResponse';
 
 aws.config.loadFromPath('/Users/ramsang/Desktop/on-the-air/config/s3.json');
 const s3 = new aws.S3();
@@ -44,7 +48,7 @@ const OTARouter = nextConnect<any, NextApiResponse>({
   .get((req, res) => {
     console.log('get', req);
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
     console.log('post', req.file);
     console.log('post 성공 seccesss@@@@ ', req.file.key);
     console.log('post req', req.body);
@@ -75,6 +79,14 @@ const OTARouter = nextConnect<any, NextApiResponse>({
     });
 
     console.log('params', params);
+    const excelUploadRes = new OTAResponse<any>();
+    excelUploadRes.result = await ExcelService.insertExcelFile({
+      FILE_NAME: req.file.key,
+      ADD_USER_COUNT: parseData.length - 1,
+    });
+
+    const bulkUserInserRes = new OTAResponse<any>();
+    bulkUserInserRes.result = await UserService.inserExcelUser(params);
 
     // console.log('post req33', req.body[0]);
     res.status(200).json({ ok: 'success' });

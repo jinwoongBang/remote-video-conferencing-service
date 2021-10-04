@@ -115,7 +115,7 @@ class UserService extends OTAService {
   }
 
   async inserExcelUser(params: { [key: string]: any }[]) {
-    this.excuteMultiInsertQuery('TB_USER', params);
+    return this.excuteMultiInsertQuery('TB_USER', params);
   }
 }
 
