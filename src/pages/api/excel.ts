@@ -50,10 +50,6 @@ class OperatorController extends OTAController {
     const currentPage = Number(0);
     // const returnCount = Number(queryParam.returnCount);
     // const currentPage = Number(queryParam.currentPage);
-    // const param = {
-    //   returnCount,
-    //   currentPage,
-    // };
     const param = {
       returnCount,
       currentPage,
