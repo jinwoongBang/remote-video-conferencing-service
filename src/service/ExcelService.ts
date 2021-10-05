@@ -1,10 +1,9 @@
 import * as _ from 'lodash';
 import OTAService from 'src/common/framework/OTAService';
-import { User } from 'src/vo';
+import { IExcel } from 'src/vo/ExcelVO';
 import OperatorVO from 'src/vo/OperatorVO';
 
-export interface SelectOperatorListParam {
-  type: number;
+export interface SelectPagingListParam {
   currentPage: number;
   returnCount: number;
 }
@@ -27,7 +26,34 @@ class ExcelService extends OTAService {
   async insertExcelFile(param: { [key: string]: any }) {
     return this.excuteInsertQuery('TB_USER_EXCEL', param);
   }
+
+  async selectExcelFileList({
+    currentPage = 0,
+    returnCount = 10,
+  }: SelectPagingListParam): Promise<IExcel[]> {
+    const result = await this.excuteQuery(
+      `
+      select
+      excel.ID,
+      FILE_NAME,
+      DATE_OF_CREATED,
+      ADD_USER_COUNT
+      from TB_USER_EXCEL as excel
+      join (
+        select 
+        ID 
+        from TB_USER_EXCEL 
+        ORDER BY ID DESC 
+        LIMiT ? OFFSET ?
+      ) as temp on temp.ID = excel.ID;
+    `,
+      [returnCount, currentPage * returnCount],
+    );
+
+    return result;
+  }
 }
+
 export default new ExcelService();
 // class OperatorService extends OTAService {
 //   async selectOperatorList({

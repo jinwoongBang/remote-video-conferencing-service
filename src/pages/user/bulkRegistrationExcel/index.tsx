@@ -10,7 +10,11 @@ import Counter from 'src/components/Counter';
 /**
  * recoil
  */
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  useRecoilState,
+  useSetRecoilState,
+  useRecoilStateLoadable,
+} from 'recoil';
 
 /**
  * Excel library sheetjs
@@ -54,9 +58,86 @@ import OTAResponse from 'src/common/framework/OTAResponse';
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
+import { forceReloadExcelListState, excelListSelector } from 'src/store/excel';
+
+import { makeStyles, Theme } from '@material-ui/core/styles';
+
+import Loading from 'src/components/Loading';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  inputLabelContainer: {
+    display: 'flex',
+    background: '#028a0f',
+    border: '1px solid black',
+    minHeight: '5vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& label': {
+      color: 'white',
+    },
+  },
+  inputContainer: {
+    display: 'flex',
+    border: '1px solid black',
+    minHeight: '5vh',
+    justifyContent: 'left',
+    alignItems: 'center',
+    paddingLeft: '10px',
+  },
+  buttonContaier: {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '15px',
+  },
+  subTitle: {
+    paddingBottom: '10px',
+    '& label': {
+      fontSize: '15px',
+    },
+  },
+  divider: {
+    padding: '15px',
+  },
+  excelDefaultDownBtn: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    marginRight: '15px',
+    color: 'white',
+  },
+}));
+
+const Board = () => {
+  const [users, reload] = useRecoilStateLoadable(excelListSelector);
+
+  console.log('users: ', users);
+  // const menuList = menus.map((menu) => (<li>{menu}</li>));
+  switch (users?.state) {
+    case 'hasValue':
+      return (
+        <div>
+          {/* {<li>users.contents.result[0].DATE_OF_CREATED</li>} */}
+          {users.contents.result.map((item) => (
+            <li>{item.DATE_OF_CREATED}</li>
+          ))}
+        </div>
+      );
+
+    case 'hasError':
+      return <div>Error...</div>;
+
+    case 'loading':
+      return (
+        <div>
+          <Loading />
+        </div>
+      );
+  }
+};
+
 function UserRegistration({
   userList,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const classes = useStyles();
+
   useEffect(() => {
     console.log('getStaticProps() :: useEffect (mount)');
     return () => {
@@ -64,52 +145,7 @@ function UserRegistration({
     };
   }, [userList]);
 
-  const [excelName, setExcelName] = useState<string>();
-
-  function get_header_row(sheet: { [x: string]: any }) {
-    var headers = [];
-    var range = xlsx.utils.decode_range(sheet['!ref']);
-    var C,
-      R = range.s.r; /* start in the first row */
-    /* walk every column in the range */
-    for (C = range.s.c; C <= range.e.c; ++C) {
-      var cell =
-        sheet[
-          xlsx.utils.encode_cell({ c: C, r: R })
-        ]; /* find the cell in the first row */
-
-      var hdr = 'UNKNOWN ' + C; // <-- replace with your desired default
-      if (cell && cell.t) hdr = xlsx.utils.format_cell(cell);
-
-      headers.push(hdr);
-    }
-    return headers;
-  }
   const { register, handleSubmit } = useForm();
-
-  // function get_header_row(sheet) {
-  //   var headers = [];
-  //   var range = XLSX.utils.decode_range(sheet['!ref']);
-  //   var C,
-  //     R = range.s.r; /* start in the first row */
-  //   /* walk every column in the range */
-  //   for (C = range.s.c; C <= range.e.c; ++C) {
-  //     var cell =
-  //       sheet[
-  //         XLSX.utils.encode_cell({ c: C, r: R })
-  //       ]; /* find the cell in the first row */
-
-  //     var hdr = 'UNKNOWN ' + C; // <-- replace with your desired default
-  //     if (cell && cell.t) hdr = XLSX.utils.format_cell(cell);
-
-  //     headers.push(hdr);
-  //   }
-  //   return headers;
-  // }
-
-  // function undefinedToNull(value: any){
-  //   return value ?? undefined = null :
-  // }
 
   async function uploadFile(formData: any, excelData: any) {
     const config = {
@@ -128,65 +164,8 @@ function UserRegistration({
     reqFormData.append('excel_file', formData['excel_file'][0]);
     reqFormData.append('excel_data', JSON.stringify(excelData));
 
-    let reqBody = JSON.stringify(excelData);
-
-    console.log('body length', reqBody.length);
-    console.log('body length22 ', JSON.parse(reqBody).length);
-    console.log('body length22222 ', JSON.parse(reqBody)[0].length);
-    let parseData: any[][] = JSON.parse(reqBody);
-
-    // let params: { [key: string]: any }[] = [];
-    // parseData.forEach((value: any, index: number) => {
-    //   if (index != 0) {
-    //     params.push({
-    //       EVENT_ID: value[0] ?? null,
-    //       STATUS: value[1] ?? null,
-    //       USER_ID: value[2] ?? null,
-    //       PASSWORD: value[3] ?? null,
-    //       NAME: value[4] ?? null,
-    //       PHONE_NUMBER: value[5] ?? null,
-    //       EMAIL: value[6] ?? null,
-    //       IS_USED_RECEIPT: value[7] ?? null,
-    //       JOB: value[8] ?? null,
-    //       BELONG_TO: value[9] ?? null,
-    //       LICENSE_NUMBER: value[10] ?? null,
-    //       SPECIALIST_NUMBER: value[11] ?? null,
-    //       DEPOSIT_AMOUNT: value[12] ?? null,
-    //       NATIONALITY: value[13] ?? null,
-    //     });
-    //   }
-    // });
-    // console.log('params', params);
-
-    // let insertKeyQuery = `INSERT INTO ` + 'TB_USER' + ` ( `;
-    // let insertValueQuery = `VALUES ( `;
-
-    // params.forEach((object, paramIndex) => {
-    //   Object.keys(object).forEach((key, index) => {
-    //     let value = object[key] ?? null;
-
-    //     let insertValue = '';
-    //     if (typeof value === 'string') {
-    //       insertValue = `'${value}'`;
-    //     } else {
-    //       insertValue = value;
-    //     }
-
-    //     if (paramIndex == 0) insertKeyQuery += index == 0 ? key : `, ${key}`;
-    //     insertValueQuery += index == 0 ? insertValue : `, ${insertValue}`;
-    //   });
-    //   insertValueQuery += paramIndex == params.length - 1 ? '' : ' ) , (';
-    // });
-
-    // insertKeyQuery += ' ) ';
-    // insertValueQuery += ' ) ';
-
-    // const query = insertKeyQuery + insertValueQuery;
-
-    // console.log('query: ', query);
-
     const { data, status }: AxiosResponse<OTAResponse<any>> =
-      await HttpMultipartClient.post('/excel', reqFormData, config); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
+      await HttpMultipartClient.post('/excelUpload', reqFormData, config); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
   }
 
   const onSubmit = (data: any) => {
@@ -280,10 +259,10 @@ function UserRegistration({
           component="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Grid item xs={2}>
-            <h3>EXCEL FILE: </h3>
+          <Grid item xs={2} className={classes.inputLabelContainer}>
+            <label>EXCEL FILE</label>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} className={classes.inputContainer}>
             <input
               id="excel_file"
               {...register('excel_file')}
@@ -292,22 +271,15 @@ function UserRegistration({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.buttonContaier}>
             <Button
+              className={classes.excelDefaultDownBtn}
               variant="outlined"
               color="secondary"
               size="large"
               onClick={onClickExcelExport}
             >
-              Excel 형식 Down
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="large"
-              onClick={onClickCancel}
-            >
-              취소
+              엑셀양식
             </Button>
             <Button
               variant="contained"
@@ -319,6 +291,14 @@ function UserRegistration({
             </Button>
           </Grid>
         </Grid>
+
+        <Grid item xs={12} className={classes.divider}></Grid>
+
+        <Grid container alignItems="center" className={classes.subTitle}>
+          <label>업로드 내역 [Total: ]</label>
+        </Grid>
+
+        <Board />
       </div>
     </ApoLayout>
   );
