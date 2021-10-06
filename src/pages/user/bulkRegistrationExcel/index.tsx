@@ -31,6 +31,7 @@ import {
   TextField,
   Select,
   MenuItem,
+  Box,
   Typography,
 } from '@material-ui/core';
 
@@ -54,6 +55,7 @@ import ApoLayout from 'src/components/AppLayout';
  * Common
  */
 import HttpMultipartClient from 'src/common/framework/HttpMultipartClient';
+import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
@@ -63,6 +65,30 @@ import { forceReloadExcelListState, excelListSelector } from 'src/store/excel';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import Loading from 'src/components/Loading';
+import { IExcel } from 'src/vo/ExcelVO';
+
+const useConfirm = (
+  message: string,
+  onConfirm: (() => void) | undefined,
+  onCancel: () => void,
+) => {
+  if (!onConfirm || typeof onConfirm !== 'function') {
+    return;
+  }
+  if (onCancel && typeof onCancel !== 'function') {
+    return;
+  }
+
+  const confirmAction = () => {
+    if (window.confirm(message)) {
+      onConfirm();
+    } else {
+      onCancel();
+    }
+  };
+
+  return confirmAction;
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
   inputLabelContainer: {
@@ -93,30 +119,175 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: '10px',
     '& label': {
       fontSize: '15px',
+      color: '#028a0f',
+      fontWeight: 'bold',
     },
+    boxShadow: '1px 3px 1px #9E9E9E',
+  },
+  subTitleCount: {
+    fontSize: '15px',
+    color: 'black',
+    fontWeight: 'bold',
   },
   divider: {
     padding: '15px',
   },
   excelDefaultDownBtn: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: 'linear-gradient(45deg, #32CD32 30%, #00FF00 90%)',
     marginRight: '15px',
+    boxShadow: '1px 2px 1px #DCDCDC',
     color: 'white',
+    fontWeight: 'bold',
+  },
+
+  excelDeleteBtn: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    color: 'white',
+    height: '2vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
+
+  boardTitleContainer: {
+    display: 'flex',
+    background: '#32CD32',
+    border: '1px solid black',
+    minHeight: '3vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '1px 2px 1px #DCDCDC',
+    paddingBottom: '3px',
+    // '& label': {
+    //   color: 'white',
+    // },
+  },
+  boardContentContainer: {
+    display: 'flex',
+    border: '1px solid black',
+    minHeight: '3vh',
+    justifyContent: 'left',
+    alignItems: 'center',
+    paddingLeft: '10px',
+    '& a': {
+      color: 'blue',
+    },
+  },
+  boardBtnContainer: {
+    display: 'flex',
+    border: '1px solid black',
+    minHeight: '3vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: '10px',
   },
 }));
 
-const Board = () => {
-  const [users, reload] = useRecoilStateLoadable(excelListSelector);
+// function excuteUpdateQuery(
+//   tableName: string,
+//   param: { [key: string]: any },
+//   whereQuery: string,
+// ) {
+//   // UPDATE table_name SET name = '테스트 변경', country = '대한민국' WHERE id = 1105;
 
-  console.log('users: ', users);
+//   let updateSetQuery = `UPDATE ` + tableName + ` SET `;
+//   let updateWhereeQuery = ` WHERE ${whereQuery}`;
+
+//   let keys = Object.keys(param);
+//   keys.forEach((key, index) => {
+//     let value = param[key] ?? null;
+
+//     let updateValue = '';
+//     if (typeof value === 'string') {
+//       updateValue = `'${value}'`;
+//     } else {
+//       updateValue = value;
+//     }
+//     updateSetQuery +=
+//       index == keys.length - 1
+//         ? ` ${key} = ${updateValue} `
+//         : ` ${key} = ${updateValue} ,`;
+//   });
+
+//   const query = updateSetQuery + updateWhereeQuery;
+
+//   console.log('query: ', query);
+// }
+
+const Board = () => {
+  const [excels, reload] = useRecoilStateLoadable(excelListSelector);
+
+  const classes = useStyles();
+  console.log('users: ', excels);
   // const menuList = menus.map((menu) => (<li>{menu}</li>));
-  switch (users?.state) {
+
+  const onClickDelete = useCallback(async (item) => {
+    console.log('onClickDelete', item);
+
+    const positive = async () => {
+      const { data, status }: AxiosResponse<OTAResponse<any>> =
+        await HttpClient.delete('/excel', { data: { excelId: item } });
+      console.log('data', data);
+      console.log('status', status);
+      if (status == 200) {
+        reload(null);
+      }
+    };
+
+    const nagative = () => {
+      console.log('nagative');
+    };
+    const confirm = useConfirm('삭제하시겠습니까?', positive, nagative);
+
+    confirm?.();
+  }, []);
+
+  switch (excels?.state) {
     case 'hasValue':
       return (
         <div>
-          {/* {<li>users.contents.result[0].DATE_OF_CREATED</li>} */}
-          {users.contents.result.map((item) => (
-            <li>{item.DATE_OF_CREATED}</li>
+          <Grid container>
+            <Grid item xs={12} className={classes.subTitle}>
+              <label>
+                EXCEL 업로드 내역 (
+                <label className={classes.subTitleCount}>
+                  {excels?.contents?.result?.length}건
+                </label>
+                )
+              </label>
+            </Grid>
+            <Grid item xs={3} className={classes.boardTitleContainer}>
+              <label>등록일</label>
+            </Grid>
+            <Grid item xs={7} className={classes.boardTitleContainer}>
+              <label>파일 이름</label>
+            </Grid>
+            <Grid item xs={2} className={classes.boardTitleContainer}>
+              <label>관리</label>
+            </Grid>
+          </Grid>
+          {excels?.contents?.result?.map((item: any) => (
+            <Grid container key={item}>
+              <Grid item xs={3} className={classes.boardContentContainer}>
+                <label>{item.DATE_OF_CREATED}</label>
+              </Grid>
+              <Grid item xs={7} className={classes.boardContentContainer}>
+                <a href="/path/to/my/file.jpg" download>
+                  {item.FILE_NAME} ( ADD. {item.ADD_USER_COUNT}건 )
+                </a>
+              </Grid>
+              <Grid item xs={2} className={classes.boardBtnContainer}>
+                <Button
+                  className={classes.excelDeleteBtn}
+                  variant="outlined"
+                  color="secondary"
+                  size="large"
+                  onClick={(id) => onClickDelete(item.ID)}
+                >
+                  삭제
+                </Button>
+              </Grid>
+            </Grid>
           ))}
         </div>
       );
@@ -193,16 +364,6 @@ function UserRegistration({
     };
     reader.readAsBinaryString(data['excel_file'][0]);
   };
-
-  async function test() {
-    const { data, status }: AxiosResponse<OTAResponse<any>> =
-      await HttpMultipartClient.put('/user'); //todo register 넘기는게 문젠데 음 어케 넘겨야하지 확인해보자
-  }
-
-  const onClickCancel = useCallback(() => {
-    console.log('onClickCancel');
-    test();
-  }, []);
 
   const onClickExcelExport = useCallback(() => {
     console.log('onClickExcelExport');
@@ -293,10 +454,6 @@ function UserRegistration({
         </Grid>
 
         <Grid item xs={12} className={classes.divider}></Grid>
-
-        <Grid container alignItems="center" className={classes.subTitle}>
-          <label>업로드 내역 [Total: ]</label>
-        </Grid>
 
         <Board />
       </div>

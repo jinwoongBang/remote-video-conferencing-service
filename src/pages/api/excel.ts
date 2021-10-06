@@ -86,8 +86,16 @@ class OperatorController extends OTAController {
 
   protected async doDelete(
     request: NextApiRequest,
-    response: NextApiResponse<OTAResponse<IExcel>>,
-  ): Promise<void> {}
+    res: NextApiResponse<OTAResponse<IExcel>>,
+  ): Promise<void> {
+    const result = await ExcelService.deleteExcelFile(
+      { IS_DELETED: 1 },
+      `ID = ${request.body.excelId}`,
+    );
+    console.log('delete res result ', result);
+    const response = new OTAResponse<IExcel>();
+    res.status(200).json(response);
+  }
 }
 
 export default async function handler(

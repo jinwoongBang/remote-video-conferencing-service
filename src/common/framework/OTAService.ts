@@ -164,6 +164,53 @@ abstract class OTAService {
     if (error) throw error;
     return JSON.parse(JSON.stringify(result));
   }
+
+  protected async excuteUpdateQuery(
+    tableName: string,
+    param: { [key: string]: any },
+    whereQuery: string,
+  ) {
+    // UPDATE table_name SET name = '테스트 변경', country = '대한민국' WHERE id = 1105;
+
+    let updateSetQuery = `UPDATE ` + tableName + ` SET `;
+    let updateWhereeQuery = ` WHERE ${whereQuery}`;
+
+    let keys = Object.keys(param);
+    keys.forEach((key, index) => {
+      let value = param[key] ?? null;
+
+      let updateValue = '';
+      if (typeof value === 'string') {
+        updateValue = `'${value}'`;
+      } else {
+        updateValue = value;
+      }
+      updateSetQuery +=
+        index == keys.length - 1
+          ? ` ${key} = ${updateValue} `
+          : ` ${key} = ${updateValue} ,`;
+    });
+
+    const query = updateSetQuery + updateWhereeQuery;
+
+    console.log('query: ', query);
+
+    let error;
+    let conn;
+    let result;
+    try {
+      conn = await this.getConnection();
+      console.log(query);
+      result = await conn.query(query);
+    } catch (e) {
+      console.error(e);
+      error = e;
+    } finally {
+      await conn?.release();
+    }
+    if (error) throw error;
+    return JSON.parse(JSON.stringify(result));
+  }
 }
 
 export default OTAService;

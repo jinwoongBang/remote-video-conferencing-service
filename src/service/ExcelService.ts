@@ -43,11 +43,21 @@ class ExcelService extends OTAService {
         select 
         ID 
         from TB_USER_EXCEL 
+        WHERE IS_DELETED = 0
         ORDER BY ID DESC 
         LIMiT ? OFFSET ?
       ) as temp on temp.ID = excel.ID;
     `,
       [returnCount, currentPage * returnCount],
+    );
+
+    return result;
+  }
+  async deleteExcelFile(param: { [key: string]: any }, whereQuery: string) {
+    const result = await this.excuteUpdateQuery(
+      'TB_USER_EXCEL',
+      param,
+      whereQuery,
     );
 
     return result;

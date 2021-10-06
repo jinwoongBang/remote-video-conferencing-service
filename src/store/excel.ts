@@ -16,7 +16,7 @@ export const forceReloadExcelListState = atom({
   default: 0,
 });
 
-export const excelListSelector = selector({
+export const excelListSelector = selector<OTAResponse<IExcel> | null>({
   key: 'excelListSelector',
   get: async ({ get }) => {
     get(forceReloadExcelListState);
