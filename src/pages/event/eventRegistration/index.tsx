@@ -11,7 +11,7 @@ import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 /**
  * Recoil
  */
-import { useRecoilCallback } from 'recoil';
+import { useRecoilCallback, useRecoilState } from 'recoil';
 
 /**
  * Libarary
@@ -87,6 +87,8 @@ import PreferenceService from 'src/service/PreferenceService';
  */
 import ServerVO from 'src/vo/ServerVO';
 import { PreferenceVO } from 'src/vo';
+import { authState } from 'src/store';
+import { Auth } from 'src/store/authentication';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inputLabelContainer: {
@@ -141,6 +143,7 @@ export enum FormKey {
   LOGIN_NOTICE = 'LOGIN_NOTICE',
   PRE_REGISTRATION_TEXT = 'PRE_REGISTRATION_TEXT',
   OPTION_LIST = 'OPTION_LIST',
+  CREATOR = 'CREATOR',
 }
 
 function createEventOptionDefaultValue(eventOptionList: PreferenceVO[]) {
@@ -161,6 +164,8 @@ function EventRegistration({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
+  const [auth, setAuth] = useRecoilState<Auth>(authState);
+
   const defaultFormValue = useMemo(() => {
     return {
       [FormKey.SERVER_ID]: -1,
@@ -179,6 +184,7 @@ function EventRegistration({
       [FormKey.LOGIN_NOTICE]: '',
       [FormKey.PRE_REGISTRATION_TEXT]: '',
       [FormKey.OPTION_LIST]: createEventOptionDefaultValue(eventOptionList),
+      [FormKey.CREATOR]: auth.user?.USER_ID,
     };
   }, []);
 
@@ -197,12 +203,12 @@ function EventRegistration({
       async (data: Partial<typeof defaultFormValue>) => {
         try {
           const formData = _.cloneDeep(data);
-          console.log({ formData });
+          formData.CREATOR = defaultFormValue[FormKey.CREATOR];
           const response = await HttpClient.post('/event', { event: formData });
         } catch (error) {
           console.error(error);
         } finally {
-          // reset(defaultFormValue);
+          reset(defaultFormValue);
           // set(forcedReloadEventManagerListState, (state) => state + 1);
         }
       },
