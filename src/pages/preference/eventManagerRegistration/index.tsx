@@ -19,7 +19,7 @@ import EventVO from 'src/vo/EventVO';
  */
 import AppLayout from 'src/components/AppLayout';
 import Form from 'src/components/eventManagerRegistration/Form';
-import EventService from 'src/service/EventService';
+import EventService from 'src/service/event';
 
 /**
  * Default Function(TSX)

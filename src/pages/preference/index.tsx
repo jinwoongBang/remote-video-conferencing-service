@@ -69,7 +69,7 @@ import { PreferenceVO } from 'src/vo';
 /**
  * common
  */
-import { PreferenceKey } from 'src/common/enum/preference';
+import { PreferenceGroupKey, PreferenceKey } from 'src/common/enum/preference';
 import HttpClient from 'src/common/framework/HttpClient';
 import OTAResponse from 'src/common/framework/OTAResponse';
 
@@ -332,7 +332,7 @@ export const getStaticProps: GetStaticProps<{
 }> = async ({ params }) => {
   const preferenceList = await PreferenceService.selectPreferenceListByGroupKey(
     {
-      preferenceKey: 'SITE_INFORMATION',
+      preferenceKey: PreferenceGroupKey.SiteInformation,
     },
   );
   return {

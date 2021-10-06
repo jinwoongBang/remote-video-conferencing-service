@@ -40,8 +40,6 @@ class EventService extends OTAService {
       eventOptions: param.OPTION_LIST || {},
     });
 
-    console.log(eventOptionParams);
-
     const optionResult = await EventOptionService.insertEventOptionList(
       eventOptionParams,
     );

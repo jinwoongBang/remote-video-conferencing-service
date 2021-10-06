@@ -13,12 +13,7 @@ class EventOptionService extends OTAService {
       const questionMarks = this.createInsertValuesByQuestionMark(item);
       const values = Object.values(item);
       const query = `INSERT TB_EVENT_OPTION (${columns}) VALUES (${questionMarks})`;
-      console.log(query);
-      console.log(values);
-      const result = await this.excuteQuery(
-        `INSERT TB_EVENT_OPTION (${columns}) VALUES (${questionMarks});`,
-        values,
-      );
+      const result = await this.excuteQuery(query, values);
       rows += result.affectedRows;
     });
 
