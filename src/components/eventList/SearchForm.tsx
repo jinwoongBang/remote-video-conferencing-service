@@ -135,20 +135,6 @@ function SearchForm() {
               <MenuItem value={EventStatus.WAITING}>대기</MenuItem>
               <MenuItem value={EventStatus.PROGRESS}>진행</MenuItem>
             </Select>
-            {/* <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">이벤트 상태</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                defaultValue={EventStatus.ALL}
-                label="이벤트 상태"
-              >
-                <MenuItem value={EventStatus.ALL}>전체</MenuItem>
-                <MenuItem value={EventStatus.STOP}>중지</MenuItem>
-                <MenuItem value={EventStatus.WAITING}>대기</MenuItem>
-                <MenuItem value={EventStatus.PROGRESS}>진행</MenuItem>
-              </Select>
-            </FormControl> */}
           </Grid>
 
           <Grid item xs={1} className={classes.label}>

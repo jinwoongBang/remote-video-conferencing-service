@@ -41,11 +41,12 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 /**
  * Store
  */
-// import {
-//   eventManagerListPaginationState,
-//   getEventManagerListSelector,
-//   GetEventManagerListSelectorType,
-// } from 'src/store/eventManager';
+
+import {
+  eventListPaginationState,
+  getEventListSelector,
+  GetEventListSelectorType,
+} from 'src/store/event';
 
 /**
  * VO
@@ -56,7 +57,6 @@ import { PreferenceVO } from 'src/vo';
  * Components
  */
 import Loading from 'src/components/Loading';
-// import EventManagerItem from 'src/components/eventManagerList/EventManagerItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -91,9 +91,30 @@ type EventListProps = {
 function EventList({ eventOptionList }: EventListProps) {
   const classes = useStyles();
 
+  const [page, setPage] = useRecoilState(eventListPaginationState);
+
+  const eventListLoadable = useRecoilValueLoadable<GetEventListSelectorType>(
+    getEventListSelector({
+      page: page.pageNumber,
+      returnCount: page.returnCount,
+    }),
+  );
+
+  const isLoading = useMemo(() => {
+    const { state } = eventListLoadable;
+    return state !== 'hasError' && state === 'loading';
+  }, [eventListLoadable.state]);
+
+  const pagination = useMemo(() => {
+    const { state } = eventListLoadable;
+    return state === 'hasValue'
+      ? eventListLoadable.getValue().pagination
+      : undefined;
+  }, [eventListLoadable.state]);
+
   const handleChange = useCallback(
     (event: React.ChangeEvent<unknown>, value: number) => {
-      // setPage((state) => ({ ...state, pageNumber: value - 1 }));
+      setPage((state) => ({ ...state, pageNumber: value - 1 }));
     },
     [],
   );
@@ -108,7 +129,11 @@ function EventList({ eventOptionList }: EventListProps) {
       >
         <Grid item className={classes.postCountContainer}>
           <Typography variant="body1">
-            총 <strong>100</strong>개 중 <strong>100</strong>개
+            총 <strong>{pagination?.itemCount || 0}</strong>개 중{' '}
+            <strong>
+              {!isLoading ? eventListLoadable.getValue().eventList.length : 0}
+            </strong>
+            개
           </Typography>
         </Grid>
       </Grid>
@@ -154,31 +179,45 @@ function EventList({ eventOptionList }: EventListProps) {
             </TableRow>
           </TableHead>
           <TableBody className={classes.tbody}>
-            {/* {!isLoading ? (
-              userListLoadable
-                .getValue()
-                .eventManagerList.map((user) => (
-                  <EventManagerItem key={user.ID} eventManager={user} />
-                ))
+            {!isLoading ? (
+              eventListLoadable.getValue().eventList.map((event) => (
+                <TableRow hover key={event.ID}>
+                  <TableCell align="center">{event.DATE_OF_STARTED}</TableCell>
+                  <TableCell align="center">{event.STATUS}</TableCell>
+                  <TableCell align="center">{event.SERVER_ID}</TableCell>
+                  <TableCell align="center">{event.CODE}</TableCell>
+                  <TableCell align="center">{event.TITLE}</TableCell>
+                  <TableCell align="center">{event.NUMBER_OF_PEOPLE}</TableCell>
+                  <TableCell align="center">-</TableCell>
+                  <TableCell align="center">-</TableCell>
+                </TableRow>
+              ))
             ) : (
               <TableRow>
                 <TableCell colSpan={8}>
                   <Loading />
                 </TableCell>
               </TableRow>
-            )} */}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <Grid container justifyContent="center">
         <Grid item>
           <Pagination
+            disabled={isLoading || !pagination}
+            color="primary"
+            count={pagination?.pageCount}
+            page={page.pageNumber + 1}
+            onChange={handleChange}
+          />
+          {/* <Pagination
             // disabled={isLoading || !pagination}
             color="primary"
             count={100}
             page={1}
             onChange={handleChange}
-          />
+          /> */}
         </Grid>
       </Grid>
     </div>

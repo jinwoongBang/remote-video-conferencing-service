@@ -13,11 +13,7 @@ import { UserType } from 'src/common/enum/user';
 /**
  * Service
  */
-import { InsertOperatorParam } from 'src/service/OperatorService';
-import { User } from 'src/vo';
-import OnTheAirVO from 'src/vo/OnTheAirVO';
 import OperatorVO from 'src/vo/OperatorVO';
-import { OperatorResponseEntity } from 'src/pages/api/operator';
 
 export const insertOperatorState = atom<InsertOperatorState>({
   key: 'insertOperatorState',
