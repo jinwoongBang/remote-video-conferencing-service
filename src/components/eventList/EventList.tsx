@@ -63,7 +63,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   postCountContainer: {
-    '& strong': {
+    margin: '30px 0 0 0',
+    '& > p strong': {
       fontWeight: 'bold',
       fontSize: '1.2em',
       margin: '0 2px',
@@ -74,6 +75,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100vh - 260px)',
     marginBottom: theme.spacing(2),
     // border: '1px solid tomato',
+  },
+  paginationInfoContainer: {
+    margin: '30px 0 0 0',
   },
   tbody: {
     // width: '100%',
@@ -102,8 +106,8 @@ function EventList({ eventOptionList }: EventListProps) {
         alignItems="center"
         component="article"
       >
-        <Grid item>
-          <Typography variant="body1" className={classes.postCountContainer}>
+        <Grid item className={classes.postCountContainer}>
+          <Typography variant="body1">
             총 <strong>100</strong>개 중 <strong>100</strong>개
           </Typography>
         </Grid>
