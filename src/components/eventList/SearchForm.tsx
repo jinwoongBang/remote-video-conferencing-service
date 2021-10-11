@@ -44,6 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     display: 'flex',
     alignItems: 'center',
+
+    // marginBottom: '10px',
     '& > p': {
       fontWeight: 'bold',
     },
@@ -79,7 +81,7 @@ function SearchForm() {
   return (
     <Grid container component={Paper} className={classes.root}>
       <Grid item xs={12}>
-        <Grid container alignItems="center" spacing={4}>
+        <Grid container alignItems="center" spacing={3}>
           <Grid item xs={2} className={classes.label}>
             <Typography variant="body1">이벤트 시작일</Typography>
             <Switch
@@ -118,7 +120,7 @@ function SearchForm() {
           </Grid>
 
           <Grid item xs={1} className={classes.label}>
-            <Typography variant="body1">이벤트 상태</Typography>
+            <Typography variant="body1">상태</Typography>
           </Grid>
           <Grid item xs={4}>
             <Select
@@ -160,7 +162,7 @@ function SearchForm() {
             <Typography variant="body1">이벤트 명칭</Typography>
           </Grid>
           <Grid item xs={3}>
-            <TextField fullWidth placeholder="이벤트 코드를 입력해주세요" />
+            <TextField fullWidth placeholder="이벤트 명칭을 입력해주세요" />
           </Grid>
 
           <Grid item xs={2}>

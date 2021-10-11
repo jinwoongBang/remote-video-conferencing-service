@@ -140,7 +140,7 @@ function EventList({ eventOptionList }: EventListProps) {
               <TableCell align="center" width={100}>
                 동기화
               </TableCell>
-              {eventOptionList.map((item) => {
+              {/* {eventOptionList.map((item) => {
                 return (
                   <TableCell
                     key={item.PREFERENCE_KEY}
@@ -150,7 +150,7 @@ function EventList({ eventOptionList }: EventListProps) {
                     {item.NAME}
                   </TableCell>
                 );
-              })}
+              })} */}
             </TableRow>
           </TableHead>
           <TableBody className={classes.tbody}>
