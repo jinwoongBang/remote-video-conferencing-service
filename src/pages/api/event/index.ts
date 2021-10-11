@@ -4,7 +4,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
 import EventService from 'src/service/event';
 import EventVO from 'src/vo/EventVO';
 import ExcuteVO from 'src/vo/ExcuteVO';
-import { EventPostParam } from 'src/pages/api/event/type';
+import { EventGetParam, EventPostParam } from 'src/pages/api/event/type';
 
 class EventController extends OTAController {
   protected async doGet(
@@ -13,11 +13,23 @@ class EventController extends OTAController {
   ): Promise<void> {
     const otaResponse = new OTAResponse<EventVO>();
 
+    const queryParam = request.query as EventGetParam;
+    const returnCount = Number(queryParam.returnCount);
+    const currentPage = Number(queryParam.currentPage);
+
+    const param = {
+      returnCount,
+      currentPage,
+    };
+
     try {
-      const eventList = await EventService.selectAllEventList();
+      const totalEventCount = await EventService.selectAllEventCount();
+      const eventList = await EventService.selectAllEventList(param);
       otaResponse.result = eventList;
       otaResponse.mappingData(EventVO);
       otaResponse.success = true;
+
+      otaResponse.setPagination(currentPage, totalEventCount, returnCount);
       response.status(200).json(otaResponse);
     } catch (e) {
       const error = e as Error;

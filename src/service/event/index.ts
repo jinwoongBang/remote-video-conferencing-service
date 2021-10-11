@@ -8,15 +8,37 @@ import PreferenceService from '../PreferenceService';
 import { PreferenceGroupKey } from 'src/common/enum/preference';
 
 class EventService extends OTAService {
-  async selectAllEventList(): Promise<EventVO[]> {
-    const result = await this.excuteQuery(`
+  async selectAllEventList({
+    currentPage = 0,
+    returnCount = 10,
+  }): Promise<EventVO[]> {
+    const result = await this.excuteQuery(
+      `
       SELECT
         *
       FROM
         TB_EVENT
-    `);
+      ORDER BY ID ASC
+      LIMIT ?
+      OFFSET ?
+    `,
+      [returnCount, currentPage * returnCount],
+    );
 
     return result;
+  }
+
+  async selectAllEventCount(): Promise<number> {
+    const result = await this.excuteQuery(
+      `
+        SELECT
+          COUNT(*) as COUNT
+        FROM
+          TB_EVENT
+    `,
+    );
+
+    return result[0].COUNT;
   }
 
   async insertEvent(param: InsertEventParam): Promise<any> {

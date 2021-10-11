@@ -52,6 +52,7 @@ import {
  * VO
  */
 import { PreferenceVO } from 'src/vo';
+import EventVO from 'src/vo/EventVO';
 
 /**
  * Components
@@ -180,9 +181,9 @@ function EventList({ eventOptionList }: EventListProps) {
           </TableHead>
           <TableBody className={classes.tbody}>
             {!isLoading ? (
-              eventListLoadable.getValue().eventList.map((event) => (
+              eventListLoadable.getValue().eventList.map((event: EventVO) => (
                 <TableRow hover key={event.ID}>
-                  <TableCell align="center">{event.DATE_OF_STARTED}</TableCell>
+                  <TableCell align="center">{event.DATE_OF_START}</TableCell>
                   <TableCell align="center">{event.STATUS}</TableCell>
                   <TableCell align="center">{event.SERVER_ID}</TableCell>
                   <TableCell align="center">{event.CODE}</TableCell>

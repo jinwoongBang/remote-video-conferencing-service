@@ -10,7 +10,7 @@ export interface Event {
   CODE?: string;
   NUMBER_OF_PEOPLE?: number;
   STATUS?: number;
-  DATE_OF_STARTED?: string;
+  DATE_OF_START?: string;
   TITLE?: string;
   ID_TEXT?: string;
   PASSWORD_TEXT?: string;
@@ -40,7 +40,7 @@ class EventVO extends OnTheAirVO implements Event {
   CODE?: string;
   NUMBER_OF_PEOPLE?: number;
   STATUS?: number;
-  DATE_OF_STARTED?: string;
+  DATE_OF_START?: string;
   TITLE?: string;
   ID_TEXT?: string;
   PASSWORD_TEXT?: string;
