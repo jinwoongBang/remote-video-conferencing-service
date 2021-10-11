@@ -15,9 +15,14 @@ class EventService extends OTAService {
     const result = await this.excuteQuery(
       `
       SELECT
-        *
+        event.*,
+        server.NAME AS SERVER_NAME
       FROM
-        TB_EVENT
+        TB_EVENT event
+      LEFT OUTER JOIN
+        TB_SERVER server
+      ON
+        server.ID = event.SERVER_ID
       ORDER BY ID ASC
       LIMIT ?
       OFFSET ?

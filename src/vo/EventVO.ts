@@ -7,6 +7,7 @@ export type EventOption = {
 export interface Event {
   ID: number;
   SERVER_ID?: number;
+  SERVER_NAME?: string;
   CODE?: string;
   NUMBER_OF_PEOPLE?: number;
   STATUS?: number;
@@ -37,6 +38,7 @@ class EventVO extends OnTheAirVO implements Event {
   [key: string]: any;
   ID!: number;
   SERVER_ID?: number;
+  SERVER_NAME?: string;
   CODE?: string;
   NUMBER_OF_PEOPLE?: number;
   STATUS?: number;

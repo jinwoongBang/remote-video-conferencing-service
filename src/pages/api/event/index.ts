@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import OTAController from 'src/common/framework/OTAController';
 import OTAResponse from 'src/common/framework/OTAResponse';
 import EventService from 'src/service/event';
-import EventVO from 'src/vo/EventVO';
+import EventOptionService from 'src/service/eventOption';
+import EventVO, { EventOption } from 'src/vo/EventVO';
 import ExcuteVO from 'src/vo/ExcuteVO';
 import { EventGetParam, EventPostParam } from 'src/pages/api/event/type';
 
@@ -25,6 +26,31 @@ class EventController extends OTAController {
     try {
       const totalEventCount = await EventService.selectAllEventCount();
       const eventList = await EventService.selectAllEventList(param);
+      const eventIdList = eventList.map((item) => item.ID);
+      const eventOptionList =
+        await EventOptionService.selectEventOptionListByEventId({
+          eventIdList,
+        });
+
+      eventList.forEach((item) => {
+        const eventId = item.ID;
+        const optionList = eventOptionList.filter(
+          ({ EVENT_ID }) => EVENT_ID === eventId,
+        );
+
+        const options: EventOption = {};
+
+        optionList.forEach((option) => {
+          const key = option.OPTION_KEY;
+          const isUsed = (option.IS_USED || 0) === 1;
+          options[key] = isUsed;
+        });
+
+        item.OPTION_LIST = options;
+
+        return item;
+      });
+
       otaResponse.result = eventList;
       otaResponse.mappingData(EventVO);
       otaResponse.success = true;

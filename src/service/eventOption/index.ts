@@ -1,10 +1,40 @@
 import * as _ from 'lodash';
 import OTAService from 'src/common/framework/OTAService';
-import EventVO, { EventOption } from 'src/vo/EventVO';
-import { InsertEventOptionParam } from 'src/service/eventOption/type';
+import EventVO from 'src/vo/EventVO';
+import {
+  InsertEventOptionParam,
+  SelectEventOptionListByEventIdListParam,
+} from 'src/service/eventOption/type';
 import PreferenceService from '../PreferenceService';
+import EventOptionVO, { EventOption } from 'src/vo/EventOptionVO';
 
 class EventOptionService extends OTAService {
+  async selectEventOptionListByEventId(
+    param: SelectEventOptionListByEventIdListParam,
+  ): Promise<EventOption[]> {
+    const { eventIdList } = param;
+    const questionMarks = eventIdList.reduce(
+      (acc, currentValue, currentIndex) => {
+        const isFirst = currentIndex === 0;
+        return isFirst ? '?' : acc + ', ?';
+      },
+      '',
+    );
+
+    const query = `
+      SELECT
+        *
+      FROM
+        TB_EVENT_OPTION
+      WHERE
+        EVENT_ID IN (${questionMarks})
+    `;
+
+    const eventOptionList = await this.excuteQuery(query, eventIdList);
+
+    return eventOptionList;
+  }
+
   async insertEventOptionList(param: InsertEventOptionParam): Promise<any> {
     let rows = 0;
 

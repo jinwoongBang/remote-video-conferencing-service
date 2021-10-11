@@ -185,7 +185,7 @@ function EventList({ eventOptionList }: EventListProps) {
                 <TableRow hover key={event.ID}>
                   <TableCell align="center">{event.DATE_OF_START}</TableCell>
                   <TableCell align="center">{event.STATUS}</TableCell>
-                  <TableCell align="center">{event.SERVER_ID}</TableCell>
+                  <TableCell align="center">{event.SERVER_NAME}</TableCell>
                   <TableCell align="center">{event.CODE}</TableCell>
                   <TableCell align="center">{event.TITLE}</TableCell>
                   <TableCell align="center">{event.NUMBER_OF_PEOPLE}</TableCell>
