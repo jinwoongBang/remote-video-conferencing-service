@@ -1,3 +1,4 @@
+import DateUtils from 'src/common/utils/DateUtils';
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 
 export type EventOption = {
@@ -63,6 +64,16 @@ class EventVO extends OnTheAirVO implements Event {
 
   constructor() {
     super();
+  }
+
+  get dateOfStart() {
+    const { DATE_OF_START } = this;
+
+    if (DATE_OF_START) {
+      return new DateUtils().format(DATE_OF_START);
+    }
+
+    return '-';
   }
 }
 

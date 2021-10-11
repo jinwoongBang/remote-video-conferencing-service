@@ -143,6 +143,9 @@ function EventList({ eventOptionList }: EventListProps) {
           <TableHead>
             <TableRow>
               <TableCell align="center" width={100}>
+                ID
+              </TableCell>
+              <TableCell align="center" width={100}>
                 이벤트 시작일
               </TableCell>
               <TableCell align="center" width={100}>
@@ -183,7 +186,8 @@ function EventList({ eventOptionList }: EventListProps) {
             {!isLoading ? (
               eventListLoadable.getValue().eventList.map((event: EventVO) => (
                 <TableRow hover key={event.ID}>
-                  <TableCell align="center">{event.DATE_OF_START}</TableCell>
+                  <TableCell align="center">{event.ID}</TableCell>
+                  <TableCell align="center">{event.dateOfStart}</TableCell>
                   <TableCell align="center">{event.STATUS}</TableCell>
                   <TableCell align="center">{event.SERVER_NAME}</TableCell>
                   <TableCell align="center">{event.CODE}</TableCell>
@@ -204,7 +208,7 @@ function EventList({ eventOptionList }: EventListProps) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8 + eventOptionList.length}>
+                <TableCell colSpan={9 + eventOptionList.length}>
                   <Loading />
                 </TableCell>
               </TableRow>
