@@ -15,7 +15,7 @@ abstract class OTAService {
 
     try {
       conn = await this.getConnection();
-      console.log(query);
+      console.log(query, param);
       result = param ? await conn.query(query, param) : await conn.query(query);
     } catch (e) {
       console.error(e);

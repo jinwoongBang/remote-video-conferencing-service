@@ -13,6 +13,9 @@ class EventOptionService extends OTAService {
     param: SelectEventOptionListByEventIdListParam,
   ): Promise<EventOption[]> {
     const { eventIdList } = param;
+    if (eventIdList.length === 0)
+      throw new Error('이벤트 아이디 리스트가 필요합니다.');
+
     const questionMarks = eventIdList.reduce(
       (acc, currentValue, currentIndex) => {
         const isFirst = currentIndex === 0;

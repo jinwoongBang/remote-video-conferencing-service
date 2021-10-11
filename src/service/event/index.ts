@@ -16,13 +16,19 @@ class EventService extends OTAService {
       `
       SELECT
         event.*,
-        server.NAME AS SERVER_NAME
+        server.NAME AS SERVER_NAME,
+        COUNT(user.EVENT_ID) as USER_COUNT
       FROM
         TB_EVENT event
       LEFT OUTER JOIN
         TB_SERVER server
       ON
         server.ID = event.SERVER_ID
+      LEFT OUTER JOIN 
+	      TB_USER user
+      ON
+        user.EVENT_ID = event.CODE
+      GROUP BY event.ID
       ORDER BY ID ASC
       LIMIT ?
       OFFSET ?

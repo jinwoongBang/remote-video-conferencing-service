@@ -1,3 +1,4 @@
+import EventStatus from 'src/common/enum/event';
 import DateUtils from 'src/common/utils/DateUtils';
 import OnTheAirVO from 'src/vo/OnTheAirVO';
 
@@ -32,6 +33,8 @@ export interface Event {
 
   OPTION_LIST: EventOption;
 
+  USER_COUNT: number;
+
   [key: string]: any;
 }
 
@@ -61,9 +64,23 @@ class EventVO extends OnTheAirVO implements Event {
   CREATOR?: string;
 
   OPTION_LIST!: EventOption;
+  USER_COUNT = 0;
 
   constructor() {
     super();
+  }
+
+  get status() {
+    switch (this.STATUS) {
+      case EventStatus.PROGRESS:
+        return '진행';
+      case EventStatus.STOP:
+        return '중지';
+      case EventStatus.WAITING:
+        return '대기';
+    }
+
+    return '-';
   }
 
   get dateOfStart() {

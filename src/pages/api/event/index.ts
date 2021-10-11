@@ -27,6 +27,7 @@ class EventController extends OTAController {
       const totalEventCount = await EventService.selectAllEventCount();
       const eventList = await EventService.selectAllEventList(param);
       const eventIdList = eventList.map((item) => item.ID);
+
       const eventOptionList =
         await EventOptionService.selectEventOptionListByEventId({
           eventIdList,
@@ -42,8 +43,8 @@ class EventController extends OTAController {
 
         optionList.forEach((option) => {
           const key = option.OPTION_KEY;
-          const isUsed = (option.IS_USED || 0) === 1;
-          options[key] = isUsed;
+          const value = option.IS_USED === 1;
+          options[key] = value;
         });
 
         item.OPTION_LIST = options;
@@ -53,8 +54,6 @@ class EventController extends OTAController {
 
       otaResponse.result = eventList;
       otaResponse.mappingData(EventVO);
-      otaResponse.success = true;
-
       otaResponse.setPagination(currentPage, totalEventCount, returnCount);
       response.status(200).json(otaResponse);
     } catch (e) {

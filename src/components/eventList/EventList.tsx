@@ -166,9 +166,9 @@ function EventList({ eventOptionList }: EventListProps) {
               <TableCell align="center" width={100}>
                 등록 회원 수
               </TableCell>
-              <TableCell align="center" width={100}>
+              {/* <TableCell align="center" width={100}>
                 동기화
-              </TableCell>
+              </TableCell> */}
               {eventOptionList.map((item) => {
                 return (
                   <TableCell
@@ -188,13 +188,13 @@ function EventList({ eventOptionList }: EventListProps) {
                 <TableRow hover key={event.ID}>
                   <TableCell align="center">{event.ID}</TableCell>
                   <TableCell align="center">{event.dateOfStart}</TableCell>
-                  <TableCell align="center">{event.STATUS}</TableCell>
+                  <TableCell align="center">{event.status}</TableCell>
                   <TableCell align="center">{event.SERVER_NAME}</TableCell>
                   <TableCell align="center">{event.CODE}</TableCell>
                   <TableCell align="center">{event.TITLE}</TableCell>
                   <TableCell align="center">{event.NUMBER_OF_PEOPLE}</TableCell>
-                  <TableCell align="center">-</TableCell>
-                  <TableCell align="center">-</TableCell>
+                  <TableCell align="center">{event.USER_COUNT}</TableCell>
+                  {/* <TableCell align="center">-</TableCell> */}
                   {eventOptionList.map((option) => (
                     <TableCell key={option.ID} align="center">
                       {event.OPTION_LIST[option.PREFERENCE_KEY] ? (
