@@ -36,7 +36,7 @@ import {
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
+import { Close, RadioButtonUnchecked } from '@material-ui/icons';
 
 /**
  * Store
@@ -166,7 +166,7 @@ function EventList({ eventOptionList }: EventListProps) {
               <TableCell align="center" width={100}>
                 동기화
               </TableCell>
-              {/* {eventOptionList.map((item) => {
+              {eventOptionList.map((item) => {
                 return (
                   <TableCell
                     key={item.PREFERENCE_KEY}
@@ -176,7 +176,7 @@ function EventList({ eventOptionList }: EventListProps) {
                     {item.NAME}
                   </TableCell>
                 );
-              })} */}
+              })}
             </TableRow>
           </TableHead>
           <TableBody className={classes.tbody}>
@@ -191,11 +191,20 @@ function EventList({ eventOptionList }: EventListProps) {
                   <TableCell align="center">{event.NUMBER_OF_PEOPLE}</TableCell>
                   <TableCell align="center">-</TableCell>
                   <TableCell align="center">-</TableCell>
+                  {eventOptionList.map((option) => (
+                    <TableCell key={option.ID} align="center">
+                      {event.OPTION_LIST[option.PREFERENCE_KEY] ? (
+                        <RadioButtonUnchecked color="primary" />
+                      ) : (
+                        <Close color="secondary" />
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8}>
+                <TableCell colSpan={8 + eventOptionList.length}>
                   <Loading />
                 </TableCell>
               </TableRow>
