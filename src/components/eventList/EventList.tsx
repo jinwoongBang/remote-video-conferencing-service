@@ -48,6 +48,11 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 // } from 'src/store/eventManager';
 
 /**
+ * VO
+ */
+import { PreferenceVO } from 'src/vo';
+
+/**
  * Components
  */
 import Loading from 'src/components/Loading';
@@ -57,9 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
   },
-  header: {
-    height: '30px',
-  },
   postCountContainer: {
     '& strong': {
       fontWeight: 'bold',
@@ -68,18 +70,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   paper: {
-    width: '100%',
+    // width: '100%',
     height: 'calc(100vh - 260px)',
     marginBottom: theme.spacing(2),
+    // border: '1px solid tomato',
   },
   tbody: {
-    width: '100%',
+    // width: '100%',
   },
 }));
 
-type EventListProps = {};
+type EventListProps = {
+  eventOptionList: PreferenceVO[];
+};
 
-function EventList({}: EventListProps) {
+function EventList({ eventOptionList }: EventListProps) {
   const classes = useStyles();
 
   const handleChange = useCallback(
@@ -90,13 +95,12 @@ function EventList({}: EventListProps) {
   );
 
   return (
-    <>
+    <div className={classes.root}>
       <Grid
         container
         justifyContent="flex-end"
         alignItems="center"
         component="article"
-        className={classes.header}
       >
         <Grid item>
           <Typography variant="body1" className={classes.postCountContainer}>
@@ -105,19 +109,44 @@ function EventList({}: EventListProps) {
         </Grid>
       </Grid>
       <TableContainer component={Paper} className={classes.paper}>
-        <Table stickyHeader aria-label="collapsible table">
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="center">이벤트 시작일</TableCell>
-              <TableCell align="center">상태</TableCell>
-              <TableCell align="center">서버</TableCell>
-              <TableCell align="center">이벤트 코드</TableCell>
-              <TableCell align="center">이벤트 타이틀</TableCell>
-              <TableCell align="center">예상 인원</TableCell>
-              <TableCell align="center">등록 회원 수</TableCell>
-              <TableCell align="center">동기화</TableCell>
-              <TableCell align="center">스케줄</TableCell>
-              <TableCell align="center">스케줄</TableCell>
+              <TableCell align="center" width={100}>
+                이벤트 시작일
+              </TableCell>
+              <TableCell align="center" width={100}>
+                상태
+              </TableCell>
+              <TableCell align="center" width={100}>
+                서버
+              </TableCell>
+              <TableCell align="center" width={100}>
+                이벤트 코드
+              </TableCell>
+              <TableCell align="center" width={100}>
+                이벤트 타이틀
+              </TableCell>
+              <TableCell align="center" width={100}>
+                예상 인원
+              </TableCell>
+              <TableCell align="center" width={100}>
+                등록 회원 수
+              </TableCell>
+              <TableCell align="center" width={100}>
+                동기화
+              </TableCell>
+              {eventOptionList.map((item) => {
+                return (
+                  <TableCell
+                    key={item.PREFERENCE_KEY}
+                    align="center"
+                    width={100}
+                  >
+                    {item.NAME}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody className={classes.tbody}>
@@ -148,7 +177,7 @@ function EventList({}: EventListProps) {
           />
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }
 

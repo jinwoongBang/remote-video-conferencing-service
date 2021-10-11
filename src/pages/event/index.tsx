@@ -11,6 +11,7 @@ import { GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next';
 /**
  * Material UI
  */
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 
 /**
@@ -22,17 +23,28 @@ import SearchForm from 'src/components/eventList/SearchForm';
 import eventOption from 'src/service/eventOption';
 import PreferenceService from 'src/service/PreferenceService';
 import { PreferenceGroupKey } from 'src/common/enum/preference';
+import { PreferenceVO } from 'src/vo';
 
-function Event({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
+const useStyles = makeStyles((theme: Theme) => ({
+  section: {
+    maxWidth: '100%',
+  },
+}));
+
+function Event({
+  eventOptionList,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const classes = useStyles();
+
   return (
     <AppLayout>
-      <Grid container component="article">
+      <Grid container>
         <Grid item xs={12}>
-          <section>
+          <section className={classes.section}>
             <SearchForm />
           </section>
-          <section>
-            <EventList />
+          <section className={classes.section}>
+            <EventList eventOptionList={eventOptionList} />
           </section>
         </Grid>
       </Grid>
@@ -40,18 +52,17 @@ function Event({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
   );
 }
 
-// This function gets called at build time
-export const getStaticProps: GetStaticProps<{ result: any[] }> = async ({
-  params,
-}) => {
-  PreferenceService.selectPreferenceListByGroupKey({
-    preferenceKey: PreferenceGroupKey.EventOptions,
-  });
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
+export const getStaticProps: GetStaticProps<{
+  eventOptionList: PreferenceVO[];
+}> = async ({ params }) => {
+  const eventOptionList =
+    await PreferenceService.selectPreferenceListByGroupKey({
+      preferenceKey: PreferenceGroupKey.EventOptions,
+    });
+
   return {
     props: {
-      result: [],
+      eventOptionList,
     },
   };
 };
