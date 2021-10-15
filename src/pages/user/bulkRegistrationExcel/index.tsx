@@ -272,7 +272,11 @@ const Board = () => {
                 <label>{item.DATE_OF_CREATED}</label>
               </Grid>
               <Grid item xs={7} className={classes.boardContentContainer}>
-                <a href="/path/to/my/file.jpg" download>
+                {/* href="javascript:void(0);" */}
+                <a
+                  href={`https://d1e19d91hzb56g.cloudfront.net/test/${item.FILE_NAME}`}
+                  download
+                >
                   {item.FILE_NAME} ( ADD. {item.ADD_USER_COUNT}건 )
                 </a>
               </Grid>
