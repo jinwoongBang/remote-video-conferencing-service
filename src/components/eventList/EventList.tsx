@@ -165,7 +165,7 @@ function EventList({ eventOptionList }: EventListProps) {
               <TableCell align="center" width={100}>
                 이벤트 코드
               </TableCell>
-              <TableCell align="center" width={100}>
+              <TableCell align="center" width={150}>
                 이벤트 타이틀
               </TableCell>
               <TableCell align="center" width={100}>
@@ -174,6 +174,7 @@ function EventList({ eventOptionList }: EventListProps) {
               <TableCell align="center" width={100}>
                 등록 회원 수
               </TableCell>
+              <TableCell align="center"></TableCell>
               {/* <TableCell align="center" width={100}>
                 동기화
               </TableCell> */}

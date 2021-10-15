@@ -22,7 +22,10 @@ import {
   Button,
   Chip,
   Divider,
+  MenuItem,
+  Menu,
 } from '@material-ui/core';
+import { MoreHoriz } from '@material-ui/icons';
 import Pagination from '@material-ui/lab/Pagination';
 
 import {
@@ -61,10 +64,19 @@ type EventItemProps = {
 function EventItem({ event, eventOptionList }: EventItemProps) {
   const classes = useStyles();
   const [detailOpen, setDetailOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleOpenCollapse = useCallback(() => {
     setDetailOpen((state) => !state);
   }, []);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
@@ -86,6 +98,23 @@ function EventItem({ event, eventOptionList }: EventItemProps) {
         <TableCell align="center">{event.TITLE}</TableCell>
         <TableCell align="center">{event.NUMBER_OF_PEOPLE}</TableCell>
         <TableCell align="center">{event.USER_COUNT}</TableCell>
+        <TableCell align="center">
+          <IconButton onClick={handleClick}>
+            <MoreHoriz />
+          </IconButton>
+
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleClose}>Logout</MenuItem>
+          </Menu>
+        </TableCell>
         {/* <TableCell align="center">-</TableCell> */}
         {/* {eventOptionList.map((option) => (
           <TableCell key={option.ID} align="center">
@@ -98,7 +127,7 @@ function EventItem({ event, eventOptionList }: EventItemProps) {
         ))} */}
       </TableRow>
       <TableRow className={classes.box}>
-        <TableCell className={classes.subRow} colSpan={9}>
+        <TableCell className={classes.subRow} colSpan={10}>
           <Collapse in={detailOpen} timeout="auto" unmountOnExit>
             <Box margin={3}>
               <Grid container spacing={3}>
@@ -120,21 +149,6 @@ function EventItem({ event, eventOptionList }: EventItemProps) {
                     )}
                   </Grid>
                 ))}
-              </Grid>
-
-              <Divider className={classes.divider} />
-
-              <Grid container justifyContent="flex-end" spacing={3}>
-                <Grid item xs={2}>
-                  <Button fullWidth color="primary" variant="outlined">
-                    수정
-                  </Button>
-                </Grid>
-                <Grid item xs={2}>
-                  <Button fullWidth color="secondary" variant="outlined">
-                    삭제
-                  </Button>
-                </Grid>
               </Grid>
             </Box>
           </Collapse>
