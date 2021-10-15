@@ -33,10 +33,16 @@ import {
   Collapse,
   Box,
   Typography,
+  Button,
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 
-import { Close, RadioButtonUnchecked } from '@material-ui/icons';
+import {
+  Close,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  RadioButtonUnchecked,
+} from '@material-ui/icons';
 
 /**
  * Store
@@ -58,6 +64,7 @@ import EventVO from 'src/vo/EventVO';
  * Components
  */
 import Loading from 'src/components/Loading';
+import EventItem from './EventItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -142,6 +149,7 @@ function EventList({ eventOptionList }: EventListProps) {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
+              <TableCell align="center" width={50}></TableCell>
               <TableCell align="center" width={100}>
                 ID
               </TableCell>
@@ -169,7 +177,7 @@ function EventList({ eventOptionList }: EventListProps) {
               {/* <TableCell align="center" width={100}>
                 동기화
               </TableCell> */}
-              {eventOptionList.map((item) => {
+              {/* {eventOptionList.map((item) => {
                 return (
                   <TableCell
                     key={item.PREFERENCE_KEY}
@@ -179,36 +187,23 @@ function EventList({ eventOptionList }: EventListProps) {
                     {item.NAME}
                   </TableCell>
                 );
-              })}
+              })} */}
             </TableRow>
           </TableHead>
           <TableBody className={classes.tbody}>
             {!isLoading ? (
-              eventListLoadable.getValue().eventList.map((event: EventVO) => (
-                <TableRow hover key={event.ID}>
-                  <TableCell align="center">{event.ID}</TableCell>
-                  <TableCell align="center">{event.dateOfStart}</TableCell>
-                  <TableCell align="center">{event.status}</TableCell>
-                  <TableCell align="center">{event.SERVER_NAME}</TableCell>
-                  <TableCell align="center">{event.CODE}</TableCell>
-                  <TableCell align="center">{event.TITLE}</TableCell>
-                  <TableCell align="center">{event.NUMBER_OF_PEOPLE}</TableCell>
-                  <TableCell align="center">{event.USER_COUNT}</TableCell>
-                  {/* <TableCell align="center">-</TableCell> */}
-                  {eventOptionList.map((option) => (
-                    <TableCell key={option.ID} align="center">
-                      {event.OPTION_LIST[option.PREFERENCE_KEY] ? (
-                        <RadioButtonUnchecked color="primary" />
-                      ) : (
-                        <Close color="secondary" />
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              eventListLoadable
+                .getValue()
+                .eventList.map((event: EventVO) => (
+                  <EventItem
+                    key={event.ID}
+                    event={event}
+                    eventOptionList={eventOptionList}
+                  />
+                ))
             ) : (
               <TableRow>
-                <TableCell colSpan={9 + eventOptionList.length}>
+                <TableCell colSpan={10 + eventOptionList.length}>
                   <Loading />
                 </TableCell>
               </TableRow>
@@ -225,13 +220,6 @@ function EventList({ eventOptionList }: EventListProps) {
             page={page.pageNumber + 1}
             onChange={handleChange}
           />
-          {/* <Pagination
-            // disabled={isLoading || !pagination}
-            color="primary"
-            count={100}
-            page={1}
-            onChange={handleChange}
-          /> */}
         </Grid>
       </Grid>
     </div>
