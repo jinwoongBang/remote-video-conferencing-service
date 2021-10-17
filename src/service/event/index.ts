@@ -45,14 +45,22 @@ class EventService extends OTAService {
     return result;
   }
 
-  async selectAllEventCount(): Promise<number> {
+  async selectAllEventCount(param: SelectEventListParam): Promise<number> {
     const result = await this.excuteQuery(
       `
         SELECT
           COUNT(*) as COUNT
         FROM
           TB_EVENT
-    `,
+        WHERE
+          1 = 1
+        ${param.fromDate ? `AND DATE_OF_START >= ?` : ''}
+        ${param.toDate ? `AND DATE_OF_START <= ?` : ''}
+        ${param.status < 2 ? 'AND STATUS = ?' : ''}
+        ${param.code ? 'AND CODE = ?' : ''}
+        ${param.title ? `AND TITLE LIKE ?` : ''}
+      `,
+      param.getParamList(),
     );
 
     return result[0].COUNT;

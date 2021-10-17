@@ -102,7 +102,6 @@ function SearchForm() {
   const setSearchCondition = useSetRecoilState(eventListSearchConditionState);
 
   const [isUsedEventStartDate, setIsUsedEventStartDate] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const handleChangeUsedEventStartDate = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,10 +110,6 @@ function SearchForm() {
     },
     [],
   );
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
 
   const onSubmit = useRecoilCallback(
     ({ set }) =>
@@ -125,11 +120,10 @@ function SearchForm() {
         code,
         title,
       }: Partial<typeof DEFAULT_VALUE>) => {
-        console.log({ status });
         setSearchCondition((state) => ({
           ...state,
-          fromDate,
-          toDate,
+          fromDate: isUsedEventStartDate ? fromDate : '',
+          toDate: isUsedEventStartDate ? toDate : '',
           status,
           code,
           title,

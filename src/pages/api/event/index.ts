@@ -56,12 +56,6 @@ export class QueryParam {
 
   getParamList() {
     const { limit, offset, fromDate, toDate, status, code, title } = this;
-    // const list: (string | number)[] = [limit, offset];
-    // toDate && list.unshift(toDate);
-    // fromDate && list.unshift(fromDate);
-    // status < 2 && list.unshift(status);
-    // code && list.unshift(code);
-    // title && list.unshift(`%${title}%`);
     const list: (string | number)[] = [];
     fromDate && list.push(fromDate);
     toDate && list.push(toDate);
@@ -85,7 +79,9 @@ class EventController extends OTAController {
     const queryParam = new QueryParam(request.query as EventGetParam);
 
     try {
-      const totalEventCount = await EventService.selectAllEventCount();
+      const totalEventCount = await EventService.selectAllEventCount(
+        queryParam,
+      );
       const eventList = await EventService.selectAllEventList(queryParam);
       const eventIdList = eventList.map((item) => item.ID);
 
