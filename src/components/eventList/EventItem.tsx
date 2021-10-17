@@ -24,8 +24,16 @@ import {
   Divider,
   MenuItem,
   Menu,
+  ListItemIcon,
+  ListItemText,
 } from '@material-ui/core';
-import { MoreHoriz } from '@material-ui/icons';
+import {
+  MoreHoriz,
+  Send,
+  TableChart,
+  Settings,
+  DeleteForever,
+} from '@material-ui/icons';
 import Pagination from '@material-ui/lab/Pagination';
 
 import {
@@ -55,6 +63,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     margin: '20px 0',
   },
+  menuItem: {
+    width: '150px',
+  },
 }));
 
 type EventItemProps = {
@@ -63,14 +74,14 @@ type EventItemProps = {
 };
 function EventItem({ event, eventOptionList }: EventItemProps) {
   const classes = useStyles();
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpenCollapse = useCallback(() => {
     setDetailOpen((state) => !state);
   }, []);
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -104,27 +115,31 @@ function EventItem({ event, eventOptionList }: EventItemProps) {
           </IconButton>
 
           <Menu
-            id="simple-menu"
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem className={classes.menuItem} onClick={handleClose}>
+              <ListItemIcon>
+                <TableChart fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="엑셀" />
+            </MenuItem>
+            <MenuItem className={classes.menuItem} onClick={handleClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="관리" />
+            </MenuItem>
+            <MenuItem className={classes.menuItem} onClick={handleClose}>
+              <ListItemIcon>
+                <DeleteForever fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="삭제" />
+            </MenuItem>
           </Menu>
         </TableCell>
-        {/* <TableCell align="center">-</TableCell> */}
-        {/* {eventOptionList.map((option) => (
-          <TableCell key={option.ID} align="center">
-            {event.OPTION_LIST[option.PREFERENCE_KEY] ? (
-              <RadioButtonUnchecked color="primary" />
-            ) : (
-              <Close color="secondary" />
-            )}
-          </TableCell>
-        ))} */}
       </TableRow>
       <TableRow className={classes.box}>
         <TableCell className={classes.subRow} colSpan={10}>

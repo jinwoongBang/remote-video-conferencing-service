@@ -1,17 +1,16 @@
 import * as _ from 'lodash';
 import OTAService from 'src/common/framework/OTAService';
 import EventVO, { EventOption } from 'src/vo/EventVO';
-import { InsertEventParam } from 'src/service/event/type';
+import { InsertEventParam, SelectEventListParam } from 'src/service/event/type';
 import EventOptionService from 'src/service/eventOption';
 import EventOptionVO from 'src/vo/EventOptionVO';
 import PreferenceService from '../PreferenceService';
 import { PreferenceGroupKey } from 'src/common/enum/preference';
 
 class EventService extends OTAService {
-  async selectAllEventList({
-    currentPage = 0,
-    returnCount = 10,
-  }): Promise<EventVO[]> {
+  async selectAllEventList(param: SelectEventListParam): Promise<EventVO[]> {
+    const paramList = param.getParamList();
+
     const result = await this.excuteQuery(
       `
       SELECT
@@ -28,12 +27,17 @@ class EventService extends OTAService {
 	      TB_USER user
       ON
         user.EVENT_ID = event.CODE
+      WHERE
+        1 = 1
+      ${param.status ? 'AND STATUS = ?' : ''}
+      ${param.code ? 'AND CODE = ?' : ''}
+      ${param.title ? `TITLE LIKE '%?%'` : ''}
       GROUP BY event.ID
       ORDER BY ID ASC
       LIMIT ?
       OFFSET ?
     `,
-      [returnCount, currentPage * returnCount],
+      paramList,
     );
 
     return result;

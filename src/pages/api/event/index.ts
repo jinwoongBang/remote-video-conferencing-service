@@ -7,6 +7,62 @@ import EventVO, { EventOption } from 'src/vo/EventVO';
 import ExcuteVO from 'src/vo/ExcuteVO';
 import { EventGetParam, EventPostParam } from 'src/pages/api/event/type';
 
+export class QueryParam {
+  _returnCount?: string;
+  _currentPage?: string;
+  fromDate?: string;
+  toDate?: string;
+  status?: string;
+  code?: string;
+  title?: string;
+
+  constructor({
+    returnCount,
+    currentPage,
+    fromDate,
+    toDate,
+    status,
+    code,
+    title,
+  }: EventGetParam) {
+    this._returnCount = returnCount;
+    this._currentPage = currentPage;
+    this.fromDate = fromDate;
+    this.toDate = toDate;
+    this.status = status;
+    this.code = code;
+    this.title = title;
+  }
+
+  get returnCount() {
+    return Number(this._returnCount);
+  }
+
+  get currentPage() {
+    return Number(this._currentPage);
+  }
+
+  get limit() {
+    return this.returnCount;
+  }
+
+  get offset() {
+    return this.returnCount * this.currentPage;
+  }
+
+  getParamList() {
+    const { limit, offset, fromDate, toDate, status, code, title } = this;
+    const list: (string | number)[] = [limit, offset];
+    fromDate && list.unshift(fromDate);
+    toDate && list.unshift(toDate);
+    status && list.unshift(status);
+    code && list.unshift(code);
+    title && list.unshift(title);
+
+    return list;
+  }
+}
+
 class EventController extends OTAController {
   protected async doGet(
     request: NextApiRequest,
@@ -14,18 +70,11 @@ class EventController extends OTAController {
   ): Promise<void> {
     const otaResponse = new OTAResponse<EventVO>();
 
-    const queryParam = request.query as EventGetParam;
-    const returnCount = Number(queryParam.returnCount);
-    const currentPage = Number(queryParam.currentPage);
-
-    const param = {
-      returnCount,
-      currentPage,
-    };
+    const queryParam = new QueryParam(request.query as EventGetParam);
 
     try {
       const totalEventCount = await EventService.selectAllEventCount();
-      const eventList = await EventService.selectAllEventList(param);
+      const eventList = await EventService.selectAllEventList(queryParam);
       const eventIdList = eventList.map((item) => item.ID);
 
       const eventOptionList =
@@ -54,7 +103,11 @@ class EventController extends OTAController {
 
       otaResponse.result = eventList;
       otaResponse.mappingData(EventVO);
-      otaResponse.setPagination(currentPage, totalEventCount, returnCount);
+      otaResponse.setPagination(
+        queryParam.currentPage,
+        totalEventCount,
+        queryParam.returnCount,
+      );
       response.status(200).json(otaResponse);
     } catch (e) {
       const error = e as Error;

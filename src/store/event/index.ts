@@ -15,6 +15,7 @@ import { UserType } from 'src/common/enum/user';
  */
 import EventManagerVO from 'src/vo/EventManagerVO';
 import EventVO from 'src/vo/EventVO';
+import EventStatus from 'src/common/enum/event';
 
 /**
  * Get Event
@@ -29,13 +30,28 @@ export const forcedReloadEventListState = atom<number>({
   default: 0,
 });
 
+export const eventListSearchConditionState = atom<{
+  fromDate: string | null;
+  toDate: string | null;
+  status: EventStatus;
+  code: string;
+  title: string;
+}>({
+  key: 'eventListSearchConditionState',
+  default: {
+    fromDate: '',
+    toDate: '',
+    status: EventStatus.ALL,
+    code: '',
+    title: '',
+  },
+});
+
 export const eventListPaginationState = atom({
   key: 'eventListPaginationState',
   default: {
     pageNumber: 0,
     returnCount: RETURN_COUNT,
-    // pageCount: 0,
-    // itemCount: 0,
   },
 });
 
@@ -45,6 +61,7 @@ export const getEventListSelector = selectorFamily({
     ({ page, returnCount }: { page: number; returnCount: number }) =>
     async ({ get }) => {
       get(forcedReloadEventListState);
+      const searchCondition = get(eventListSearchConditionState);
       const result: GetEventListSelectorType = {
         eventList: [],
       };
