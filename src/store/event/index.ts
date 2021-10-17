@@ -31,11 +31,11 @@ export const forcedReloadEventListState = atom<number>({
 });
 
 export const eventListSearchConditionState = atom<{
-  fromDate: string | null;
-  toDate: string | null;
-  status: EventStatus;
-  code: string;
-  title: string;
+  fromDate?: string;
+  toDate?: string;
+  status?: EventStatus;
+  code?: string;
+  title?: string;
 }>({
   key: 'eventListSearchConditionState',
   default: {
@@ -61,14 +61,30 @@ export const getEventListSelector = selectorFamily({
     ({ page, returnCount }: { page: number; returnCount: number }) =>
     async ({ get }) => {
       get(forcedReloadEventListState);
-      const searchCondition = get(eventListSearchConditionState);
+      const {
+        fromDate,
+        toDate,
+        code,
+        status: eventStatus,
+        title,
+      } = get(eventListSearchConditionState);
       const result: GetEventListSelectorType = {
         eventList: [],
       };
       try {
+        const params = {
+          currentPage: page,
+          returnCount,
+          fromDate,
+          toDate,
+          code,
+          title,
+          status: eventStatus,
+        };
+        eventStatus === EventStatus.ALL && delete params.status;
         const { data, status }: AxiosResponse<OTAResponse<EventVO>> =
           await HttpClient.get('/event', {
-            params: { type: 1, currentPage: page, returnCount },
+            params,
           });
         const responseData = new OTAResponse(data);
         responseData.mappingData(EventVO);

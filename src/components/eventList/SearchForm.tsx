@@ -118,14 +118,21 @@ function SearchForm() {
 
   const onSubmit = useRecoilCallback(
     ({ set }) =>
-      async (data: Partial<typeof DEFAULT_VALUE>) => {
+      async ({
+        fromDate,
+        toDate,
+        status,
+        code,
+        title,
+      }: Partial<typeof DEFAULT_VALUE>) => {
+        console.log({ status });
         setSearchCondition((state) => ({
           ...state,
-          fromDate: data.fromDate || '',
-          toDate: data.toDate || '',
-          status: data.status || EventStatus.ALL,
-          code: data.code || '',
-          title: data.title || '',
+          fromDate,
+          toDate,
+          status,
+          code,
+          title,
         }));
       },
   );
@@ -188,7 +195,7 @@ function SearchForm() {
               fullWidth
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // defaultValue={EventStatus.ALL}
+              defaultValue={EventStatus.ALL}
               {...register(FormKey.STATUS)}
             >
               <MenuItem value={EventStatus.ALL}>전체</MenuItem>

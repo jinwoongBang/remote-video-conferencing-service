@@ -204,7 +204,7 @@ function EventList({ eventOptionList }: EventListProps) {
                 ))
             ) : (
               <TableRow>
-                <TableCell colSpan={10 + eventOptionList.length}>
+                <TableCell colSpan={10}>
                   <Loading />
                 </TableCell>
               </TableRow>

@@ -12,7 +12,7 @@ export class QueryParam {
   _currentPage?: string;
   fromDate?: string;
   toDate?: string;
-  status?: string;
+  _status?: string;
   code?: string;
   title?: string;
 
@@ -29,7 +29,7 @@ export class QueryParam {
     this._currentPage = currentPage;
     this.fromDate = fromDate;
     this.toDate = toDate;
-    this.status = status;
+    this._status = status;
     this.code = code;
     this.title = title;
   }
@@ -50,14 +50,26 @@ export class QueryParam {
     return this.returnCount * this.currentPage;
   }
 
+  get status() {
+    return Number(this._status);
+  }
+
   getParamList() {
     const { limit, offset, fromDate, toDate, status, code, title } = this;
-    const list: (string | number)[] = [limit, offset];
-    fromDate && list.unshift(fromDate);
-    toDate && list.unshift(toDate);
-    status && list.unshift(status);
-    code && list.unshift(code);
-    title && list.unshift(title);
+    // const list: (string | number)[] = [limit, offset];
+    // toDate && list.unshift(toDate);
+    // fromDate && list.unshift(fromDate);
+    // status < 2 && list.unshift(status);
+    // code && list.unshift(code);
+    // title && list.unshift(`%${title}%`);
+    const list: (string | number)[] = [];
+    fromDate && list.push(fromDate);
+    toDate && list.push(toDate);
+    status < 2 && list.push(status);
+    code && list.push(code);
+    title && list.push(`%${title}%`);
+    list.push(limit);
+    list.push(offset);
 
     return list;
   }
