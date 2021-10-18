@@ -21,6 +21,7 @@ export interface User {
   SPECIALIST_NUMBER: string;
   SOCIETY_REQUEST: string;
   DEPOSIT_AMOUNT: number;
+  IS_DELETED: number;
 }
 class UserVO {
   userName: string;

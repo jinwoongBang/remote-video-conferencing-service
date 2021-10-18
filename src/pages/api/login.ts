@@ -6,6 +6,10 @@ import withSession from 'src/common/utils/session';
 import UserLogService from 'src/service/UserLogService';
 import UserService from 'src/service/UserService';
 import UserVO, { User } from 'src/vo/UserVO';
+import jwt from 'jsonwebtoken';
+
+//TODO 1018 임시 이거도 어떻게 할지 정해야할 듯 유저 데이터에 PASSWORD KeY를 둘지
+const JWT_KEY = 'asdjasiodjsaiojdioasjd';
 
 type NextIronRequest = NextApiRequest & { session: Session };
 class LoginController extends OTAController {
@@ -28,6 +32,19 @@ class LoginController extends OTAController {
         throw new Error('일치하는 계정이 존재하지 않습니다.');
       }
 
+      const { EVENT_ID, USER_ID, STATUS, IS_DELETED } = user;
+      const userHost = request.headers.host;
+      const token = jwt.sign(
+        {
+          EVENT_ID,
+          USER_ID,
+          STATUS,
+          idDeleted: IS_DELETED === 1,
+          userHost,
+        },
+        JWT_KEY,
+      );
+
       otaResponse.result.push(user);
 
       request.session.set('user', user);
@@ -37,7 +54,7 @@ class LoginController extends OTAController {
 
       await UserLogService.insertUserLog({
         userId: user.ID,
-        accessToken: accessToken,
+        accessToken: token,
         accessIp: request.headers.host || '',
         accessEnv: request.headers['user-agent'] || '',
         message: '',
