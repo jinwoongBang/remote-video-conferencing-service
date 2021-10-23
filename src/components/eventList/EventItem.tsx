@@ -81,13 +81,21 @@ function EventItem({ event, eventOptionList }: EventItemProps) {
     setDetailOpen((state) => !state);
   }, []);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    [],
+  );
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
+
+  const handleClickManagement = useCallback(() => {
+    window.open(`event/management/${event.ID}`);
+    handleClose();
+  }, [event]);
 
   return (
     <>
@@ -126,7 +134,10 @@ function EventItem({ event, eventOptionList }: EventItemProps) {
               </ListItemIcon>
               <ListItemText primary="엑셀" />
             </MenuItem>
-            <MenuItem className={classes.menuItem} onClick={handleClose}>
+            <MenuItem
+              className={classes.menuItem}
+              onClick={handleClickManagement}
+            >
               <ListItemIcon>
                 <Settings fontSize="small" />
               </ListItemIcon>
