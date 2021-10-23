@@ -90,8 +90,12 @@ class EventController extends OTAController {
     return otaResponse;
   }
 
-  private getEvent(id: number) {
+  private async getEvent(id: number) {
     const otaResponse = new OTAResponse<EventVO>();
+    const event = await EventService.selectOneEvent({ id });
+    const eventListWithOptions = await this.getEventListWithOptions([event]);
+    otaResponse.result = eventListWithOptions;
+    otaResponse.mappingData(EventVO);
 
     return otaResponse;
   }
