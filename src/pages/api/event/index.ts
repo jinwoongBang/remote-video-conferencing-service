@@ -7,6 +7,7 @@ import EventVO, { EventOption } from 'src/vo/EventVO';
 import ExcuteVO from 'src/vo/ExcuteVO';
 import { EventGetParam, EventPostParam } from 'src/pages/api/event/type';
 import QueryParam from 'src/db/model/EventQueryParam';
+import EventOptionHandler from 'src/common/handler/EventOptionHandler';
 
 class EventController extends OTAController {
   protected async doGet(
@@ -76,33 +77,9 @@ class EventController extends OTAController {
     const otaResponse = new OTAResponse<EventVO>();
     const totalEventCount = await EventService.selectAllEventCount(queryParam);
     const eventList = await EventService.selectAllEventList(queryParam);
-    const eventIdList = eventList.map((item) => item.ID);
+    const eventListWithOptions = await this.getEventListWithOptions(eventList);
 
-    const eventOptionList =
-      await EventOptionService.selectEventOptionListByEventId({
-        eventIdList,
-      });
-
-    eventList.forEach((item) => {
-      const eventId = item.ID;
-      const optionList = eventOptionList.filter(
-        ({ EVENT_ID }) => EVENT_ID === eventId,
-      );
-
-      const options: EventOption = {};
-
-      optionList.forEach((option) => {
-        const key = option.OPTION_KEY;
-        const value = option.IS_USED === 1;
-        options[key] = value;
-      });
-
-      item.OPTION_LIST = options;
-
-      return item;
-    });
-
-    otaResponse.result = eventList;
+    otaResponse.result = eventListWithOptions;
     otaResponse.mappingData(EventVO);
     otaResponse.setPagination(
       queryParam.currentPage,
@@ -117,6 +94,17 @@ class EventController extends OTAController {
     const otaResponse = new OTAResponse<EventVO>();
 
     return otaResponse;
+  }
+
+  private async getEventListWithOptions(eventList: EventVO[]) {
+    const eventOptionHandler = new EventOptionHandler({
+      eventList,
+    });
+    const eventListWithOptions = (
+      await eventOptionHandler.addEventOptions()
+    ).getEventListInstance();
+
+    return eventListWithOptions;
   }
 }
 
