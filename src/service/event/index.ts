@@ -69,12 +69,22 @@ class EventService extends OTAService {
       ON
         user.EVENT_ID = event.CODE
       WHERE
-        ID = ?
+      event.ID = ?
       GROUP BY event.ID
     `,
       [id],
     );
 
+    return result[0];
+  }
+
+  async selectAllEventIdList(): Promise<number[]> {
+    const result = await this.excuteQuery(`
+      SELECT
+        ID
+      FROM
+        TB_EVENT
+    `);
     return result;
   }
 

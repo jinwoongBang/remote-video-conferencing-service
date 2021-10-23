@@ -19,8 +19,8 @@ class EventController extends OTAController {
 
     try {
       otaResponse = queryParam.hasId
-        ? await this.getEventList(queryParam)
-        : await this.getEvent(queryParam.id);
+        ? await this.getEvent(queryParam.id)
+        : await this.getEventList(queryParam);
 
       response.status(200).json(otaResponse);
     } catch (e) {
