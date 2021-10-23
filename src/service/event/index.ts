@@ -1,7 +1,11 @@
 import * as _ from 'lodash';
 import OTAService from 'src/common/framework/OTAService';
 import EventVO, { EventOption } from 'src/vo/EventVO';
-import { InsertEventParam, SelectEventListParam } from 'src/service/event/type';
+import {
+  InsertEventParam,
+  SelectEventListParam,
+  SelectOneEventParam,
+} from 'src/service/event/type';
 import EventOptionService from 'src/service/eventOption';
 import EventOptionVO from 'src/vo/EventOptionVO';
 import PreferenceService from '../PreferenceService';
@@ -40,6 +44,35 @@ class EventService extends OTAService {
       OFFSET ?
     `,
       paramList,
+    );
+
+    return result;
+  }
+
+  async selectOneEvent(param: SelectOneEventParam): Promise<EventVO> {
+    const { id } = param;
+
+    const result = await this.excuteQuery(
+      `
+      SELECT
+        event.*,
+        server.NAME AS SERVER_NAME,
+        COUNT(user.EVENT_ID) as USER_COUNT
+      FROM
+        TB_EVENT event
+      LEFT OUTER JOIN
+        TB_SERVER server
+      ON
+        server.ID = event.SERVER_ID
+      LEFT OUTER JOIN 
+	      TB_USER user
+      ON
+        user.EVENT_ID = event.CODE
+      WHERE
+        ID = ?
+      GROUP BY event.ID
+    `,
+      [id],
     );
 
     return result;

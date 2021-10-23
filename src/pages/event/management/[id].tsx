@@ -62,6 +62,8 @@ function EventManagement({
 export const getStaticProps: GetStaticProps<{
   eventOptionList: PreferenceVO[];
 }> = async ({ params }) => {
+  const eventId = params?.id;
+
   const eventOptionList =
     await PreferenceService.selectPreferenceListByGroupKey({
       preferenceKey: PreferenceGroupKey.EventOptions,

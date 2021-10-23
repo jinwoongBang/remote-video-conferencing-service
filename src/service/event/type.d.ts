@@ -7,5 +7,8 @@ type PaginationType = {
 };
 
 export type SelectEventListParam = QueryParam;
+export type SelectOneEventParam = {
+  id: number;
+};
 
 export type InsertEventParam = Partial<EventVO>;

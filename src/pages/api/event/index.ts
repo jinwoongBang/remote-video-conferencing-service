@@ -6,116 +6,21 @@ import EventOptionService from 'src/service/eventOption';
 import EventVO, { EventOption } from 'src/vo/EventVO';
 import ExcuteVO from 'src/vo/ExcuteVO';
 import { EventGetParam, EventPostParam } from 'src/pages/api/event/type';
-
-export class QueryParam {
-  _returnCount?: string;
-  _currentPage?: string;
-  fromDate?: string;
-  toDate?: string;
-  _status?: string;
-  code?: string;
-  title?: string;
-
-  constructor({
-    returnCount,
-    currentPage,
-    fromDate,
-    toDate,
-    status,
-    code,
-    title,
-  }: EventGetParam) {
-    this._returnCount = returnCount;
-    this._currentPage = currentPage;
-    this.fromDate = fromDate;
-    this.toDate = toDate;
-    this._status = status;
-    this.code = code;
-    this.title = title;
-  }
-
-  get returnCount() {
-    return Number(this._returnCount);
-  }
-
-  get currentPage() {
-    return Number(this._currentPage);
-  }
-
-  get limit() {
-    return this.returnCount;
-  }
-
-  get offset() {
-    return this.returnCount * this.currentPage;
-  }
-
-  get status() {
-    return Number(this._status);
-  }
-
-  getParamList() {
-    const { limit, offset, fromDate, toDate, status, code, title } = this;
-    const list: (string | number)[] = [];
-    fromDate && list.push(fromDate);
-    toDate && list.push(toDate);
-    status < 2 && list.push(status);
-    code && list.push(code);
-    title && list.push(`%${title}%`);
-    list.push(limit);
-    list.push(offset);
-
-    return list;
-  }
-}
+import QueryParam from 'src/db/model/EventQueryParam';
 
 class EventController extends OTAController {
   protected async doGet(
     request: NextApiRequest,
     response: NextApiResponse<OTAResponse<EventVO>>,
   ): Promise<void> {
-    const otaResponse = new OTAResponse<EventVO>();
-
+    let otaResponse = new OTAResponse<EventVO>();
     const queryParam = new QueryParam(request.query as EventGetParam);
 
     try {
-      const totalEventCount = await EventService.selectAllEventCount(
-        queryParam,
-      );
-      const eventList = await EventService.selectAllEventList(queryParam);
-      const eventIdList = eventList.map((item) => item.ID);
+      otaResponse = queryParam.hasId
+        ? await this.getEventList(queryParam)
+        : await this.getEvent(queryParam.id);
 
-      const eventOptionList =
-        await EventOptionService.selectEventOptionListByEventId({
-          eventIdList,
-        });
-
-      eventList.forEach((item) => {
-        const eventId = item.ID;
-        const optionList = eventOptionList.filter(
-          ({ EVENT_ID }) => EVENT_ID === eventId,
-        );
-
-        const options: EventOption = {};
-
-        optionList.forEach((option) => {
-          const key = option.OPTION_KEY;
-          const value = option.IS_USED === 1;
-          options[key] = value;
-        });
-
-        item.OPTION_LIST = options;
-
-        return item;
-      });
-
-      otaResponse.result = eventList;
-      otaResponse.mappingData(EventVO);
-      otaResponse.setPagination(
-        queryParam.currentPage,
-        totalEventCount,
-        queryParam.returnCount,
-      );
       response.status(200).json(otaResponse);
     } catch (e) {
       const error = e as Error;
@@ -151,18 +56,67 @@ class EventController extends OTAController {
     }
   }
 
-  protected doPut(
+  protected async doPut(
     request: NextApiRequest,
     response: NextApiResponse<any>,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
 
-  protected doDelete(
+  protected async doDelete(
     request: NextApiRequest,
     response: NextApiResponse<any>,
   ): Promise<any> {
     throw new Error('Method not implemented.');
+  }
+
+  private async getEventList(
+    queryParam: QueryParam,
+  ): Promise<OTAResponse<EventVO>> {
+    const otaResponse = new OTAResponse<EventVO>();
+    const totalEventCount = await EventService.selectAllEventCount(queryParam);
+    const eventList = await EventService.selectAllEventList(queryParam);
+    const eventIdList = eventList.map((item) => item.ID);
+
+    const eventOptionList =
+      await EventOptionService.selectEventOptionListByEventId({
+        eventIdList,
+      });
+
+    eventList.forEach((item) => {
+      const eventId = item.ID;
+      const optionList = eventOptionList.filter(
+        ({ EVENT_ID }) => EVENT_ID === eventId,
+      );
+
+      const options: EventOption = {};
+
+      optionList.forEach((option) => {
+        const key = option.OPTION_KEY;
+        const value = option.IS_USED === 1;
+        options[key] = value;
+      });
+
+      item.OPTION_LIST = options;
+
+      return item;
+    });
+
+    otaResponse.result = eventList;
+    otaResponse.mappingData(EventVO);
+    otaResponse.setPagination(
+      queryParam.currentPage,
+      totalEventCount,
+      queryParam.returnCount,
+    );
+
+    return otaResponse;
+  }
+
+  private getEvent(id: number) {
+    const otaResponse = new OTAResponse<EventVO>();
+
+    return otaResponse;
   }
 }
 

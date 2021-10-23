@@ -10,6 +10,7 @@ export type EventGetParam = {
   status: string;
   code: string;
   title: string;
+  id?: string;
 };
 
 type EventPostParam = {
