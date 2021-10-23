@@ -61,7 +61,8 @@ class LoginController extends OTAController {
       });
 
       response.status(200);
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error;
       console.error(error);
       response.status(401);
       otaResponse.message = error.message;

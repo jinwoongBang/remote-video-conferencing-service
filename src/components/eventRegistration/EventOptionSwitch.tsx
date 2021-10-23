@@ -25,7 +25,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import { PreferenceVO } from 'src/vo';
 import { UseFormRegister } from 'react-hook-form';
-import { FormKey } from 'src/pages/event/eventRegistration';
+import { FormKey } from 'src/pages/event/registration';
 
 type EventOptionSwitchProps = {
   eventOption: PreferenceVO;

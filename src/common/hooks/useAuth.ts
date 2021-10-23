@@ -15,14 +15,7 @@ import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import authState, { Auth } from 'src/store/authentication';
 import HttpClient from '../framework/HttpClient';
 
-type User = {
-  isLoggedIn: boolean;
-};
-
-export default function useAuth({
-  redirectTo = '',
-  redirectIfFound = false,
-} = {}) {
+export default function useAuth() {
   const router = useRouter();
 
   const [auth, setAuth] = useRecoilState<Auth>(authState);

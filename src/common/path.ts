@@ -20,5 +20,5 @@ export enum UserPath {
 
 export enum EventPath {
   root = '/event',
-  eventRegistration = '/event/eventRegistration',
+  eventRegistration = '/event/registration',
 }
