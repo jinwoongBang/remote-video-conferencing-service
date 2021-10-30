@@ -1,4 +1,4 @@
-import { QueryParam } from 'src/pages/api/event';
+import QueryParam from 'src/db/model/EventQueryParam';
 import EventVO from 'src/vo/EventVO';
 
 type PaginationType = {

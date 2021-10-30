@@ -20,6 +20,7 @@ import EventVO from 'src/vo/EventVO';
 import AppLayout from 'src/components/AppLayout';
 import Form from 'src/components/eventManagerRegistration/Form';
 import EventService from 'src/service/event';
+import QueryParam from 'src/db/model/EventQueryParam';
 
 /**
  * Default Function(TSX)
@@ -39,6 +40,7 @@ export const getStaticProps: GetStaticProps<{ eventList: EventVO[] }> = async ({
   params,
 }) => {
   const eventList = await EventService.selectAllEventList();
+  // const eventList = [] as EventVO[];
   // will receive `posts` as a prop at build time
   return {
     props: {

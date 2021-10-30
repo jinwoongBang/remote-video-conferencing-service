@@ -18,7 +18,7 @@ import * as _ from 'lodash';
  * Material UI
  */
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Typography } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 
 /**
  * Hooks
@@ -40,6 +40,11 @@ import EventOptionHandler from 'src/common/handler/EventOptionHandler';
 import EventVO from 'src/vo/EventVO';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    minWidth: '500px',
+    height: '100vh',
+    padding: 0,
+  },
   section: {
     maxWidth: '100%',
   },
@@ -55,14 +60,16 @@ function EventManagement({
 
   return (
     <main>
-      <Grid container>
-        <Grid item xs={12}>
-          <section className={classes.section}>
-            <Typography>{event?.TITLE}</Typography>
-            <Typography>({event?.CODE})</Typography>
-          </section>
+      <Container maxWidth={false} className={classes.root}>
+        <Grid container component="section">
+          <Grid item xs={12}>
+            <Typography variant="h4">
+              {event?.TITLE} ({event?.CODE})
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
+        <Grid container></Grid>
+      </Container>
     </main>
   );
 }
