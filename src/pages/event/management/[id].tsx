@@ -38,6 +38,7 @@ import { PreferenceGroupKey } from 'src/common/enum/preference';
 import { PreferenceVO } from 'src/vo';
 import EventOptionHandler from 'src/common/handler/EventOptionHandler';
 import EventVO from 'src/vo/EventVO';
+import EventManagementLayout from 'src/components/EventManagementLayout';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -56,21 +57,14 @@ function EventManagement({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const classes = useStyles();
 
-  const { auth } = useAuth();
-
   return (
-    <main>
-      <Container maxWidth={false} className={classes.root}>
-        <Grid container component="section">
-          <Grid item xs={12}>
-            <Typography variant="h4">
-              {event?.TITLE} ({event?.CODE})
-            </Typography>
-          </Grid>
+    <EventManagementLayout eventVO={event}>
+      <Grid container component="section">
+        <Grid item xs={12}>
+          <Typography variant="h4">내용들어갈 자리</Typography>
         </Grid>
-        <Grid container></Grid>
-      </Container>
-    </main>
+      </Grid>
+    </EventManagementLayout>
   );
 }
 
