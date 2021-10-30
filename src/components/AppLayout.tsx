@@ -181,10 +181,7 @@ const StyledTabs = withStyles({
 function ApoLayout({ children }: ApoLayoutProps) {
   const classes = useStyles();
   const router = useRouter();
-  const { auth } = useAuth({
-    redirectTo: router.pathname,
-    redirectIfFound: true,
-  });
+  const { auth } = useAuth();
 
   const [value, setValue] = useState<number>(0);
   const [sidebar, setSidebar] = useState(<DashboardSidebar />);
