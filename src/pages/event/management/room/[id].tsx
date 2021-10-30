@@ -61,7 +61,7 @@ function EventManagement({
     <EventManagementLayout eventVO={event}>
       <Grid container component="section">
         <Grid item xs={12}>
-          <Typography variant="h4">[[기본정보]]</Typography>
+          <Typography variant="h4">이벤트 ROOM</Typography>
         </Grid>
       </Grid>
     </EventManagementLayout>

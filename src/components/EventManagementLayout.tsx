@@ -67,6 +67,7 @@ import OTAResponse from 'src/common/framework/OTAResponse';
  */
 import { authState, counterState } from 'src/store';
 import EventVO from 'src/vo/EventVO';
+import { EventPath } from 'src/common/path';
 
 const drawerWidth = 240;
 
@@ -77,16 +78,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerContainer: {
-    overflow: 'auto',
-  },
   main: {
     flexGrow: 1,
     // border: '1px solid tomato',
@@ -95,6 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     padding: '20px',
+    border: '1px solid tomato',
   },
 
   subHeader: {
@@ -129,51 +121,51 @@ type SubHeader = {
 const subHeaderList: SubHeader[] = [
   {
     label: '기본정보',
-    url: '/',
+    url: EventPath.eventManagement,
   },
   {
     label: 'ROOM',
-    url: '/preference',
+    url: EventPath.eventManagementByRoom,
   },
   {
     label: 'E-BOOTH',
-    url: '/user',
+    url: EventPath.eventManagementByEBooth,
   },
   {
     label: '스폰서',
-    url: '/event',
+    url: EventPath.eventManagementBySponsor,
   },
   {
     label: '포스터',
-    url: '/special',
+    url: EventPath.eventManagementByPoster,
   },
   {
     label: 'VOD',
-    url: '/special',
+    url: EventPath.eventManagementByVOD,
   },
   {
     label: '온라인광고',
-    url: '/special',
+    url: EventPath.eventManagementByOnlineAD,
   },
   {
     label: '이용약관',
-    url: '/special',
+    url: EventPath.eventManagementByTerms,
   },
   {
     label: '공지사항',
-    url: '/special',
+    url: EventPath.eventManagementByNotice,
   },
   {
     label: '긴급공지사항',
-    url: '/special',
+    url: EventPath.eventManagementByUrgentNotice,
   },
   {
     label: '소개글',
-    url: '/special',
+    url: EventPath.eventManagementByNotice,
   },
   {
     label: '기프티콘',
-    url: '/special',
+    url: EventPath.eventManagementByGifticon,
   },
 ];
 
@@ -240,7 +232,7 @@ function EventManagementLayout({ children, eventVO }: ApoLayoutProps) {
 
   const handleChangeTab = useCallback(
     (event: React.ChangeEvent<{}>, newValue: number) => {
-      router.push(subHeaderList[newValue].url);
+      router.push(`${subHeaderList[newValue].url}/${eventVO?.ID}`);
     },
     [router],
   );
@@ -272,8 +264,6 @@ function EventManagementLayout({ children, eventVO }: ApoLayoutProps) {
               </Typography>
             </Grid>
             <Grid item xs={3} className={classes.rightContainer}>
-              {/* <Typography variant="body1">{auth.user?.NAME}</Typography>
-              <Typography variant="body2">님 께서 로그인하셨습니다.</Typography> */}
               <Button variant="outlined" color="inherit" onClick={handleLogout}>
                 창 닫기
               </Button>
