@@ -32,17 +32,17 @@ export default function useAuth() {
   };
 
   useEffect(() => {
-    handleAuthentication();
+    // handleAuthentication();
   }, [router.pathname]);
 
   useEffect(() => {
-    if (auth.isLoggedIn) {
-      router.pathname === '/login' && router.push('/');
-      console.log('[handleAuthentication] success');
-    } else {
-      router.pathname !== '/login' && router.push('/login');
-      console.log('[handleAuthentication] failure');
-    }
+    // if (auth.isLoggedIn) {
+    //   router.pathname === '/login' && router.push('/');
+    //   console.log('[handleAuthentication] success');
+    // } else {
+    //   router.pathname !== '/login' && router.push('/login');
+    //   console.log('[handleAuthentication] failure');
+    // }
   }, [auth.isLoggedIn]);
 
   return { auth };
